@@ -53,7 +53,7 @@
 							@foreach($lists as $key => $val)
 							<div class="m_list_cm">
 								@forelse($val['plate_vs_attr'] as $kk => $vv)
-									<div class="item_list_cm clearfix" >
+									<div class="item_list_cm clearfix" @if( $vv['id'] == 20 ) style="display:none;" @endif >
 										<span class="sp1">{{ $vv['attr_name'] }}：</span>
 										<ul data-id="{{$vv['id']}}">
 											<li><a href="">不限</a></li>

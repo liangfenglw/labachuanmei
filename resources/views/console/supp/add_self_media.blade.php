@@ -256,14 +256,15 @@ function sub_form() {
     });
     $("#spec").val(spec);
 
-    if (!$("#documents_upload_button2").val() && !$("#img_upload2").attr('src')) {
-        layer.msg("入口示意图必须添加");
-        return false;
-    }
-    if (!$("#documents_upload_button").val() && !$("#img_upload3").attr('src')) {
+    if ($("#img_upload").attr('src') == '' || $("#img_upload").attr('src') == '/console/images/z_add2.png') {
         layer.msg("媒体logo必须添加");
         return false;
     }
+    if ($("#img_upload2").attr('src') == '' || $("#img_upload2").attr('src') == '/console/images/z_add2.png') {
+        layer.msg("入口示意图必须添加");
+        return false;
+    }
+    
     if (!$("#proxy_price").val()) {
         layer.msg("价格必须填写");
         return false;

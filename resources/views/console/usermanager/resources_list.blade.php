@@ -56,7 +56,7 @@
                     </div>
                     <div class="l">
                         <a class="sub4_2" href="javascript:;" onclick="get_excel();" target="_blank" style="background:#7db6eb">导出媒体</a>
-                        <a class="sub4_2" href="javascript:;" onclick="" target="_blank" style="background:#7db6eb">导入媒体</a>
+<!--					<a class="sub4_2" href="javascript:;" onclick="" target="_blank" style="background:#7db6eb">导入媒体</a>	-->
                     </div>
                     <div class="l" style="display:none;">
                         <a class="sub4_2" href="/usermanager/add_ads" style="background:#7db6eb">创建</a>

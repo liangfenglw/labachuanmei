@@ -1265,6 +1265,9 @@ a.sub4_2:hover{	color:#fff;	}
 .table_in1 td.link-pic{}	
 .table_in1 td.link-pic img{	width:auto;	height:auto;	max-width:100%;	max-height:25px;	overflow:hidden;	margin:0px;	}
 
+.table_in1 td .success-urlpic{	awidth:150px;	aoverflow:hidden;	}
+.table_in1 td .success-urlpic a{	color:#8abbec;	}
+
 .title5{		aheight:77px;	min-height:70px;	border-bottom:1px solid #e5e5e5;	font-weight:400;	font-size:24px;		color:#2f4050;		background:#fff;
 	border-radius:12px 12px 0 0;	}
 .title5 strong{		font-weight:400;	height:69px;	line-height:74px;	overflow:hidden;	float:left;		color:#2f4050;	text-decoration:none;	font-size:24px;	padding-left:30px;	}
@@ -1273,7 +1276,8 @@ a.sub4_2:hover{	color:#fff;	}
 .item_f{	width:100%;	aheight:40px;	line-height:40px;	margin:13px 0;	float:left;	font-size:16px;	}
 .item_f p{	width:150px;	text-align:right;	margin-right:12px;	float:left;	color:#2f4050;	font-size:17px;	}
 .LGntas{	position:relative;	top:2px;	padding-right:8px;	color:#f00;	}
-.item_f .r{	display:block;	float:none;		margin-left:132px;	}
+.item_f .r{	display:block;	float:none;		margin-left:132px;
+	margin-left:162px;	}
 .txt_f1{	border:1px solid #E5E5E5;	border-radius:25px;	height:45px;	line-height:45px;	width:28%;	padding:0 2%;	font-size:16px;
 	color:#2f4050;	color:#999;	}
 .txt_ft1{	width:88%;		height:178px;	border:1px solid #E5E5E5;	line-height:26px;	padding:8px 1%;	font-size:14px;	border-radius:25px;	color:#999;	}

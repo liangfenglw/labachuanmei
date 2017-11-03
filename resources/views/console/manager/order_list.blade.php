@@ -192,7 +192,7 @@
                                 <th>所属用户</th>
                                 <th>供应商</th>
                                 <th>媒体名称</th>
-                                <th style="width: 230px;">完成链接/截图</th>
+                                <th style="max-width: 230px;">完成链接/截图</th>
                                 <th>订单状态</th>
                                 <th class="nosort">操作</th>
                             </tr>
@@ -233,13 +233,15 @@
                                      <td>{{ $value['supp_user']['parent_user']['name'] }}</td>
                                     <td>{{ $value['supp_user']['media_name'] }}</td>
                                     <td>
+										<div class="success-urlpic">
                                         @if($value['success_url'])
-                                            {{ $value['success_url'] }}
+                                            <a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
                                         @else
                                             @if ($value['success_pic'])
                                                  <img src="{{ $value['success_pic'] }}">
                                             @endif
                                         @endif
+										</div>
                                     </td>
                                     <td class="color1">
                                     {{ getOrderType($value['order_type']) }}
@@ -262,13 +264,15 @@
                                     <td>{{ $value['supp_user']['parent_user']['name'] }}</td>
                                     <td>{{ $value['supp_user']['media_name'] }}</td>
                                     <td>
+										<div class="success-urlpic">
                                         @if($value['success_url'])
-                                            {{ $value['success_url'] }}
+											<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
                                         @else
                                             @if ($value['success_pic'])
                                                  <img src="{{ $value['success_pic'] }}">
                                             @endif
                                         @endif
+										</div>
                                     </td>
                                     <td class="color1">
                                         {{ getOrderType($value['order_type']) }}
@@ -286,15 +290,15 @@
                                     <td>{{ $value['supp_user']['parent_user']['name'] }}</td>
                                     <td>{{ $value['supp_user']['media_name'] }}</td>
                                     <td>
-                                    @if($value['success_url'])
-                                        {{ $value['success_url'] }}
-                                    @else
-                                        @if ($value['success_pic'])
-                                             <img src="{{ $value['success_pic'] }}">
-                                        @endif
-                                    @endif
-                                    
-                                    
+										<div class="success-urlpic">
+										@if($value['success_url'])
+											<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
+										@else
+											@if ($value['success_pic'])
+												 <img src="{{ $value['success_pic'] }}">
+											@endif
+										@endif
+										</div>
                                     </td>
                                     <td class="color1">
                                     {{ getOrderType($value['order_type']) }}
@@ -339,13 +343,15 @@
                                     <td>{{ $value['supp_user']['parent_user']['name'] or '' }}</td>
                                     <td>{{ $value['supp_user']['media_name'] }}</td>
                                     <td>
+										<div class="success-urlpic">
                                         @if($value['success_url'])
-                                        {{ $value['success_url'] }}
-                                    @else
-                                        @if ($value['success_pic'])
-                                             <img src="{{ $value['success_pic'] }}">
-                                        @endif
-                                    @endif
+											<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
+										@else
+											@if ($value['success_pic'])
+												<img src="{{ $value['success_pic'] }}">
+											@endif
+										@endif
+										</div>
                                     </td>
                                     <td class="color1">
                                     {{ getOrderType($value['order_type']) }}

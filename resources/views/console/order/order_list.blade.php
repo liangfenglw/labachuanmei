@@ -77,7 +77,7 @@
                     <li @if($order_type == 5)class="cur" @endif><a href="/order/order_list/5">已完成</a></li>
                     <li @if($order_type == 4)class="cur" @endif><a href="/order/order_list/4">正执行</a></li>
                     <li @if($order_type == 3)class="cur" @endif><a href="/order/order_list/3">已流单</a></li>
-                    <li @if($order_type == 2)class="cur" @endif><a href="/order/order_list/2">已拒单</a></li>
+                  {{--   <li @if($order_type == 2)class="cur" @endif><a href="/order/order_list/2">已拒单</a></li> --}}
                     <li @if($order_type == 100)class="cur" @endif><a href="/order/order_list/100">退款订单</a></li>
                     {{-- <li @if($order_type == 9)class="cur" @endif><a href="/order/order_list/9">申诉订单</a></li> --}}
 				</ul>
@@ -146,7 +146,7 @@
 								<th>订单状态</th>
 								<th class="nosort">操作</th>		<!--	（查看）	-->
 							</tr>
-						@elseif( $order_type == 2 )
+						{{-- @elseif( $order_type == 2 )
 							<tr>
 								<th>订单号</th>
 								<th>稿件名称</th>
@@ -157,7 +157,7 @@
 								<th>媒体名称</th>
 								<th>订单状态</th>
 								<th class="nosort">操作</th>		<!--	（查看）	-->
-							</tr>
+							</tr> --}}
 						@elseif( $order_type == 100 )
 							<tr>
 								<th>订单号</th>

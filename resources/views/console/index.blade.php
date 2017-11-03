@@ -59,7 +59,7 @@
          <!--	帐户余额	-->
         <div class="right_balance right_balance2">
         	<h2>帐户余额</h2>
-            <h1>{{ $all_user_money }} <span>元</span></h1>
+            <h1>{{$ads_user_money + $platform_money}} <span>元</span></h1>
 				{{--
 			<a href="/userpersonal/onlnetop_up" class="topup">充 值</a>
             <a href="/userpersonal/account_enchashment" class="withdrawal">提 现</a>
@@ -114,11 +114,11 @@
                 <div class="tab2_body">
                     <ul class="clearfix">
                         @foreach($ads_users_list as $key => $val)
-                        <li><a href="/usermanager/adsinfo/{{$val['user_id']}}" title="{{$val['nickname']}}"><img src="{{url('console/images/pic4.jpg')}}" alt="" /><p>{{$val['nickname']}}</p></a></li>
+                        <li><a href="/user/ad_user/{{$val['user_id']}}" title="{{$val['name']}}"><img src="{{url('console/images/pic4.jpg')}}" alt="" /><p>{{$val['name']}}</p></a></li>
                     	@endforeach
                     </ul>
 				</div>
-				<a href="/user/ad_user_list" class="more_1">更多 ></a>
+				<a href="/user/supper_ad_user_list" class="more_1">更多 ></a>
              </div>
              
              <div class="yonghu_list" style="margin-top:25px!important;	margin-top:25px;">
@@ -195,7 +195,7 @@
 			<h3 class="title2"><strong><a >盈利状况</a></strong></h3>
 			<ul>
                 <li class="li1"><p>会员总金额<b>￥{{$ads_user_money}}</b></p></li>
-                <li class="li2"><p>平台纯收益<b>￥{{$pingtai_user_money}}</b></p></li>
+                <li class="li2"><p>平台纯收益<b>￥{{$platform_money}}</b></p></li>
                 <li class="li3"><p>供应商总金额<b>￥{{$supp_user_money}}</b></p></li>
             </ul>
         </div>

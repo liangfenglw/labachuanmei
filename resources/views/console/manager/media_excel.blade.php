@@ -16,6 +16,7 @@
 .list_3 ul li strong{   font-weight:400;    }
 .list_3 ul li span{     }
 
+.wrap_fl{	width:70%;	}
 </style>
 
 <body class="fold">
@@ -38,7 +39,7 @@
                 <div class="wrap_fl clearfix" style="">
                     <div class="item_f"><p><i class="LGntas"></i>上传类型：</p>
                         <div class="r">
-                            <select name="upload_type" onchange="sel_show(this)">
+                            <select name="upload_type" onchange="sel_show(this)" class="sel_f1" style="min-width:150px;">
                                 <option value="0">请选择</option>
                                 <option value="1">媒体</option>
                                 <option value="2">供应商账号</option>
@@ -49,7 +50,7 @@
                 <div class="wrap_fl clearfix" id="media_s" style="display: none;">
                     <div class="item_f"><p><i class="LGntas"></i>媒体分类：</p>
                         <div class="r">
-                            <select name="plate_tid" onchange="select_platetid(this);">
+                            <select name="plate_tid" onchange="select_platetid(this);" class="sel_f1" style="min-width:150px;">
                                 <option value="0">请选择</option>
                                 @foreach($list as $key => $val)
                                     <option value="{{ $val['id'] }}">{{ $val['plate_name'] }}</option>
@@ -60,7 +61,7 @@
                     <div class="item_f"><p><i class="LGntas"></i>媒体类型：</p>
                         <div class="r">
                             @foreach($list as $key => $val)
-                                <select name="media_type[{{ $val['id'] }}]" id="spec_{{ $val['id'] }}" style="display: none">
+                                <select name="media_type[{{ $val['id'] }}]" id="spec_{{ $val['id'] }}" class="sel_f1" style="min-width:150px;display:none;">
                                     @foreach($val['child_plate'] as $kk => $vv)
                                         <option value="{{ $vv['id'] }}">{{ $vv['plate_name'] }}</option>
                                     @endforeach
@@ -70,32 +71,31 @@
                     </div>
                     <div class="item_f"><p><i class="LGntas"></i>分类：</p>
                         <div class="r">
-                            <select name="media_ref" >
+                            <select name="media_ref" class="sel_f1" style="min-width:150px;">
                                 <option value="1">自营媒体</option>
                                 <option value="2">供应商媒体</option>
                             </select>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <div class="wrap_fl clearfix" style="">
+				<div class="wrap_fl clearfix" style="">
                         <div class="item_f">
                             <p><i class="LGntas"></i>文件：</p>
                             <div class="r">
-                                <input type="file" name="file">
+						
+								<input type="text" name="name2_2" id="name2_2" class="txt6" readonly="">
+								<button type="button" name="upload_file" id="upload_file" class="txt7" style=" width:80px;">导入</button><br>
+								
                             </div>
                         </div>
-                    </div>
                 </div>
-                <div>
-                    <div class="wrap_fl clearfix" style="">
+				<div class="wrap_fl clearfix" style="">
                         <div class="item_f">
                             <p><i class="LGntas"></i></p>
                             <div class="r">
-                                <input type="submit" name="file">
+								<input type="submit" value="确 认" class="sub5" style="margin-left:0;">
                             </div>
                         </div>
-                    </div>
                 </div>
             </div>
             <input type="hidden" name="category_id" id="category_id" value="">
@@ -103,6 +103,16 @@
         </form>
         
     </div>
+	
+	<!--	稿件上传表单	-->
+	<form id="form1" style="position:absolute;z-index:1000;">
+		{{ csrf_field() }}
+		<!-- <input type="hidden" name="_token" value="x6WF98UczCSVQeCOopUjsUNWUf0inoxZcd4qATQg"> -->
+		<input type="file" name="file" id="Manuscripts" class="txt6 txt6_up" 
+			style="display:none;opacity:0;"	/>
+	</form>
+
+	
 <script type="text/javascript">
     function sel_show(obj)
     {
@@ -189,6 +199,61 @@
         return true;
     }   
     
+	/*	稿件上传	*/
+	var options = {
+       url : "{{url('media/upload')}}",
+        url : "",
+		type : "post",
+		// data : { return_type : "string" },
+		enctype: 'multipart/form-data',
+        success : function(ret) {
+			// console.log("ret1:")
+			// console.log(typeof(ret))
+			// console.log(ret)
+			if( typeof(ret) == "string" ){	ret = JSON.parse(ret);	}
+			if(ret.sta == "1"){
+				layer.msg('文件上传成功');
+				$('input[name="name2_2"]').val(ret.md5);
+			}else{
+				layer.msg(ret.msg);
+			}
+        },  
+        error : function(ret){  
+			layer.msg("网络错误");
+			console.log(ret);
+			console.log(JSON.parse(ret.responseText).msg);
+        },  
+		clearForm : false,
+        timeout : 100000
+    };
+	
+	$("#upload_file").click(function(){
+		$("#Manuscripts").click();
+	});
+	
+	$("#Manuscripts").change(function () {
+		// alert(9);
+		// $("#form1").ajaxSubmit(options);
+ 			//创建FormData对象
+			var data = new FormData($('#form1')[0]);
+			$.ajax({
+//				url: "{{url('usermanager/upload')}}",
+				url: "",
+					type: 'POST',
+					data: data,
+					dataType: 'JSON',
+					cache: false,
+					processData: false,
+					contentType: false
+			}).done(function(ret){
+				console.log("ret:", ret);
+				if(ret.status == 1){
+					$('input[name="name2_2"]').val(ret.data.file);
+				}else{
+					layer.msg('文件上传失败');
+				}
+			}); 
+	});
 </script>
 
 </body>
