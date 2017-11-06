@@ -42,7 +42,7 @@
                 </div>
                 
                 <div class="item_f"><p><i class="LGntas"></i>编辑方式{{ $info['parent_order']['doc_type'] }}：</p>
-                    <div class="r radio_w">
+                    <div class="r radio_w disabled_rd">
                         <label class="rd1 @if($info['parent_order']['doc_type'] == 1) css_cur  @endif"><input type="radio" disabled="disabled" class="radio_f" value="1" @if($info['parent_order']['doc_type'] == 1) checked  @endif />外部链接</label>
                         <label class="rd1 @if($info['parent_order']['doc_type'] == 2) css_cur  @endif"><input type="radio" disabled="disabled" class="radio_f" value="2" @if($info['parent_order']['doc_type'] == 2) checked  @endif />上传文档</label>
                         <label class="rd1 @if($info['parent_order']['doc_type'] == 3) css_cur  @endif"><input type="radio" disabled="disabled" class="radio_f" value="3" @if($info['parent_order']['doc_type'] == 3) checked  @endif/>内部编辑</label>
@@ -62,7 +62,8 @@
                     <div class="item_f" @if($info['parent_order']['doc_type'] == 3) style="display:block;" @else style="display: none" @endif><p><i class="LGntas"></i>稿件需求：</p>
                         <div class="r">
                             <!--    在订单详情页中，”订单内容项“ 根据编辑方式不同所显示的界面不同，具体排版与会员下单页界页一样 -->
-                            <textarea class="txt_ft1">{{ $info['parent_order']['content'] }}</textarea>
+<!--						<textarea class="txt_ft1">{!! $info['parent_order']['content'] !!}</textarea>		-->
+                            <div class="txt_ft1">{!! $info['parent_order']['content'] !!}</div>
                         </div>
                     </div>
                 </div>

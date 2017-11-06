@@ -1217,10 +1217,10 @@ class UsermanagerController extends CommonController
         $supp->remark = $request->remark;
         $supp->is_state = $request->is_state;
         $supp->order_count = 0;
-        $supp->vip_price = $request->vip_price;
-        $supp->plate_price = $request->plate_price;
-        $supp->vip_rate = $request->vip_rate;
-        $supp->plate_rate = $request->plate_rate;
+        // $supp->vip_price = $request->vip_price;
+        // $supp->plate_price = $request->plate_price;
+        // $supp->vip_rate = $request->vip_rate;
+        // $supp->plate_rate = $request->plate_rate;
         $tmp2 = $supp->save();
         $supp_vs_attr_data = [];
         foreach ($spec as $key => $value) {

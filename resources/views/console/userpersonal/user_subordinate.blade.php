@@ -125,10 +125,13 @@
 						<input type="text" class="txt2" id="datepicker1" />-<input type="text" class="txt2" id="datepicker2" />
 					</div>
 					<div class="l">
-						<select name="" class="sel1" id="mediatype">
+						<select name="" class="sel1" id="mediatype" style="display:none;">
+							<option value="35">网络媒体</option>
+<!--
 							@foreach($media as $key => $val)
 								<option value="{{ $val['id'] }}">{{ $val['plate_name'] }}</option>
 							@endforeach
+-->
 						</select>
 					</div>
 					<div class="l">
@@ -162,16 +165,28 @@
 	<tbody id="listcontent">
 		@forelse($data_lists as $key => $val)
 			<tr>
-			<td>{{ $val['order_id'] }}</td>
-			<td>{{ $val['title'] }}</td>
-			<td>{{ $val['type_name'] }}</td>
-			<td>{{ $val['start_at'] }}</td>
-			<td>{{ $val['over_at'] }}</td>
-			<td class="color1">￥{{ $val['user_money'] }}</td>
-			<td class="color1">￥{{ $val['commission'] }}</td>
-			<td>{{ $val['order_type'] }}</td>
-			<td class="link-pic"><a href="{{ $val['success_url'] }}"><img src="{{ $val['success_pic'] }}"></a></td>
-		</tr>
+				<td>{{ $val['order_id'] }}</td>
+				<td>{{ $val['title'] }}</td>
+				<td>{{ $val['type_name'] }}</td>
+				<td>{{ $val['start_at'] }}</td>
+				<td>{{ $val['over_at'] }}</td>
+				<td class="color1">￥{{ $val['user_money'] }}</td>
+				<td class="color1">￥{{ $val['commission'] }}</td>
+				<td>{{ $val['order_type'] }}</td>
+<!--			<td class="link-pic"><a href="{{ $val['success_url'] }}"><img src="{{ $val['success_pic'] }}"></a></td>		-->
+				<td class="link-pic">
+					<div class="success-urlpic">
+						@if( $val['success_url'] && $val['success_pic'] )
+							<a target="_blank" href="{{ $val['success_url'] }}"><img src="{{ $val['success_pic'] }}"></a>
+						@elseif( $val['success_url'] )
+							<a target="_blank" href="{{ $val['success_url'] }}">链接地址</a>
+						@elseif( $val['success_pic'] )
+							<img src="{{ $val['success_pic'] }}">
+						@else
+						@endif
+					</div>
+				</td>
+			</tr>
 		@empty
 			<tr><td colspan='9'>没有查询到数据！</td></tr>
 		@endforelse
@@ -251,10 +266,9 @@
 					},
 					searchPlaceholder: "过滤..."
 				},
-				"order" : [[3,"desc"]]
+				"order" : [[0,"desc"]]
 			};
 			datatable =  $('#datatable1').DataTable(dt_option);
-			
 			var _token = $('input[name="_token"]').val();
             $("#searchnews").click(function () {
                 $.ajax({
@@ -285,7 +299,7 @@
 								htmls += '<td class="color1">'+msg[i]['user_money']+'</td>';
 								htmls += '<td class="color1">'+msg[i]['commission']+'</td>';
 								htmls += '<td>'+msg[i]['order_type']+'</td>';
-								htmls += '<td class="link-pic"><a href="'+msg[i]['success_url']+'"><img src="'+msg[i]['success_pic']+'></a></td></td></tr>';
+								htmls += '<td class="link-pic"><a href="'+msg[i]['success_url']+'"><img src="'+msg[i]['success_pic']+'"></a></td></td></tr>';
 							}
 							$('#listcontent').html(htmls);
 							datatable =  $('#datatable1').DataTable(dt_option);
@@ -293,8 +307,7 @@
 							if( $.fn.dataTable.isDataTable(" #datatable1 ") ){
 								datatable.destroy();
 							}
-                            $('#listcontent').html("<tr><td colspan='9'>没有查询到数据！</td></tr>");			//7 表格列数
-//                        window.location.reload();
+                            $('#listcontent').html("<tr><td colspan='9'>没有查询到数据！</td></tr>");
                         }
                     }
                 })

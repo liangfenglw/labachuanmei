@@ -31,6 +31,9 @@
 				</ul>
 			</div>
 		</h3>
+		<div style="display:none;">{{ $info['order_type'] }}</div>
+		<div style="display:none;">{{ $info['deal_with_status'] }}</div>
+		<div style="display:none;">{{ $info['supp_status'] }}</div>
         @if($info['order_type'] == 12 && $info['deal_with_status'] == 0 && $info['supp_status'] != 1) {{-- 广告主申请退款 供应商暂未同意 --}}
             @include('console.manager.order_info_1')
         @elseif($info['order_type'] == 13 && $info['deal_with_status'] == 1 && $info['supp_status'] != 1) {{-- 后台允许退款 完单 --}}

@@ -21,12 +21,13 @@
                 </div>
                 
                 <div class="item_f"><p><i class="LGntas"></i>编辑方式：</p>
-                    <div class="r radio_w">
+                    <div class="r radio_w disabled_rd">
                         <label class="rd1 @if($info['parent_order']['doc_type'] == 1) css_cur @endif"><input type="radio" name="edit_type" class="radio_f" value="1" @if($info['parent_order']['doc_type'] == 1) checked @endif  disabled="disabled" />外部连接</label>
                         <label class="rd1 @if($info['parent_order']['doc_type'] == 2) css_cur @endif"><input type="radio" name="edit_type" class="radio_f" value="2" @if($info['parent_order']['doc_type'] == 2) checked @endif disabled="disabled" />上传文档</label>
                         <label class="rd1 @if($info['parent_order']['doc_type'] == 3) css_cur @endif"><input type="radio" name="edit_type" class="radio_f" value="3" @if($info['parent_order']['doc_type'] == 3) checked @endif disabled="disabled"/>内部编辑</label>
                     </div>
                 </div>
+
                 <div id="body_edit_type">
                     <div class="item_f" @if($info['parent_order']['doc_type'] == 1) style="display:block;" @else style="display:none;" @endif ><p><i class="LGntas"></i>外部链接：</p>
                         <div class="r"><input type="text" name="textfield" id="textfield" readonly="readonly" class="txt_f1" style="width:75%;" value="{{ $info['parent_order']['content'] }}" /></div>
@@ -40,7 +41,8 @@
                     <div class="item_f" @if($info['parent_order']['doc_type'] == 3) style="display:block;" @else style="display:none;" @endif><p><i class="LGntas"></i>订单内容：</p>
                         <div class="r">
                             <!--    在订单详情页中，”订单内容项“ 根据编辑方式不同所显示的界面不同，具体排版与会员下单页界页一样     -->
-                            <textarea class="txt_ft1" readonly="readonly">{{ $info['parent_order']['content'] }}</textarea>
+<!--						<textarea class="txt_ft1" readonly="readonly">{{ $info['parent_order']['content'] }}</textarea>		-->
+							<div class="txt_ft1">{!! $info['parent_order']['content'] !!}</div>
                         </div>
                     </div>
                 </div>

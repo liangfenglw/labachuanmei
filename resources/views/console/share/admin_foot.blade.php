@@ -142,6 +142,7 @@ $(function(){
 		$(this).addClass("css_cur").siblings("label").removeClass("css_cur");
 //		$(this).find("input")[0].checked == true;
 	});
+	$(".disabled_rd .rd1").unbind("click");
 
 
     /*  返回顶部    */

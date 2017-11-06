@@ -1094,18 +1094,27 @@ html .content.fold{	margin-left:70px;	}
 
 .info_am_r{	width:100%;	float:right;	}
 .info_am_r ul{		margin:0;}
-.info_am_r ul li{		float:left;	text-align:center;	 width:24%;border-radius:8px;padding:4%;	}
+.info_am_r ul li{		float:left;	text-align:center;	 width:24%;border-radius:8px;	padding:4%;
+	padding:2% 4% 1%;	}
 .info_am_r ul li .colcnt{height:auto;border-radius:8px; }
 .colcnt .colcntimg{ width:35%; float:left;	padding-bottom:40%;
 	background-size:80%;
 	background-repeat:no-repeat;
     background-position:center center;
+	padding-bottom:20%;
 }
 .colcnt1 .colcntimg{ 	background-image:url(/console/images/GL14.png);	}
 .colcnt2 .colcntimg{ 	background-image:url(/console/images/GL15.png);	background-size:96%;	}
 .colcnt2_nt .colcntimg{ 	background-image:url(/console/images/GL15nt.png);	background-size:96%;	}
 .colcnt3 .colcntimg{ 	background-image:url(/console/images/GL16.png);	}
 .colcnt3_nt .colcntimg{ 	background-image:url(/console/images/GL16nt.png);	}
+
+.info_am_r ul li.colcnt1,
+.info_am_r ul li.colcnt2,
+.info_am_r ul li.colcnt3{	apadding:4%;		}
+.info_am_r ul li.colcnt1 .colcntimg,
+.info_am_r ul li.colcnt2 .colcntimg,
+.info_am_r ul li.colcnt3 .colcntimg{	padding-bottom:40%;		}
 
 .colcnt .colcntimg img{ width:100%; height:auto;}
 .colcnt span a{ width:65%; float:left;font-size:30px;color:#fff; text-align:left;line-height:40px;	font-weight:400;	}
@@ -1713,7 +1722,14 @@ body #error_show a.more{	float:none;	width:220px;/*	background:#EEEEEE;*/color:#
 	border-radius:30px;		margin:0 auto;	display:block;	}
 
 
-
+body .txt_ft1 h1,
+body .txt_ft1 h2,
+body .txt_ft1 h3,
+body .txt_ft1 h4,
+body .txt_ft1 h5,
+body .txt_ft1 h6,
+body .txt_ft1 div,
+body .txt_ft1 p{	width:auto;	text-align:left;	float:none;	font-size:14px;	color:#999;		padding:8px 1%;		margin-right:0;	}
 
 
 

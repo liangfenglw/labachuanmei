@@ -529,7 +529,7 @@ class ManagerController extends CommonController
         }
         $ads_uid = $order_info->ads_user_id;
         $supp_info = SuppUsersModel::where('user_id', $supp_uid)->first();
-       
+
         $platform_money = $order_info->user_money - $supp_info->proxy_price - $order_info->commission;
         if ($platform_money < 0) {
             return back()->with('status', '指派给此媒体,这次交易会亏钱,禁止交易');

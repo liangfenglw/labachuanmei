@@ -53,7 +53,7 @@
 							@foreach($lists as $key => $val)
 							<div class="m_list_cm">
 								@forelse($val['plate_vs_attr'] as $kk => $vv)
-									<div class="item_list_cm clearfix" @if( $vv['id'] == 20 ) style="display:none;" @endif >
+									<div class="item_list_cm clearfix" 			@if( $vv['id'] == 20 ) style="display:none;" @endif >
 										<span class="sp1">{{ $vv['attr_name'] }}：</span>
 										<ul data-id="{{$vv['id']}}">
 											<li><a href="">不限</a></li>
@@ -350,7 +350,7 @@ $(function(){
 					},
 					searchPlaceholder: "过滤..."
 				},
-				"order" : [[3,"desc"]]
+				"order" : [[0,"desc"]]
 	};
 //	datatable =  $('#datatable1').DataTable(dt_option);
 	datatable =  $('.table_in1').DataTable(dt_option);

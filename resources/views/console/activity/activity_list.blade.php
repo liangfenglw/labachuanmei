@@ -12,7 +12,7 @@
 @include('console.share.admin_menu')<!--    左弹菜单 普通会员首页 -->
 <div class="content"><div class="Invoice">
     <div class="place">
-        <div class="place_ant"><a href="/console/index">首页</a><a  href="/activity/activity_list" class="cur">活动管理 </a></div>
+        <div class="place_ant"><a href="/console/index">首页</a><a  href="/console/activity/list" class="cur">活动管理 </a></div>
     </div>
     <div class="main_o" style="padding-bottom:0;">
         <h3 class="title4"><strong><a href="#">活动管理</a></strong>
@@ -139,7 +139,7 @@ $(function(){
                     },
                     searchPlaceholder: "过滤..."
                 },
-                "order" : [[3,"desc"]]
+                "order" : [[0,"desc"]]
             };
             datatable =  $('#datatable1').DataTable(dt_option);
 //          var _token = $('input[name="_token"]').val();

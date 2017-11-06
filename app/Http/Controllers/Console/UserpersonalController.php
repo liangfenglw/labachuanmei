@@ -1055,7 +1055,12 @@ class UserpersonalController extends CommonController
                             ->leftJoin('order','order.ads_user_id','=','ad_users.user_id')
                             ->leftJoin('order_network','order.order_sn','=','order_network.order_sn')
                             ->select("*",DB::raw("count(order_network.id) as order_num"),
-                                DB::raw("sum(order_network.user_money) as user_money_all"),
+                                DB::raw("
+                                    sum(case when 
+                                        order_network.order_type = 10
+                                        or (order_network.order_type = 13 and deal_with_status = 3)
+                                         then order_network.user_money end)
+                                   as user_money_all"),
                                 "users.created_at as user_created_at",'users.is_login'
                                 )
                             ->groupBy('ad_users.id');
@@ -1148,9 +1153,19 @@ class UserpersonalController extends CommonController
         // 会员总金额
         $user_money = AdUsersModel::where('user_id',$user_id)->value('user_money');
         // 平台纯收益
-        $commission = OrderNetworkModel::where('ads_user_id',$user_id)->sum('commission');
+        $commission = OrderNetworkModel::where('ads_user_id',$user_id)
+                                        ->where(function($query){
+                                            $query->where('order_type', 10)
+                                                ->orWhere(function($query){
+                                                    $query->where('order_type', 13)
+                                                        ->where('deal_with_status',3);
+                                                });
+                                        })
+                                        ->sum('commission');
         // 总完成订单订单数
-        $success_order_num = OrderModel::where('ads_user_id',$user_id)->where('order_type',10)->count();
+        $success_order_num = OrderNetworkModel::where('ads_user_id',$user_id)
+                                    ->where('order_type',10)
+                                    ->count();
         // 订单明细
         $data_lists = getAdsUserOrderList($user_id);
         $media = PlateModel::where('pid',0)->get()->toArray();

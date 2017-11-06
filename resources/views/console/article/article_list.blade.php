@@ -88,7 +88,7 @@
                     },
                     searchPlaceholder: "过滤..."
                 },
-                "order" : [[2,"desc"]]
+                "order" : [[0,"desc"]]
             };
 			datatable =  $('#datatable1').DataTable(dt_option);
     })

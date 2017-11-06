@@ -40,7 +40,8 @@
                     <div class="item_f" @if($info['parent_order']['doc_type'] == 3) style="display:block;" @else style="display:none;" @endif><p><i class="LGntas"></i>订单内容：</p>
                         <div class="r">
                             <!--    在订单详情页中，”订单内容项“ 根据编辑方式不同所显示的界面不同，具体排版与会员下单页界页一样     -->
-                            <textarea class="txt_ft1" readonly="readonly">{{ $info['parent_order']['content'] }}</textarea>
+<!--						<textarea class="txt_ft1" readonly="readonly">{{ $info['parent_order']['content'] }}</textarea>		-->
+							<div class="txt_ft1">{!! $info['parent_order']['content'] !!}</div>
                         </div>
                     </div>
                 </div>

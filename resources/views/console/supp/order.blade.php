@@ -180,13 +180,16 @@
                                     {{-- <td>{{ $value['start_at'] }}</td> --}}
                                     <td>{{ $value['supp_money'] }}</td>
                                     <td class="link-pic">
-                                        @if($value['success_url'])
-                                            {{ $value['success_url'] }}
-                                        @else
-                                            @if ($value['success_pic'])
-                                                 <img src="{{ $value['success_pic'] }}">
-                                            @endif
-                                        @endif
+										<div class="success-urlpic">
+											@if( $value['success_url'] && $value['success_pic'] )
+												<a target="_blank" href="{{ $value['success_url'] }}"><img src="{{ $value['success_pic'] }}"></a>
+											@elseif( $value['success_url'] )
+												<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
+											@elseif( $value['success_pic'] )
+												<img src="{{ $value['success_pic'] }}">
+											@else
+											@endif
+										</div>
                                     </td>
                                     <td>{{ $status[$value['order_type']] }}</td>
                                     <td>
@@ -203,13 +206,16 @@
                                     {{-- <td>{{ $value['start_at'] }}</td> --}}
                                     <td>{{ $value['supp_money'] }}</td>
                                     <td class="link-pic">
-                                        @if($value['success_url'])
-                                            {{ $value['success_url'] }}
-                                        @else
-                                            @if ($value['success_pic'])
-                                                 <img src="{{ $value['success_pic'] }}">
-                                            @endif
-                                        @endif
+										<div class="success-urlpic">
+											@if( $value['success_url'] && $value['success_pic'] )
+												<a target="_blank" href="{{ $value['success_url'] }}"><img src="{{ $value['success_pic'] }}"></a>
+											@elseif( $value['success_url'] )
+												<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
+											@elseif( $value['success_pic'] )
+												<img src="{{ $value['success_pic'] }}">
+											@else
+											@endif
+										</div>
                                     </td>
                                     <td>{{ $status[$value['order_type']] }}</td>
                                     <td>
@@ -256,13 +262,16 @@
                                     <td>{{ $value['over_at'] }}</td>
                                     <td class="color1">￥{{ $value['supp_money'] }}</td>
                                     <td class="link-pic">
-                                        @if($value['success_url'])
-                                            {{ $value['success_url'] }}
-                                        @else
-                                            @if ($value['success_pic'])
-                                                 <img src="{{ $value['success_pic'] }}">
-                                            @endif
-                                        @endif
+										<div class="success-urlpic">
+											@if( $value['success_url'] && $value['success_pic'] )
+												<a target="_blank" href="{{ $value['success_url'] }}"><img src="{{ $value['success_pic'] }}"></a>
+											@elseif( $value['success_url'] )
+												<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
+											@elseif( $value['success_pic'] )
+												<img src="{{ $value['success_pic'] }}">
+											@else
+											@endif
+										</div>
                                     </td>
                                     <td>{{ $status[$value['order_type']] }}</td>
                                     <td>
@@ -350,7 +359,7 @@ $(function(){
                     },
                     searchPlaceholder: "过滤..."
                 },
-                "order" : [[3,"desc"]]
+                "order" : [[0,"desc"]]
             };
             datatable =  $('#datatable1').DataTable(dt_option);
 			// getOrderList();

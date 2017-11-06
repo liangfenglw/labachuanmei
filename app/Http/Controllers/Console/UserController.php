@@ -48,15 +48,15 @@ class UserController extends CommonController
                 $qa_money = OrderNetworkModel::where('order_type',10)->sum('user_money');
             }
             //可用部分：账户余额
-            $adsmoney = AdUsersModel::sum('user_money');
-            $suppmoney = SuppUsersModel::sum('user_money');
-            $all_user_money = get_demical($adsmoney + $suppmoney);
+            // $adsmoney = AdUsersModel::sum('user_money');
+            // $suppmoney = SuppUsersModel::sum('user_money');
+            // $all_user_money = get_demical($adsmoney + $suppmoney);
             $all_used_money = UserAccountLogModel::where('account_type',3)->sum('user_money');
 
             //平台订单
             $order_count = OrderNetworkModel::count();
             // 平台用户
-            $ads_user_count = AdUsersModel::count();
+            $ads_user_count = AdUsersModel::where('level_id','>','1')->count();
             // 平台资源
             $supp_user_count = SuppUsersModel::count();
             // 平台资源
@@ -72,12 +72,24 @@ class UserController extends CommonController
                             ->get()
                             ->toArray();
             // 盈利状况
-            $ads_user_money = AdUsersModel::sum('user_money');
+            $ads_user_money = AdUsersModel::sum('user_money'); // 会员总金额
+            $platform_money = OrderNetworkModel::where(function($query){
+                $query->where('order_type', 10)
+                        ->orWhere(function($query){
+                            $query->where('order_type', 13)
+                                    ->where('deal_with_status', 3);
+                        });
+                })->sum('platform');
+
             $supp_user_money = SuppUsersModel::sum('user_money');
             $pingtai_user_money = OrderNetworkModel::sum('platform');
-            $ads_users_list = AdUsersModel::where("level_id",2)->orderBy('ad_users.id','desc')
+            $ads_users_list = AdUsersModel::where("level_id",2)
+                                ->orderBy('ad_users.id','desc')
                                 ->leftJoin('users','users.id','=','ad_users.user_id')
-                                ->select("ad_users.user_id",'users.name','users.head_pic','ad_users.nickname')
+                                ->select('ad_users.user_id',
+                                         'users.name',
+                                         'users.head_pic',
+                                         'ad_users.nickname')
                                 ->take(8)
                                 ->get()
                                 ->toArray();
@@ -142,9 +154,10 @@ class UserController extends CommonController
                  'ads_users_list' => $ads_users_list,
                  'supp_users_list' => $supp_users_list,
                  'phone_orders' => $phone_orders,
-                 'all_user_money' => $all_user_money,
+                 // 'all_user_money' => $all_user_money,
                  'all_used_money' => $all_used_money,
                  'phone_order_count' => $phone_order_count,
+                 'platform_money' => $platform_money
                  ]);
     }
 

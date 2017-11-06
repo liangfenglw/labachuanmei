@@ -210,13 +210,16 @@
 									<td>{{ $value['self_user']['media_name'] }}</td>
 		                            <td>{{ $status[$value['order_type']] }}</td>
 		                            <td class="link-pic">
-		                            	@if($value['success_url'])
-	                                        {{ $value['success_url'] }}
-	                                    @else
-	                                        @if ($value['success_pic'])
-	                                             <img src="{{ $value['success_pic'] }}">
-	                                        @endif
-	                                    @endif
+										<div class="success-urlpic">
+											@if( $value['success_url'] && $value['success_pic'] )
+												<a target="_blank" href="{{ $value['success_url'] }}"><img src="{{ $value['success_pic'] }}"></a>
+											@elseif( $value['success_url'] )
+												<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
+											@elseif( $value['success_pic'] )
+												<img src="{{ $value['success_pic'] }}">
+											@else
+											@endif
+										</div>
 		                            </td>
 		                            <td><a class="color2" href="/order/order_detail/{{ $value['id'] }}">查看</a></td>
 		                        </tr>
@@ -228,13 +231,16 @@
 		                            <td class="color1">￥{{ $value['user_money'] }}</td>
 										<td>{{ $value['self_user']['media_name'] }}</td>
 		                            <td class="link-pic">
-		                            	@if($value['success_url'])
-	                                        {{ $value['success_url'] }}
-	                                    @else
-	                                        @if ($value['success_pic'])
-	                                             <img src="{{ $value['success_pic'] }}">
-	                                        @endif
-	                                    @endif
+										<div class="success-urlpic">
+											@if( $value['success_url'] && $value['success_pic'] )
+												<a target="_blank" href="{{ $value['success_url'] }}"><img src="{{ $value['success_pic'] }}"></a>
+											@elseif( $value['success_url'] )
+												<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
+											@elseif( $value['success_pic'] )
+												<img src="{{ $value['success_pic'] }}">
+											@else
+											@endif
+										</div>
 	                            	</td>
 		                            <td>{{ $status[$value['order_type']] }}</td>
 		                            <td><a class="color2" href="/order/order_detail/{{ $value['id'] }}">查看</a></td>
@@ -247,13 +253,16 @@
 		                            <td class="color1">￥{{ $value['user_money'] }}</td>
 										<td>{{ $value['self_user']['media_name'] }}</td>
 		                            <td class="link-pic">
-		                            	@if($value['success_url'])
-	                                        {{ $value['success_url'] }}
-	                                    @else
-	                                        @if ($value['success_pic'])
-	                                             <img src="{{ $value['success_pic'] }}">
-	                                        @endif
-	                                    @endif
+										<div class="success-urlpic">
+											@if( $value['success_url'] && $value['success_pic'] )
+												<a target="_blank" href="{{ $value['success_url'] }}"><img src="{{ $value['success_pic'] }}"></a>
+											@elseif( $value['success_url'] )
+												<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
+											@elseif( $value['success_pic'] )
+												<img src="{{ $value['success_pic'] }}">
+											@else
+											@endif
+										</div>
 	                            	</td>
 		                            <td>
 		                            	@if($value['order_type'] == 13 && $value['deal_with_status'] == 3)
@@ -269,13 +278,16 @@
 									<td>{{ $value['id'] }}</td>
 		                            <td>{{ $value['type_name'] }}</td>
 		                            <td class="link-pic">
-		                            	@if($value['success_url'])
-	                                        {{ $value['success_url'] }}
-	                                    @else
-	                                        @if ($value['success_pic'])
-	                                             <img src="{{ $value['success_pic'] }}">
-	                                        @endif
-	                                    @endif
+										<div class="success-urlpic">
+											@if( $value['success_url'] && $value['success_pic'] )
+												<a target="_blank" href="{{ $value['success_url'] }}"><img src="{{ $value['success_pic'] }}"></a>
+											@elseif( $value['success_url'] )
+												<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
+											@elseif( $value['success_pic'] )
+												<img src="{{ $value['success_pic'] }}">
+											@else
+											@endif
+										</div>
 	                            	</td>
 		                            <td>{{ $status[$value['order_type']] }}</td>
 		                            <td><a class="color2" href="/order/order_detail/{{ $value['id'] }}">查看</a></td>
@@ -291,13 +303,16 @@
 
 										<td>{{ $value['self_user']['media_name'] }}</td>
 		                            <td class="link-pic">
-		                            	@if($value['success_url'])
-	                                        {{ $value['success_url'] }}
-	                                    @else
-	                                        @if ($value['success_pic'])
-	                                             <img src="{{ $value['success_pic'] }}">
-	                                        @endif
-	                                    @endif
+										<div class="success-urlpic">
+											@if( $value['success_url'] && $value['success_pic'] )
+												<a target="_blank" href="{{ $value['success_url'] }}"><img src="{{ $value['success_pic'] }}"></a>
+											@elseif( $value['success_url'] )
+												<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
+											@elseif( $value['success_pic'] )
+												<img src="{{ $value['success_pic'] }}">
+											@else
+											@endif
+										</div>
 	                            	</td>
 		                            <td>
 		                            	@if($value['order_type'] == 13 && $value['deal_with_status'] == 3)
@@ -319,13 +334,16 @@
 
 										<td>{{ $value['self_user']['media_name'] }}</td>
 		                            <td class="link-pic">
-		                            	@if($value['success_url'])
-	                                        {{ $value['success_url'] }}
-	                                    @else
-	                                        @if ($value['success_pic'])
-	                                             <img src="{{ $value['success_pic'] }}">
-	                                        @endif
-	                                    @endif
+										<div class="success-urlpic">
+											@if( $value['success_url'] && $value['success_pic'] )
+												<a target="_blank" href="{{ $value['success_url'] }}"><img src="{{ $value['success_pic'] }}"></a>
+											@elseif( $value['success_url'] )
+												<a target="_blank" href="{{ $value['success_url'] }}">链接地址</a>
+											@elseif( $value['success_pic'] )
+												<img src="{{ $value['success_pic'] }}">
+											@else
+											@endif
+										</div>
 	                            	</td>
 		                            <td>{{ $status[$value['order_type']] }}</td>
 		                            <td><a class="color2" href="/order/order_detail/{{ $value['id'] }}">查看</a></td>
@@ -436,7 +454,7 @@ $(function(){
 					},
 					searchPlaceholder: "过滤..."
 				},
-				"order" : [[3,"desc"]]
+				"order" : [[0,"desc"]]
 			};
 			datatable =  $('#datatable1').DataTable(dt_option);
                 // getOrderList();

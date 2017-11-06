@@ -325,9 +325,22 @@ class CartController extends CommonController
             if ($aduser['level_id'] > 1) { // 会员
                 $price_type = 2; // 会员价
             }
+            $activity = ActivityModel::where('start','<=',date("Y-m-d H:i:s",time()))
+                            ->where('over','>=',date("Y-m-d H:i:s",time()))
+                            ->select('vip_rate','plate_rate','id')
+                            ->first();
+            $user_ids = [];
+            if (!empty($activity)) {
+                $user_ids = ActivityVsUserModel::where('activity_id',$activity->id)
+                                ->pluck('user_id')
+                                ->toArray();  
+            }
+             
             $CartModel = new CartModel();
+
             foreach ($order_sn_arr_buf as $key => $value) {
-                $CartModel->where('order_sn',$value['order_sn'])->update(['status'=>1,'is_delete'=>2]);
+                $CartModel->where('order_sn',$value['order_sn'])
+                            ->update(['status'=>1,'is_delete'=>2]);
                 // 流水表
                 $accountlog_data[] = [
                         'user_id' => $user['user_id'],
@@ -381,8 +394,10 @@ class CartController extends CommonController
                     if ($uids['status_code'] == 200) {
                         $supp_user_id = $uids['data']['0'];
                         $proxy_price = SuppUsersModel::where('user_id', $supp_user_id)
-                                            ->first()->proxy_price;
-                        $platform = $self_user_info['proxy_price'] - $proxy_price - $commission;
+                                            ->first()
+                                            ->proxy_price;
+                        $platform = $v['user_money'] - $proxy_price - $commission;
+                        
                     }
                     $OrderNetworkModel = new OrderNetworkModel;
                     $OrderNetworkModel->order_sn = $v['order_sn'];
@@ -401,6 +416,9 @@ class CartController extends CommonController
                     $OrderNetworkModel->plateform_price = $plate_price;
                     $OrderNetworkModel->vip_price = $vip_price;
                     $OrderNetworkModel->commission = $commission; //分成
+                    if (empty($user_ids) && in_array($v['supp_user_id'], $user_ids)) {
+                        $OrderNetworkModel->activity_id = $activity->id;
+                    }
                     $OrderNetworkModel->save();
                     if ($supp_user_id > 0) {
                         SendOrderNotic($OrderNetworkModel->id, $supp_user_id, '您有新的订单,【'.$value['title'].'】','用户下单');

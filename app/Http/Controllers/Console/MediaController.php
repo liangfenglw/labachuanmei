@@ -98,8 +98,7 @@ class MediaController extends CommonController
                         ->where('over','>=',date("Y-m-d H:i:s",time()))
                         ->select('vip_rate','plate_rate','id')
                         ->first();
-        
-                        
+
         if ($user['level_id'] >= 2) {
             $lists = SuppUsersSelfModel::where('plate_id',$id)
                             ->where('is_state',1)
