@@ -51,7 +51,7 @@
                     <li @if(Request::input('type') == 10) class="cur" @endif><a href="/console/manager/order/35?type=10">已完成</a></li>
                     <li  @if(Request::input('type') == 4) class="cur" @endif><a href="/console/manager/order/35?type=4">正执行</a></li>
                     <li @if(Request::input('type') == 3) class="cur" @endif><a href="/console/manager/order/35?type=3">已流单</a></li>
-                    <li @if(Request::input('type') == 2) class="cur" @endif><a href="/console/manager/order/35?type=2">已拒单</a></li>
+<!--				<li @if(Request::input('type') == 2) class="cur" @endif><a href="/console/manager/order/35?type=2">已拒单</a></li>		-->
                     <li @if(Request::input('type') == 12) class="cur" @endif><a href="/console/manager/order/35?type=12">退款订单</a></li>
                     <li @if(Request::input('type') == 9) class="cur" @endif><a href="/console/manager/order/35?type=9">申诉订单</a></li>
                 </ul>

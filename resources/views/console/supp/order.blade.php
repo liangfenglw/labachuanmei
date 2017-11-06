@@ -289,7 +289,7 @@
                             <li class="cur">{{ $order_statistics['all_count'] or 0}}个/{{ $order_statistics['all_money'] or 0 }}元 <br/>总订单数</li>
                             <li>{{ $order_statistics['success_count'] }}个/{{ $order_statistics['success_money'] or 0 }}元 <br/>已完成</li>
                             <li>{{ $order_statistics['flow_order_count'] }}个/{{ $order_statistics['flow_order_money'] or 0 }}元 <br/>流单数</li>
-                            <li>{{ $order_statistics['give_up_count'] }}个/{{ $order_statistics['give_up_money'] or 0 }}元 <br/>取消数</li>
+<!--						<li>{{ $order_statistics['give_up_count'] }}个/{{ $order_statistics['give_up_money'] or 0 }}元 <br/>取消数</li>		-->
                             <li>{{ $order_statistics['refuse_order'] }}个/{{ $order_statistics['refuse_money'] or 0 }}元 <br/>拒单数</li>
                         </ul>
                 </div>

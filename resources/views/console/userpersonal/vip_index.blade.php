@@ -57,7 +57,7 @@
                     <div class="colcntimg"><img src="/console/images/GL16nt.png" width="120%"/></div>
                 </li>
 				<li class="colcnt" style="background:#4fd0b1; margin-left:2%;">
-                    <span><a href="/order/order_list">代理会员总单<p>{{ $child_order_num }}</p></a></span>
+                    <span><a>代理会员总单<p>{{ $child_order_num }}</p></a></span>
                     <div class="colcntimg"><img src="/console/images/GL16.png" /></div>
 				</li>
 			</ul>
@@ -224,7 +224,7 @@ $(function(){
             },
             "searchPlaceholder": "过滤..."
         },
-        "order" : [[0,"desc"]]
+        "order" : [[3,"desc"]]
     };
     datatable =  $('#datatable1').DataTable(dt_option);
 

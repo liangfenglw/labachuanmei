@@ -1112,6 +1112,9 @@ html .content.fold{	margin-left:70px;	}
 .info_am_r ul li.colcnt1,
 .info_am_r ul li.colcnt2,
 .info_am_r ul li.colcnt3{	apadding:4%;		}
+.info_am_r ul li.colcnt1_nt .colcntimg,
+.info_am_r ul li.colcnt2_nt .colcntimg,
+.info_am_r ul li.colcnt3_nt .colcntimg,
 .info_am_r ul li.colcnt1 .colcntimg,
 .info_am_r ul li.colcnt2 .colcntimg,
 .info_am_r ul li.colcnt3 .colcntimg{	padding-bottom:40%;		}
@@ -1722,6 +1725,8 @@ body #error_show a.more{	float:none;	width:220px;/*	background:#EEEEEE;*/color:#
 	border-radius:30px;		margin:0 auto;	display:block;	}
 
 
+
+body div.txt_ft1{	background:#EBEBE4;	color:#999;	}
 body .txt_ft1 h1,
 body .txt_ft1 h2,
 body .txt_ft1 h3,

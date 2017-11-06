@@ -118,7 +118,7 @@
                     	@endforeach
                     </ul>
 				</div>
-				<a href="/user/supper_ad_user_list" class="more_1">更多 ></a>
+				<a href="/user/ad_user_list" class="more_1">更多 ></a>
              </div>
              
              <div class="yonghu_list" style="margin-top:25px!important;	margin-top:25px;">
