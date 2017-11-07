@@ -70,7 +70,7 @@
                         <div class="r">
                             <!--    在订单详情页中，”订单内容项“ 根据编辑方式不同所显示的界面不同，具体排版与会员下单页界页一样 -->
                            
-                            <div class="txt_ft1">{!! $info['parent_order']['content'] !!}</div>
+                            <div class="dnts">{!! $info['parent_order']['content'] !!}</div>
                         </div>
                     </div>
 
@@ -111,7 +111,7 @@
                         <div class="r">
                             <!--    在订单详情页中，”订单内容项“ 根据编辑方式不同所显示的界面不同，具体排版与会员下单页界页一样 -->
                             <!-- <textarea class="txt_ft1" disabled>{{$info['parent_order']['content']}}</textarea> -->
-                            <div class="txt_ft1">{!! $info['parent_order']['content'] !!}</div>
+                            <div class="dnts">{!! $info['parent_order']['content'] !!}</div>
                         </div>
                     </div>
                     @endif

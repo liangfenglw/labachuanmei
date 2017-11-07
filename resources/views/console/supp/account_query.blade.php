@@ -75,10 +75,9 @@
                             <tr>
                                 <th>日期</th>
                                 <th>订单号</th>
-                                <th>稿件类型</th>
-                                <th>稿件名称</th>
+                                <th>提现方式</th>
+                                <th>提现账号</th>
                                 <th>状态</th>
-                                <th>完成链接/截图</th>
                                 <th>金额</th>
                             </tr>
                         </thead>
@@ -87,9 +86,9 @@
                                 <tr>
                                     <td>{{ $value['created_at'] }}</td>
                                     <td>{{ $value['order_sn'] }}</td>
-                                    <td>{{ getPayType([$value['pay_type']]) }}</td>
+                                    <td>{{ $value['pay_type'] }}</td>
                                     <td>{{ $value['pay_user'] }}</td>
-                                    <td>{{ getCashStatus([$value['status']]) }}</td>
+                                    <td>{{ suppWithdrawStatus($value['status']) }}</td>
                                     <td><span class="color_red2">{{ $value['user_money'] }}元</span>
                                     </td>
                                 </tr>

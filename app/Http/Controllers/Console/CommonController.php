@@ -78,6 +78,9 @@ class CommonController extends Controller
         }
         $upload_file = [];
         foreach ($files as $key => $file) {
+            if (!$file) {
+                return ['status_code' => 201, 'msg' => '不存在文件'];
+            }
             if (!$file->isValid()) {
                 return ['status_code' => 201, 'msg' => '不存在文件'];
             }

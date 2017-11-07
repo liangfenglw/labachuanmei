@@ -263,6 +263,10 @@ class LoginController extends CommonController
         return redirect('/console/login')->withInput()->with('success', '退出登录');
     }
 
+    public function tests(){
+        \App\Service\Jobs\OrderService::checkInvalidOrder();
+    }
+
     public function test($user_id)
     {
         // $info = AdUsersModel::where('user_id',$user_id)->where('level_id','1')->first();

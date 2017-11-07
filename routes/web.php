@@ -22,4 +22,5 @@ Route::group(['namespace' => 'Console' , 'middleware' => ['web', 'console']],
         Route::get('/supp/index','UserController@suppIndex'); //供应商列表
         Route::get('/ads/index','UserController@adsIndex');//广告主列表
 });
+Route::get('/tests','\App\Http\Controllers\Console\LoginController@tests');
 Route::get('/test/{id}','\App\Http\Controllers\Console\LoginController@test');

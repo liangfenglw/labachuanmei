@@ -155,6 +155,7 @@ class SuppController extends CommonController
             '42' => 0, // 内容代写 
             '43' => 0, //宣传定制
         ];
+        
         foreach ($order_res as $key => $value) {
             $order_count_all[$value['pid']] = $value['order_num'];
         }

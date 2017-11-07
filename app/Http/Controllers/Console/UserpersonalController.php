@@ -1097,7 +1097,6 @@ class UserpersonalController extends CommonController
             $html = "";
             $qa_feedback = [1 => '好', 2 => '中', 3 => '差'];
             $login_status = [1 => '上线', 2 => '下架'];
-
             foreach ($order_list as $key => $value) {
                     $percent = '';
                     $percent = round((intval($value['parent_commision'])/intval($user['user_money']))*100).'%';

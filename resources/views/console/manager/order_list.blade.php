@@ -333,6 +333,34 @@
                                     </td>
                                     <td><a class="color2" href="/console/manager/order/info/{{ $value['id'] }}">查看</a></td></tr>
                             @endforeach
+                        @elseif(Request::input('type') == 3)
+                           @foreach($child_lists as $key => $value)
+                                <tr>
+                                    <td>{{ $value['id'] }}</td>
+                                    <td>{{ $value['title'] }}</td>
+                                    <td>{{ $value['type_name'] }}</td>
+                                    <td>{{ $value['start_at'] }}</td>
+                                    <td>{{ $value['over_at'] }}</td>
+                                    <td class="color1">{{ $value['user_money'] }}</td>
+                                    <td>{{ $value['username'] }}</td>
+                                    <td>{{ $value['supp_user']['parent_user']['name'] or '' }}</td>
+                                    <td>{{ $value['supp_user']['media_name'] }}</td>
+                                   
+                                    <td class="color1">
+                                    {{ getOrderType($value['order_type']) }}
+                                    @if($value['deal_with_status'] == 2)
+                                        ，重做
+                                    @elseif($value['deal_with_status'] == 1)
+                                        ，此订单退款处理
+                                    @elseif($value['deal_with_status'] == 3) 
+                                        ，不同意申诉，结款
+                                    @endif
+                                    @if($value['media_type'] == 12)
+                                        重指派
+                                    @endif
+                                    </td>
+                                    <td><a class="color2" href="/console/manager/order/info/{{ $value['id'] }}">查看</a></td></tr>
+                            @endforeach 
                         @else
                             @foreach($child_lists as $key => $value)
                                 <tr>

@@ -508,6 +508,9 @@ class ManagerController extends CommonController
             return back()->with('status', '该媒体不在线或未审核，不能指派');
         }
         $order_info = OrderNetworkModel::with('selfUser', 'ad_user')->where('id', $order_id)->first();
+        if ($order_info['order_type'] == 3) {
+            return back()->with('status', '这个订单已流单');
+        }
         if (in_array($order_info['media_type'], [13])) { // 13是已指派标记
             return back()->with('status', '这个订单已指派过了');
         }

@@ -88,7 +88,7 @@
             <td class="color1">￥{{ $val['proxy_price'] }}</td>
             <td>{{ getSuppUserType($val['is_state']) }}</td>
             <td><a class="color2" href="/usermanager/suppResourceInfo?id={{ $val['user_id'] }}">查看</a> &nbsp;  &nbsp; 
-            @if($order_info['media_type'] != 13)
+            @if($order_info['media_type'] != 13 && $order_info['order_type'] != 10 && $order_info['order_type'] != 3)
             <label class="color2">
                 <a class="color1" href="/console/managerOrder/setOrderMedia?order_id={{ Request::input('order_id') }}&user_id={{ $val['user_id'] }}" data_id="{{ $val['user_id'] }}"/> 指派订单</a>
             </label>

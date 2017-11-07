@@ -97,16 +97,18 @@
                     @if(in_array($info['check_status'], [2]))
                         <div class="item_f"><p><i class="LGntas"></i>状态：</p>
                             <div class="r radio_w">
-                                <label class="rd1 @if($info['check_status'] == 4)  css_cur @endif"><input type="radio" name="check_status" class="radio_f" value="4" />通过</label>
-                                <label class="rd1 @if($info['check_status'] == 2)  css_cur @endif"><input type="radio" name="check_status" class="radio_f" value="2" />审核</label>
-                                <label class="rd1 @if($info['check_status'] == 3)  css_cur @endif"><input type="radio" name="check_status" class="radio_f" value="3" />不通过</label>
+                                <label class="rd1 @if($info['check_status'] == 4)  css_cur @endif"><input type="radio" name="check_status" @if($info['check_status'] == 4)  checked="checked" @endif class="radio_f" value="4" />通过</label>
+
+                                <label class="rd1 @if($info['check_status'] == 2)  css_cur @endif"><input type="radio" name="check_status" class="radio_f" value="2" @if($info['check_status'] == 2)  checked="checked" @endif />审核</label>
+
+                                <label class="rd1 @if($info['check_status'] == 3)  css_cur @endif"><input type="radio" name="check_status" @if($info['check_status'] == 3)  checked="checked" @endif class="radio_f" value="3" />不通过</label>
                             </div>
                         </div>
                     @else
                         <div class="item_f"><p><i class="LGntas"></i>状态：</p>
                             <div class="r radio_w">
-                                <label class="rd1 @if($info['user']['is_login'] == 1)  css_cur @endif"><input  type="radio"  name="is_login" class="radio_f" value="1" />启用</label>
-                                <label class="rd1 @if($info['user']['is_login'] == 2)  css_cur @endif"><input type="radio"  name="is_login" class="radio_f" value="2" />审核</label>
+                                <label class="rd1 @if($info['user']['is_login'] == 1)  css_cur @endif"><input  type="radio" @if($info['user']['is_login'] == 1)  checked="checked" @endif  name="is_login" class="radio_f" value="1" />启用</label>
+                                <label class="rd1 @if($info['user']['is_login'] == 2)  css_cur @endif"><input type="radio" @if($info['user']['is_login'] == 2)  checked="checked" @endif  name="is_login" class="radio_f" value="2" />审核</label>
                                 
                             </div>
                         </div>

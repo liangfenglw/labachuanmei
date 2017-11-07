@@ -391,25 +391,48 @@ function makePaySn($member_id) {
  * @return [type]            [description]
  */
 function getOrderType($orderType) {
-    $status = [ 0 => '全部',
-       1 => '预约', 
-       2 => '拒绝', 
-       3 => '流单', 
-       4 => '正执行', 
-       5 => '供应商完成', 
-       6 => '供应商反馈', 
-       7 => '广告主反馈', 
-       8 => '广告主质量反馈', 
-       9 => '申诉', 
-       10 => '确认完成',
-       // 100 => '未匹配',
-       1000 => '退款',
-       11 => '未匹配',
-       12 => '申请退款',
-       13 => '确认完成',
-       14 => '供应商不同意退款',
-       15 => '供应商同意退款',
-    ];
+    if (Auth::user()->user_type == 2) {
+        $status = [ 0 => '全部',
+           1 => '预约', 
+           2 => '拒绝', 
+           3 => '流单', 
+           4 => '正执行', 
+           5 => '供应商完成', 
+           6 => '供应商反馈', 
+           7 => '广告主反馈', 
+           8 => '广告主质量反馈', 
+           9 => '申诉', 
+           10 => '确认完成',
+           // 100 => '未匹配',
+           1000 => '退款',
+           11 => '未匹配',
+           12 => '申请退款',
+           13 => '完成',
+           14 => '申请退款',
+           15 => '申请退款',
+        ];
+    } else {
+        $status = [ 0 => '全部',
+           1 => '预约', 
+           2 => '拒绝', 
+           3 => '流单', 
+           4 => '正执行', 
+           5 => '供应商完成', 
+           6 => '供应商反馈', 
+           7 => '广告主反馈', 
+           8 => '广告主质量反馈', 
+           9 => '申诉', 
+           10 => '确认完成',
+           // 100 => '未匹配',
+           1000 => '退款',
+           11 => '未匹配',
+           12 => '申请退款',
+           13 => '确认完成',
+           14 => '供应商不同意退款',
+           15 => '供应商同意退款',
+        ];
+    }
+    
     return $status[$orderType];
 }
 
@@ -568,17 +591,17 @@ function getUserOfAttrValueId($plate_id,$attr_value_id,$user_ids = [],$is_state=
 {
     // \DB::enableQueryLog();
     $SuppVsAttrModel = new SuppVsAttrModel();
-    $SuppVsAttrModel = $SuppVsAttrModel->where('supp_users.plate_id',$plate_id);
-    $SuppVsAttrModel = $SuppVsAttrModel->where('supp_users.is_state',$is_state);
-    $SuppVsAttrModel = $SuppVsAttrModel->leftjoin('supp_users','supp_users.user_id','supp_vs_attr.user_id');
+    $SuppVsAttrModel = $SuppVsAttrModel->where('supp_users_self.plate_id',$plate_id);
+    $SuppVsAttrModel = $SuppVsAttrModel->where('supp_users_self.is_state',$is_state);
+    $SuppVsAttrModel = $SuppVsAttrModel->leftjoin('supp_users_self','supp_users_self.user_id','supp_vs_attr.user_id');
 
     if ($user_ids) {
-        $SuppVsAttrModel = $SuppVsAttrModel->whereIn('supp_users.user_id',$user_ids);
+        $SuppVsAttrModel = $SuppVsAttrModel->whereIn('supp_users_self.user_id',$user_ids);
     }
     $SuppVsAttrModel->whereIn('supp_vs_attr.attr_value_id',$attr_value_id);
 
     $user_ids = $SuppVsAttrModel->distinct()
-                                 ->pluck('supp_users.user_id')
+                                 ->pluck('supp_users_self.user_id')
                                  ->toArray();
      // dd(\DB::getQueryLog());
     return $user_ids;
@@ -589,28 +612,28 @@ function select_price($plate_id,$user_ids=[],$offer,$rebate_percent,$last_user =
 {
     // \DB::enableQueryLog();
     $SuppVsAttrModel = new SuppVsAttrModel();
-    $SuppVsAttrModel = $SuppVsAttrModel->where('supp_users.plate_id',$plate_id);
-    $SuppVsAttrModel = $SuppVsAttrModel->where('supp_users.is_state',$is_state);
-    $SuppVsAttrModel = $SuppVsAttrModel->leftjoin('supp_users','supp_users.user_id','supp_vs_attr.user_id');
+    $SuppVsAttrModel = $SuppVsAttrModel->where('supp_users_self.plate_id',$plate_id);
+    $SuppVsAttrModel = $SuppVsAttrModel->where('supp_users_self.is_state',$is_state);
+    $SuppVsAttrModel = $SuppVsAttrModel->leftjoin('supp_users_self','supp_users_self.user_id','supp_vs_attr.user_id');
     if (!$last_user) {
-        $SuppVsAttrModel = $SuppVsAttrModel->whereIn('supp_users.user_id',$user_ids);
+        $SuppVsAttrModel = $SuppVsAttrModel->whereIn('supp_users_self.user_id',$user_ids);
     }
      $offer = PlateAttrValueModel::where('id',$offer)
                                     ->value('attr_value');
 
     if (strpos($offer, '以上')) {
-        $SuppVsAttrModel = $SuppVsAttrModel->where(DB::raw("supp_users.proxy_price * $rebate_percent"),'>',preg_replace('/\D/s', '', $offer));
+        $SuppVsAttrModel = $SuppVsAttrModel->where(DB::raw("supp_users_self.proxy_price * $rebate_percent"),'>',preg_replace('/\D/s', '', $offer));
         
     }else if (strpos($offer, '以下')) {
-        $SuppVsAttrModel = $SuppVsAttrModel->where(DB::raw("supp_users.proxy_price * $rebate_percent"),'<',preg_replace('/\D/s', '', $offer));
+        $SuppVsAttrModel = $SuppVsAttrModel->where(DB::raw("supp_users_self.proxy_price * $rebate_percent"),'<',preg_replace('/\D/s', '', $offer));
     }else{
         $offer = rtrim($offer, "元");
         $offer = explode("-", $offer);
 
-        $SuppVsAttrModel = $SuppVsAttrModel->whereBetween(DB::raw("supp_users.proxy_price * $rebate_percent"),[$offer[0],$offer[1]]);
+        $SuppVsAttrModel = $SuppVsAttrModel->whereBetween(DB::raw("supp_users_self.proxy_price * $rebate_percent"),[$offer[0],$offer[1]]);
     }
 
-    $user_ids = $SuppVsAttrModel->distinct()->pluck('supp_users.user_id')
+    $user_ids = $SuppVsAttrModel->distinct()->pluck('supp_users_self.user_id')
                                  ->toArray();
                                  // echo 88;
                                  // echo 888;
@@ -860,11 +883,21 @@ function getAdsUserOrderList($user_id, $where = [])
                          'order_network.commission',
                          'order_network.order_type',
                          'order_network.success_url',
-                         'order_network.success_pic')
+                         'order_network.success_pic',
+                         'order_network.supp_status',
+                         'deal_with_status')
                 ->get()
                 ->toArray();
     $data = [];
     foreach ($lists as $key => $value) {
+        $tip = "";
+        if ($value['order_type'] == 13) {
+            if ($value['deal_with_status'] == 3) {
+                $tip = ',不同意退款';
+            } elseif ($value['deal_with_status'] == 1) {
+                $tip = ',退款成功';
+            }
+        }
         $data[] = [
             'order_id' => $value['id'],
             'title' => $value['title'],
@@ -873,7 +906,7 @@ function getAdsUserOrderList($user_id, $where = [])
             'over_at' => $value['over_at'],
             'user_money' => $value['user_money'],
             'commission' => $value['commission'],
-            'order_type' => getOrderType($value['order_type']),
+            'order_type' => getOrderType($value['order_type']).$tip,
             'success_pic' => $value['success_pic'],
             'success_url' => $value['success_url'],
         ];
@@ -906,6 +939,11 @@ function getSuppUserType($type) {
 
 function getCashStatus($type) {
     $withdraw_status = [1 => '已到账', 0 => '未到账', 2 => '失败'];
+    return $withdraw_status[$type];
+}
+
+function suppWithdrawStatus($type) {
+    $withdraw_status = [1 => '成功', 0 => '提现中', 2 => '失败'];
     return $withdraw_status[$type];
 }
 
