@@ -83,8 +83,11 @@
                             <p><i class="LGntas"></i>文件：</p>
                             <div class="r">
 						
+								<input type="file" name="file" class="" style="padding:7px 2px 6px 2px;" />
+<!--
 								<input type="text" name="name2_2" id="name2_2" class="txt6" readonly="">
 								<button type="button" name="upload_file" id="upload_file" class="txt7" style=" width:80px;">导入</button><br>
+-->
 								
                             </div>
                         </div>

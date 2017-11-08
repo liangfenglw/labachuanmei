@@ -4,9 +4,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>头部搜索结果 - 亚媒社</title>
     @include('console.share.cssjs')
-	<style>
-		body div.txt_twoline{	awhite-space:nowrap;	text-overflow:ellipsis;	apadding:6px 5px;	max-width:500px;	overflow:hidden;	max-height:3em;	line-height:1.5em;	display:inline-block;	}
-	</style>
 </head>
 <body class="fold">
 <!--    class="fold" 左导航收缩  -->
@@ -32,11 +29,11 @@
     <thead>
         <tr>
             <th style="border-radius:12px 0 0 0;">序号</th>
-            <th>媒体名称</th>
-            <th>媒体分类</th>
+            <th>资源名称</th>
+            <th>资源类型</th>
             <th>入口示意图</th>
-            <th>媒体优势</th>
-            <th>价格</th>
+            <th>资源简介</th>
+            <th>金额</th>
             <th style="border-radius:0 12px 0 0;" class="nosort">操作</th>
         </tr>
     </thead>
@@ -48,7 +45,7 @@
                 <td>{{ $val['plate_name'] }}</td>
                 <td><img src="{{ $val['index_logo'] }}"></td>
                 <td>
-					<div class="txt_twoline">{{ $val['breif'] }}</div>
+					<div style="text-overflow:ellipsis;padding:6px 5px;white-space:nowrap;max-width:500px;overflow:hidden;height:1.5em;display:inline-block;">{{ $val['breif'] }}</div>
 				</td>
                 <td class="color1">￥{{ $val['proxy_price'] * $zhekou }}</td>
                 <td><a class="color2" href="/media/sale_media/{{ $val['plate_id'] }}?user_id={{ $val['user_id'] }}">任务发布</a></td>
