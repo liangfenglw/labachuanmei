@@ -255,74 +255,76 @@
     }
 
     var datatable;
+	var dt_option = {
+		"searching" : false,        //是否允许Datatables开启本地搜索
+		"paging" : true,            //是否开启本地分页
+		"pageLength" : 5,           //每页显示记录数
+		"lengthChange" : false,     //是否允许用户改变表格每页显示的记录数 
+		"lengthMenu": [ 5, 10, 100 ],       //用户可选择的 每页显示记录数
+		"info" : true,
+		"columnDefs" : [{
+			"targets": 'nosort',
+			"orderable": false
+		}],
+		"pagingType": "simple_numbers",
+		"language": {
+			"search": "搜索",
+			sZeroRecords : "没有查询到数据",
+			"info": "显示第 _PAGE_/_PAGES_ 页，共_TOTAL_条",
+			"infoFiltered": "(筛选自_MAX_条数据)",
+			"infoEmpty": "没有符合条件的数据",
+			oPaginate: {    
+				"sFirst" : "首页",
+				"sPrevious" : "上一页",
+				"sNext" : "下一页",
+				"sLast" : "尾页"    
+			},
+			searchPlaceholder: "过滤..."
+		},
+		"order" : [[0,"desc"]]
+	};
+	
     $(function () {
-            get_ajax_list();
-            var dt_option = {
-                "searching" : false,        //是否允许Datatables开启本地搜索
-                "paging" : true,            //是否开启本地分页
-                "pageLength" : 5,           //每页显示记录数
-                "lengthChange" : false,     //是否允许用户改变表格每页显示的记录数 
-                "lengthMenu": [ 5, 10, 100 ],       //用户可选择的 每页显示记录数
-                "info" : true,
-                "columnDefs" : [{
-                    "targets": 'nosort',
-                    "orderable": false
-                }],
-                "pagingType": "simple_numbers",
-                "language": {
-                    "search": "搜索",
-                    sZeroRecords : "没有查询到数据",
-                    "info": "显示第 _PAGE_/_PAGES_ 页，共_TOTAL_条",
-                    "infoFiltered": "(筛选自_MAX_条数据)",
-                    "infoEmpty": "没有符合条件的数据",
-                    oPaginate: {    
-                        "sFirst" : "首页",
-                        "sPrevious" : "上一页",
-                        "sNext" : "下一页",
-                        "sLast" : "尾页"    
-                    },
-                    searchPlaceholder: "过滤..."
-                },
-                "order" : [[0,"desc"]]
-            };
-            datatable =  $('#datatable1').DataTable(dt_option);
-            
+		get_ajax_list();
+		datatable =  $('#datatable1').DataTable(dt_option);
 //          var _token = $('input[name="_token"]').val();
             $("#searchnews").click(function () {
                 get_ajax_list();
             })
-    });
-function get_ajax_list() {
-    $.ajax({
-        type:"get",
-        url:"/user/get_ads_orderlist",
-        dataType: 'html',
-        data:{
-            'start':$("#datepicker1").val(),
-            'end':$("#datepicker2").val(),
-            'mediatype':$("#mediatype").val(),
-            'orderid':$("#keyword").val(),
-            'user_id':"{{ $info['user_id'] }}",
-        },
-        success:function (msg) {
-            console.log("msg:" + msg);
-            if (msg) {
-                if( $.fn.dataTable.isDataTable(" #datatable1 ") ){
-                    datatable.destroy();
-                }
-                $('#listcontent').html(msg);
-                datatable =  $('#datatable1').DataTable(dt_option);
-            } else {
-                if( $.fn.dataTable.isDataTable(" #datatable1 ") ){
-                    datatable.destroy();
-                }
-                $('#listcontent').html("<tr><td colspan='10'>没有查询到数据！</td></tr>");          //7 表格列数
-            }
-        }
-    })
-}  
+	});
+	
+	function get_ajax_list() {
+		$.ajax({
+			type:"get",
+			url:"/user/get_ads_orderlist",
+			dataType: 'html',
+			data:{
+				'start':$("#datepicker1").val(),
+				'end':$("#datepicker2").val(),
+				'mediatype':$("#mediatype").val(),
+				'orderid':$("#keyword").val(),
+				'user_id':"{{ $info['user_id'] }}",
+			},
+			success:function (msg) {
+	//			console.log("msg:" + msg);
+				if (msg) {
+					if( $.fn.dataTable.isDataTable(" #datatable1 ") ){
+						datatable.destroy();
+					}
+					$('#listcontent').html(msg);
+					datatable =  $('#datatable1').DataTable(dt_option);
+				} else {
+					if( $.fn.dataTable.isDataTable(" #datatable1 ") ){
+						datatable.destroy();
+					}
+					$('#listcontent').html("<tr><td colspan='10'>没有查询到数据！</td></tr>");          //7 表格列数
+				}
+			}
+		})
+	}  
+	
 // 普通会员
-var myChart2 = echarts.init(document.getElementById('tb_av2'));
+	var myChart2 = echarts.init(document.getElementById('tb_av2'));
     
     option2 = {
             title: {
