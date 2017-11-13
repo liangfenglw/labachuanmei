@@ -37,18 +37,23 @@
                 <div class="tab1_body_m" style="display:block;">
                     <table class="table_in1 cur" id="datatable1">
                         <thead style="display:none;">
-                            <tr><th class="nosort"></th></tr>
+                            <tr>
+								<th>ID</th>
+								<th class="nosort"></th>
+							</tr>
                         </thead>
                         <tbody>
                             @if(Auth::user()->user_type == 2)
                                 @foreach($news as $key => $val)
                                 <tr>
+									<td><span class="hide">{{ $val['id'] }}</span></td>
                                     <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /order/order_detail/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
                                 </tr> 
                             @endforeach
                             @else
                                 @foreach($news as $key => $val)
                                     <tr>
+										<td><span class="hide">{{ $val['id'] }}</span></td>
                                         <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /supp/order/info/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
                                     </tr> 
                                 @endforeach
@@ -61,19 +66,24 @@
                 <div class="tab1_body_m" style="display:none;">
                     <table class="table_in1 cur" id="datatable2">
                         <thead style="display:none;">
-                            <tr><th class="nosort"></th></tr>
+                            <tr>
+								<th>ID</th>
+								<th class="nosort"></th>
+							</tr>
                         </thead>
                         <tbody>
                            
                             @if(Auth::user()->user_type == 2)
                                  @foreach($read_news as $key => $val)
                                     <tr>
+										<td><span class="hide">{{ $val['id'] }}</span></td>
                                         <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /order/order_detail/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
                                     </tr> 
                                 @endforeach
                             @else
                                  @foreach($read_news as $key => $val)
                                     <tr>
+										<td><span class="hide">{{ $val['id'] }}</span></td>
                                         <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /supp/order/info/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
                                     </tr> 
                                 @endforeach
@@ -111,7 +121,7 @@
                 "pagingType": "simple_numbers",
                 "language": {
                     "search": "搜索",
-                    sZeroRecords : "没有查询到数据",
+                    sZeroRecords : "没有未读消息",
                     "info": "显示第 _PAGE_/_PAGES_ 页，共_TOTAL_条",
                     "infoFiltered": "(筛选自_MAX_条数据)",
                     "infoEmpty": "没有符合条件的数据",
@@ -123,22 +133,20 @@
                     },
                     searchPlaceholder: "过滤..."
                 }
-                ,"order" : [[1,"desc"]]
+                ,"order" : [[0,"desc"]]
             };
             datatable =  $('#datatable1').DataTable(dt_option);
             datatable2 =  $('#datatable2').DataTable(dt_option);
         
-        
-        $(".tab1 ul li a").unbind("click");     /*  取消原切换事件，改成下面的新切换事件  */
-        $(".tab1>ul>li>a").click(function(){
-            var index=$(this).parent("li").index();
-            $(this).parent("li").addClass("cur").siblings("li").removeClass("cur");
-            $(this).parents(".tab1").next(".tab1_body").find(".tab1_body_m").css("display","none").eq(index).css("display","block");
-            return false;
-        });
-        
     });
     
+	$(".tab1>ul>li>a").unbind("click");     /*  取消原切换事件，改成下面的新切换事件  */
+	$(".tab1>ul>li>a").click(function(){
+		var index=$(this).parent("li").index();
+		$(this).parent("li").addClass("cur").siblings("li").removeClass("cur");
+		$(this).parents(".tab1").next(".tab1_body").find(".tab1_body_m").css("display","none").eq(index).css("display","block");
+		return false;
+	});
     
 </script>
 

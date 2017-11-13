@@ -33,8 +33,9 @@
                             @endforeach
                         </select>
                     </div>
+                    <input type="hidden" name="type" value="{{ Request::input('type') }}">
                     <div class="l">
-                        <input type="text" name="keyword" id="keyword" class="txt5" placeholder="订单号" />
+                        <input type="text" name="keyword" id="keyword" class="txt5" placeholder="订单号" value="{{ Request::input('keyword') }}" />
                         <input type="submit" name="submit" class="sub4_3" id="searchnews" value="查询" />
                     </div>
                 </div>

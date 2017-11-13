@@ -27,17 +27,18 @@
 				<form action="" method="post" style="position:relative;float:left;" class="form_up">
 					<a class="sub4_2" href="javascript:;" id="up_excel" style="background:#7db6eb;margin:0;" >导入媒体</a>
 					<input type="file" name="file" class="txt6 txt6_up upfile upload_f1" style="width:100%;height:30px;display:none;opacity:0;"	/>
+					<input type="hidden" name="plate_id" id="plate_id" />
 				</form>
-				<a class="sub4_2" style="background:#7db6eb;" href="javascript:;" id="get_excel" onclick="get_excel()">导入模板</a>
+				<a class="sub4_2" style="background:#7db6eb;" href="javascript:;" id="get_excel" onclick="get_excel()">导出模板</a>
 			</div>
         </h3>
 		
         <div class="dhorder_m">
             <div class="tab1 2">
                 <strong class="l" style="font-size:24px;font-weight:400;color:#000000;">媒体管理</strong>
-                <ul>
+                <ul id="nav2_ul">
                     @foreach($child_plate as $key => $val)
-                        <li onclick="window.location='/order/order_appeal'" @if($key == 0) class="cur" @endif @if(Request::input('tid') == $val['id']) class="cur" @endif ><a  >{{ $val['plate_name'] }}({{ $val['res_count'] }})</a></li>
+                        <li data-plateid={{ $val['id'] }} onclick="window.location='/order/order_appeal'" @if($key == 0) class="cur" @endif @if(Request::input('tid') == $val['id']) class="cur" @endif ><a  >{{ $val['plate_name'] }}({{ $val['res_count'] }})</a></li>
                     @endforeach
                 </ul>
             </div>
@@ -163,7 +164,13 @@
 		window.open(url);
 	}
 	$(".form_up a").click(function(){
+		var plate_id = $("#nav2_ul li.cur").attr("data-plateid");
+		$("#plate_id").val( plate_id );
+		console.log( plate_id );
 		$(this).siblings(".upfile").click();
+	});
+	$(".upfile").change(function(){
+		$(".form_up").submit();
 	});
 
 </script>
