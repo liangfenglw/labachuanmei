@@ -1540,7 +1540,6 @@ class UsermanagerController extends CommonController
                 }
                 $attr[$spec['attr_name']] = $tmp;
             }
-
             if ($request->media_ref == 1) { // 自营
                 $res = $this->selfMediaExelSave($file, $attr, $plate_tid, $plate_id);
             } elseif ($request->media_ref == 2) { // 供应商
@@ -1568,64 +1567,107 @@ class UsermanagerController extends CommonController
             return $data = $reader->get();
         })->toArray();
         $pic = array_values(ExcelTools::excelFilePic($file));
+        if (empty($pic)) {
+            return ['status_code' => 201, 'msg' => '请添加对应图片资料'];
+        }
         $excel_data = $excel_data['0'];
         $user_data = $spec_val = [];
         $i = -1;
+        $j = 1;
         $is_state = ['在线' => 1, '下架' => '2', '审核' => 3];
         DB::enableQueryLog();
-        foreach ($pic as $key => $value) {
-            if (count($excel_data) < $key+1) {
-                break;
-            }
-            // 写入到user表
-            $user_id = DB::table('users')->insertGetId(
-                ['name' => $excel_data[$key]['媒体名称'].uniqid(),
-                 'password' => bcrypt(env('pwd')),
-                 'is_login' => 2, 
-                 'is_show' => 1, 
-                 'role_id' => 1, 'user_type' => 4,
-                 'created_at' => date("Y-m-d H:i:s", time())]);
-                
-            $user_data[] = [
-                'user_id' => $user_id,
-                'name' => $excel_data[$key]['媒体名称'],
-                'plate_tid' => $plate_tid,
-                'plate_id' => $plate_id,
-                'media_name' => $excel_data[$key]['媒体名称'],
-                'media_logo' => $pic[++$i],
-                'index_logo' => $pic[++$i],
-                'proxy_price' => $excel_data[$key]['价格'],
-                'platform_price' => ($excel_data[$key]['平台价率'] / 100) * $excel_data[$key]['价格'] + $excel_data[$key]['价格'],
-                'media_contact' => $excel_data[$key]['负责人'],
-                'contact_phone' => $excel_data[$key]['联系电话'],
-                'email' => $excel_data[$key]['电子邮箱'],
-                'qq' => $excel_data[$key]['联系qq'],
-                'address' => $excel_data[$key]['联系地址'],
-                'zip_code' => $excel_data[$key]['邮编'],
-                'web_contact' => $excel_data[$key]['网站微博'],
-                'remark' => $excel_data[$key]['媒体优势'],
-                'is_state' => $is_state[$excel_data[$key]['状态']],
-                'created_at' => date('Y-m-d H:i:s', time()),
-                // 'company_name'
-                'vip_price' => ($excel_data[$key]['会员价率'] / 100) * $excel_data[$key]['价格'] + $excel_data[$key]['价格'],
-                'plate_price' => ($excel_data[$key]['平台价率'] / 100) * $excel_data[$key]['价格'] + $excel_data[$key]['价格'],
-                'vip_rate' => $excel_data[$key]['会员价率'],
-                'plate_rate' => $excel_data[$key]['平台价率'],
-            ];
-            foreach ($attr as $attr_name => $value) {
-                if (empty($excel_data[$key][$attr_name])) {
-                    continue;
-                    // DB::rollBack();
-                    // return back()->with('status', '存在缺少的数据');
+        try {
+            foreach ($pic as $key => $value) {
+                if (count($pic) < ($j * 2)) { // 2
+                    break;
                 }
-                $spec_val[] = [
+                $tmp = ++$i;
+                $tmp2 = ++$i;
+                ++$j;
+                if (empty($excel_data[$key]['媒体名称'])) {
+                    break;
+                }
+                if (empty($excel_data[$key]['媒体名称']) || 
+                    empty($excel_data[$key]['价格']) || 
+                    empty($excel_data[$key]['平台价率']) || 
+                    empty($excel_data[$key]['负责人']) || 
+                    empty($excel_data[$key]['联系电话']) ||
+                    empty($excel_data[$key]['电子邮箱']) || 
+                    empty($excel_data[$key]['联系qq']) ||
+                    empty($excel_data[$key]['联系地址']) || 
+                    empty($excel_data[$key]['邮编']) ||
+                    empty($excel_data[$key]['网站微博']) || 
+                    empty($excel_data[$key]['媒体优势']) || 
+                    empty($excel_data[$key]['会员价率'])
+                    ) {
+                    DB::rollBack();
+                    return ['status_code' => 201, 'msg' => '个人资料的数据填写不齐全'];
+                }
+                if (empty($pic[$tmp]) || empty($pic[$tmp2])) {
+                    DB::rollBack();
+                    return ['status_code' => 201, 'msg' => '图片数据不齐全'];
+                }
+                
+                if (empty($is_state[$excel_data[$key]['状态']])) {
+                    DB::rollBack();
+                    return ['status_code' => 201, 'msg' => '状态的数据填写错误'];
+                }
+                // dd($excel_data);
+                // 写入到user表
+                
+                $user_id = DB::table('users')->insertGetId(
+                    ['name' => $excel_data[$key]['媒体名称'].uniqid(),
+                     'password' => bcrypt(env('pwd')),
+                     'is_login' => 2, 
+                     'is_show' => 1, 
+                     'role_id' => 1, 'user_type' => 4,
+                     'created_at' => date("Y-m-d H:i:s", time())]);
+                \Log::info(['user_id_bin' => $user_id]);
+                $user_data[] = [
                     'user_id' => $user_id,
-                    'attr_value_id' => $value[$excel_data[$key][$attr_name]]['0'],
+                    'name' => $excel_data[$key]['媒体名称'],
+                    'plate_tid' => $plate_tid,
+                    'plate_id' => $plate_id,
+                    'media_name' => $excel_data[$key]['媒体名称'],
+                    'media_logo' => $pic[$tmp],
+                    'index_logo' => $pic[$tmp2],
+                    'proxy_price' => $excel_data[$key]['价格'],
+                    'platform_price' => ($excel_data[$key]['平台价率'] / 100) * $excel_data[$key]['价格'] + $excel_data[$key]['价格'],
+                    'media_contact' => $excel_data[$key]['负责人'],
+                    'contact_phone' => $excel_data[$key]['联系电话'],
+                    'email' => $excel_data[$key]['电子邮箱'],
+                    'qq' => $excel_data[$key]['联系qq'],
+                    'address' => $excel_data[$key]['联系地址'],
+                    'zip_code' => $excel_data[$key]['邮编'],
+                    'web_contact' => $excel_data[$key]['网站微博'],
+                    'remark' => $excel_data[$key]['媒体优势'],
+                    'is_state' => $is_state[$excel_data[$key]['状态']],
                     'created_at' => date('Y-m-d H:i:s', time()),
-                    'attr_id' => $value[$excel_data[$key][$attr_name]]['1'],
+                    // 'company_name'
+                    'vip_price' => ($excel_data[$key]['会员价率'] / 100) * $excel_data[$key]['价格'] + $excel_data[$key]['价格'],
+                    'plate_price' => ($excel_data[$key]['平台价率'] / 100) * $excel_data[$key]['价格'] + $excel_data[$key]['价格'],
+                    'vip_rate' => $excel_data[$key]['会员价率'],
+                    'plate_rate' => $excel_data[$key]['平台价率'],
                 ];
+                foreach ($attr as $attr_name => $value) {
+                    if (empty($excel_data[$key][$attr_name])) {
+                        DB::rollBack();
+                        return ['status_code' => 201, 'msg' => '存在缺少的数据'];
+                    }
+                    if (empty($value[$excel_data[$key][$attr_name]]['0'])) {
+                        DB::rollBack();
+                        return ['status_code' => 201, 'msg' => '不存在该分类属性值'];
+                    }
+                    $spec_val[] = [
+                        'user_id' => $user_id,
+                        'attr_value_id' => $value[$excel_data[$key][$attr_name]]['0'],
+                        'created_at' => date('Y-m-d H:i:s', time()),
+                        'attr_id' => $value[$excel_data[$key][$attr_name]]['1'],
+                    ];
+                }
             }
-
+        } catch (Exception $e) {
+            return ['status_code' => 201, 'msg' => '错误'];
         }
         $tmp1 = SuppUsersSelfModel::insert($user_data);
         $tmp2 = SuppVsAttrModel::insert($spec_val);
@@ -1659,6 +1701,28 @@ class UsermanagerController extends CommonController
                 DB::rollBack();
                 return ['status_code' => 201, 'msg' => '存在不正确的供应商数据'];
             }
+            $tmp = ++$i;
+            $tmp2 = ++$i;
+            if (empty($excel_data[$key]['媒体名称'])) {
+                break;
+            }
+            if (empty($excel_data[$key]['媒体名称'])  || 
+                empty($excel_data[$key]['价格']) || 
+                empty($excel_data[$key]['负责人']) || empty($excel_data[$key]['联系电话']) ||
+                empty($excel_data[$key]['电子邮箱']) || empty($excel_data[$key]['联系qq']) ||
+                empty($excel_data[$key]['联系地址']) || empty($excel_data[$key]['邮编']) ||
+                empty($excel_data[$key]['网站微博']) || empty($excel_data[$key]['媒体优势'])) {
+                DB::rollBack();
+                return ['status_code' => 201, 'msg' => '个人资料的数据填写不齐全'];
+            }
+            if (empty($is_state[$excel_data[$key]['状态']])) {
+                DB::rollBack();
+                return ['status_code' => 201, 'msg' => '状态的数据填写错误'];
+            }
+            if (empty($pic[$tmp]) || empty($pic[$tmp2])) {
+                DB::rollBack();
+                return ['status_code' => 201, 'msg' => '图片数据不齐全'];
+            }
             // 写入到user表
             $user_id = DB::table('users')->insertGetId(
                 ['name' => $excel_data[$key]['媒体名称'].uniqid(),
@@ -1675,9 +1739,10 @@ class UsermanagerController extends CommonController
                 'plate_tid' => $plate_tid,
                 'plate_id' => $plate_id,
                 'parent_id' => $info->id,
+                'belong' => $info->id,
                 'media_name' => $excel_data[$key]['媒体名称'],
-                'media_logo' => $pic[++$i],
-                'index_logo' => $pic[++$i],
+                'media_logo' => $pic[$tmp],
+                'index_logo' => $pic[$tmp2],
                 'proxy_price' => $excel_data[$key]['价格'],
                 'media_contact' => $excel_data[$key]['负责人'],
                 'contact_phone' => $excel_data[$key]['联系电话'],
@@ -1692,9 +1757,12 @@ class UsermanagerController extends CommonController
             ];
             foreach ($attr as $attr_name => $value) {
                 if (empty($excel_data[$key][$attr_name])) {
-                    continue;
-                    // DB::rollBack();
-                    // return back()->with('status', '存在缺少的数据');
+                    DB::rollBack();
+                    return ['status_code' => 201, 'msg' => '存在缺少的数据'];
+                }
+                if (empty($value[$excel_data[$key][$attr_name]]['0'])) {
+                    DB::rollBack();
+                    return ['status_code' => 201, 'msg' => '不存在该分类属性值'];
                 }
                 $spec_val[] = [
                     'user_id' => $user_id,

@@ -24,7 +24,8 @@
                 @endforeach
             </ul>
 			<div class="search_1" style="float:right;">
-				<form action="" method="post" style="position:relative;float:left;" class="form_up">
+				<form action="/supp/uploadMedia" method="post" style="position:relative;float:left;" class="form_up" enctype="multipart/form-data">
+                {!! csrf_field() !!}
 					<a class="sub4_2" href="javascript:;" id="up_excel" style="background:#7db6eb;margin:0;" >导入媒体</a>
 					<input type="file" name="file" class="txt6 txt6_up upfile upload_f1" style="width:100%;height:30px;display:none;opacity:0;"	/>
 					<input type="hidden" name="plate_id" id="plate_id" />

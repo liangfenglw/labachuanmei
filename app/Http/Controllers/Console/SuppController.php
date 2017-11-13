@@ -18,6 +18,9 @@ use App\Model\ApplySuppsModel;
 use App\Model\AdUsersModel;
 use App\Model\OrderNetworkRefundModel;
 use App\Model\OrderMediaLogModel;
+use App\Model\PlateAttrValueModel;
+use App\Model\PlateAttrModel;
+use App\Service\Excel\ExcelTools;
 use App\User;
 use Auth;
 use DB;
@@ -580,6 +583,8 @@ class SuppController extends CommonController
     {
         $user_money = SuppUsersModel::where('user_id',Auth::user()->id)->value('user_money');
         $pay_list = \Config::get('paylist');
+        $pay_list = ['wechat'=>'微信',
+    'alipay'=>'支付宝'];
         return view('console.supp.withdraw',
             ['active' => 'account_query',
              'balance' => $user_money,
@@ -831,6 +836,128 @@ class SuppController extends CommonController
         }
         DB::commit();
         return redirect('/supp/resource')->with('status','提交申请成功');
+    }
+
+    public function uploadMedia(Request $request)
+    {
+         $data = parent::uploadExcel($request->file);
+        if ($data['status_code'] != 200) {
+            return back()->with('status', '上传失败');
+        }
+        $file = $data['data']; // excel文件路径
+        $plate_tid = 35;
+        $plate_id = $request->plate_id;
+        $list = PlateAttrModel::with('attrVsVal')->where('plate_id', $plate_id)->get()->toArray();
+        if (empty($list)) {
+            return back()->with('status', '分类错误');
+        }
+        $attr = [];
+        foreach ($list as $key => $spec) {
+            $tmp = [];
+            foreach ($spec['attr_vs_val'] as $kk => $val) {
+                $tmp[$val['attr_value']] = [$val['id'], $val['attr_id']];
+            }
+            $attr[$spec['attr_name']] = $tmp;
+        }
+        // 加载excel
+        $excel_data = \Excel::load('.'.$file, function($reader) {
+            return $data = $reader->get();
+        })->toArray();
+        $pic = array_values(ExcelTools::excelFilePic($file));
+        $excel_data = $excel_data['0'];
+        $user_data = $spec_val = [];
+        $i = -1;
+        $is_state = ['在线' => 1, '下架' => '2', '审核' => 3];
+        DB::enableQueryLog();
+        $info = User::where('id', Auth::user()->id)->first();
+        foreach ($pic as $key => $value) {
+            if (count($excel_data) < $key+1) {
+                break;
+            }
+            $tmp = ++$i;
+            $tmp2 = ++$i;
+            if (empty($excel_data[$key]['媒体名称'])) {
+                break;
+            }
+            if (empty($excel_data[$key]['媒体名称'])  || 
+                empty($excel_data[$key]['价格']) || 
+                empty($excel_data[$key]['负责人']) || empty($excel_data[$key]['联系电话']) ||
+                empty($excel_data[$key]['电子邮箱']) || empty($excel_data[$key]['联系qq']) ||
+                empty($excel_data[$key]['联系地址']) || empty($excel_data[$key]['邮编']) ||
+                empty($excel_data[$key]['网站微博']) || empty($excel_data[$key]['媒体优势'])) {
+                DB::rollBack();
+                return back()->with('status', '个人资料的数据填写不齐全');
+            }
+            if (empty($is_state[$excel_data[$key]['状态']])) {
+                DB::rollBack();
+                return back()->with('status', '状态的数据填写错误');
+            }
+            if (empty($pic[$tmp]) || empty($pic[$tmp2])) {
+                DB::rollBack();
+                return back()->with('status', '图片数据不齐全');
+            }
+            // 写入到user表
+            $user_id = DB::table('users')->insertGetId(
+                ['name' => $excel_data[$key]['媒体名称'].uniqid(),
+                 'password' => bcrypt(env('pwd')),
+                 'is_login' => 2, 
+                 'is_show' => 1, 
+                 'role_id' => 1, 
+                 'user_type' => 3,
+                 'created_at' => date("Y-m-d H:i:s", time())]);
+                
+            $user_data[] = [
+                'user_id' => $user_id,
+                'name' => $excel_data[$key]['媒体名称'],
+                'parent_id' => Auth::user()->id,
+                'belong' => Auth::user()->id,
+                'plate_tid' => $plate_tid,
+                'plate_id' => $plate_id,
+                'parent_id' => $info->id,
+                'media_name' => $excel_data[$key]['媒体名称'],
+                'media_logo' => $pic[$tmp],
+                'index_logo' => $pic[$tmp2],
+                'proxy_price' => $excel_data[$key]['价格'],
+                'media_contact' => $excel_data[$key]['负责人'],
+                'contact_phone' => $excel_data[$key]['联系电话'],
+                'email' => $excel_data[$key]['电子邮箱'],
+                'qq' => $excel_data[$key]['联系qq'],
+                'address' => $excel_data[$key]['联系地址'],
+                'zip_code' => $excel_data[$key]['邮编'],
+                'web_contact' => $excel_data[$key]['网站微博'],
+                'remark' => $excel_data[$key]['媒体优势'],
+                'is_state' => $is_state[$excel_data[$key]['状态']],
+                'created_at' => date('Y-m-d H:i:s', time()),
+            ];
+            foreach ($attr as $attr_name => $value) {
+                if (empty($excel_data[$key][$attr_name])) {
+                    DB::rollBack();
+                    return back()->with('status', '存在缺少的数据');
+                }
+                if (empty($value[$excel_data[$key][$attr_name]]['0'])) {
+                    DB::rollBack();
+                    return back()->with('status', '不存在该分类属性值');
+                }
+                $spec_val[] = [
+                    'user_id' => $user_id,
+                    'attr_value_id' => $value[$excel_data[$key][$attr_name]]['0'],
+                    'created_at' => date('Y-m-d H:i:s', time()),
+                    'attr_id' => $value[$excel_data[$key][$attr_name]]['1'],
+                ];
+            }
+
+        }
+        $tmp1 = SuppUsersModel::insert($user_data);
+        $tmp2 = SuppVsAttrModel::insert($spec_val);
+        if ($tmp1 && $tmp2) {
+            DB::commit();
+            return back()->with('status', '上传成功');
+        } else {
+            DB::rollBack();
+            return back()->with('status', '上传失败');
+        }
+
+
     }
 
     public function orderList()

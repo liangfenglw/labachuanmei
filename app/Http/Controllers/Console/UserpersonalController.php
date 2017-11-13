@@ -731,7 +731,7 @@ class UserpersonalController extends CommonController
                     ->toArray();
         // 遍历处理数据格式
         foreach ($order_list as $key => $value) {
-            $order_list[$key]['order_type'] = $value['desc'];
+            $order_list[$key]['order_type'] = getOrderType($value['order_type']);
             $order_list[$key]['order_title'] = $value['desc'];
             $order_list[$key]['pay_type'] = $paylist[$value['pay_type']];
             $order_list[$key]['order_status'] = $recharge_consume[$value['status']];
@@ -975,6 +975,7 @@ class UserpersonalController extends CommonController
             $UsersModel->password = bcrypt($password);
             $UsersModel->user_type = 2;
             $UsersModel->role_id = 1;
+            $UsersModel->is_login = 1;
             $UsersModel->save();
             $add_user_id = $UsersModel->id;
             if (!$add_user_id) {

@@ -84,9 +84,10 @@ class CommonController extends Controller
             if (!$file->isValid()) {
                 return ['status_code' => 201, 'msg' => '不存在文件'];
             }
-            $extension = $file->extension();
-            if (in_array(strtolower($extension), ['xlsx','xls'])) {
+
+            if (in_array(strtolower($file->clientExtension()), ['xlsx','xls','bin'])) {
                 $dir_name = date('Y-m-d', time());
+
                 // 检测文件夹是否存在
                 if (!is_dir(public_path().'/uploads/'.$dir_name)) {
                     mkdir(public_path().'/uploads/'.$dir_name, 777);

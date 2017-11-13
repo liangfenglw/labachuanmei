@@ -82,7 +82,6 @@ class NewsController extends CommonController
         {
             return $value['created_at'];
         }));
-        // dd($lists);
         return view('news.news_list',
             ['news' => $lists,
              'read_news' => $read_list]);

@@ -241,11 +241,11 @@ class ManagerController extends CommonController
                     $child_lists->where('order_network.order_type','=',$request->type);
             }
         } else {
-            $child_lists = $child_lists->whereNotIn('order_network.order_type',[9,12,14,15])// 退款
-                        ->Where(function($query){
-                            $query->where('order_network.order_type','<>',13)
-                                    ->Where('order_network.deal_with_status','<>',1);
-                        });
+            // $child_lists = $child_lists->whereNotIn('order_network.order_type',[9,12,14,15])// 退款
+            //             ->orWhere(function($query){
+            //                 $query->where('order_network.order_type','=',13)
+            //                         ->Where('order_network.deal_with_status','<>',1);
+            //             });
         }
         if (!empty($request->input('mediatype'))) {
             $child_lists = $child_lists->where('order_network.type_id','=',$request->input('mediatype'));
@@ -272,24 +272,6 @@ class ManagerController extends CommonController
         if ($request->input('get_excel') == 1) {
             $this->getOrderListExcel($request->input('type'),$child_lists);
         }
-        $html = "";
-        
-        // foreach ($child_lists as $key => $value) {
-            // if ($request->input('type') == 9) { //申诉
-            //     $html .= "<tr>";
-            //     $html .= "<td>".$value['id']."</td>";
-            //     $html .= "<td>".$value['type_name']."</td>";
-            //     $html .= "<td>".$value['username']."</td>";
-            //     $html .= "<td>".$value['success_url']."</td>";
-            //     $html .= "<td>".$value['appeal_title']."</td>";
-            //     $html .= "<td>".$value['appeal_created_at']."</td>";
-            //     $html .= "<td>";
-            //     $html .= getAppealStatus($value['appeal_type']);
-            //     $html .= '</td>';
-            //     $html .= "<td><a class=\"color2\" href=\"/console/manager/order/info/".$value['id'].'">查看</a></td></tr>';
-            // }
-        // }
-        // dd($child_lists);
         //获取当前媒体下分类
         $child_plate = PlateModel::where('pid',$media_id)->get()->toArray();
         return view('console.manager.order_list',

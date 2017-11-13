@@ -56,7 +56,7 @@ class UserController extends CommonController
             //平台订单
             $order_count = OrderNetworkModel::count();
             // 平台用户
-            $ads_user_count = AdUsersModel::where('level_id','>','1')->count();
+            $ads_user_count = AdUsersModel::where('level_id','=','1')->count();
             // 平台资源
             $supp_user_count = SuppUsersModel::count();
             // 平台资源
@@ -83,13 +83,14 @@ class UserController extends CommonController
 
             $supp_user_money = SuppUsersModel::sum('user_money');
             $pingtai_user_money = OrderNetworkModel::sum('platform');
-            $ads_users_list = AdUsersModel::where("level_id",2)
+            $ads_users_list = AdUsersModel::where("level_id",1)
                                 ->orderBy('ad_users.id','desc')
                                 ->leftJoin('users','users.id','=','ad_users.user_id')
                                 ->select('ad_users.user_id',
                                          'users.name',
                                          'users.head_pic',
                                          'ad_users.nickname')
+                                ->orderBy('ad_users.id','desc')
                                 ->take(8)
                                 ->get()
                                 ->toArray();
@@ -98,6 +99,7 @@ class UserController extends CommonController
                                 ->leftJoin('users','users.id','=','supp_users.user_id')
                                 ->select("supp_users.user_id",'supp_users.media_logo','users.name')
                                 ->where('belong',0)
+                                ->orderBy('supp_users.id','desc')
                                 ->take(8)
                                 ->get()
                                 ->toArray();
@@ -273,7 +275,7 @@ class UserController extends CommonController
                  'child_user_count' => getMychildUserCount(),//代理会员数
                  'order_list' => $order_list,
                  'vip_all' => $vip_all,
-                 'parent_commision' => $parent_commision,
+                 'parent_commision' => get_demical($parent_commision),
                  'order_status_count' => $order_status_count,
                  'month' => date("m",time()),
                  'data_all' => $toufang['0'],

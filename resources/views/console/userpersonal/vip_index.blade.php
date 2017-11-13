@@ -164,7 +164,7 @@
             <ul>
                 <li class="li1"><p>分销会员总收益<b>￥{{ $vip_all }}</b></p></li>
                 <li class="li2"> <p>纯分销收益<b>￥{{ $parent_commision }}</b></p></li>
-                <li class="li3"><p>占账户总金率<b>{{ $parent_commision / $user_money }}</b></p></li>
+                <li class="li3"><p>占账户总金率<b>{{  get_demical($parent_commision / $user_money) }}</b></p></li>
             </ul>
         </div>
         <div class="row3 row3_3 radius1">

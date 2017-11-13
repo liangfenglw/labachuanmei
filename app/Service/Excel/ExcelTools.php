@@ -17,6 +17,7 @@ class ExcelTools
         $excelFile = $reader->load('./'.$file);
         $worksheet = $excelFile->getActiveSheet();
         $basePath = generateStroagePath();
+        chmod($basePath, 0777);
         return $result = self::extractImageFromWorksheet($worksheet, $basePath); 
     }
 

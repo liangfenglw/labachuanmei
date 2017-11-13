@@ -27,4 +27,5 @@ Route::group(['namespace' => 'Console', 'prefix' => 'supp', 'middleware' => ['we
         Route::get('/resource/{id}','SuppController@addResource');//添加资源模板渲染
         Route::post('/resource/save','SuppController@saveResource');//添加资源模板渲染
         Route::get('/resource/info/{id}','SuppController@resourceInfo');//查看审核中的资源(下级)
+        Route::post('uploadMedia', 'SuppController@uploadMedia'); // 上传媒体资源
     });
