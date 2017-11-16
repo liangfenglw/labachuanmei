@@ -264,19 +264,28 @@ aa#datatable1_filter{	display:none;	}
 .sbox_1{		margin:20px 2.5% 0;	}
 .sbox_1_w{	/*	border:1px solid #E5E5E5;	border-radius:6px;		*/}
 .sbox_1_item{		height:52px;	aline-height:74px;	/*border-bottom:1px dashed #E5E5E5;	*/font-size:18px;	color:#333333;	overflow:hidden;		}
-.sbox_1_item .l{	awidth:10%;	width:110px;	float:left;	/*	background:#F7F8FA;	*/height:52px;	text-align:center;	}
+.sbox_1_item .l{	awidth:10%;	width:110px;	float:left;	/*	background:#F7F8FA;	*/height:52px;	text-align:center;
+	width:130px;	text-align:right;	}
 .sbox_1_item .l strong{		afloat:left;		height:30px;	line-height:30px;	margin:11px 0 11px 10px;	font-weight:400;	color:#7db6eb;
 	display:block;	}
 .sbox_1_item .m{	awidth:83.3%;	afloat:left;	background:#FFFFFF;	
-	display:block;	margin-right:90px;	margin-left:120px;	}
+	display:block;	margin-right:90px;	margin-left:120px;
+	min-height:52px;	margin-left:130px;	}
 .sbox_1_item:last-child{	border-bottom:none;	}
-.sbox_1_item .m ul{		float:left;	margin:11px 0 11px -20px;	height:30px;	overflow:hidden;	}
+.sbox_1_item .m ul{		float:left;	margin:11px 0 11px -20px;	height:30px;	overflow:hidden;
+	margin:11px 0 11px 0px;
+	margin:11px 0 0px 0px;	}
 .sbox_1_item .m ul li{	float:left;	margin:0 2px 1px 0;	}
 .sbox_1_item .m ul li a{	float:left;		height:30px;	line-height:30px;	padding:0 10px;	color:#2f4050;	background:#fff;	border-radius:3px;	}
 .sbox_1_item .m ul li a.cur{	color:#0f85f7;	/*background:#2D9FDD;	background:#73d7cd;*/	}
 .sbox_1_item .r{	awidth:6.7%;	float:right;	display:inline-block;	margin:0 20px 0 10px;	}
-.sbox_1_item .r a{	margin:14px 0 0 0;	width:60px;	height:22px;	line-height:22px;	float:left;	background:url(/images/more1.gif) no-repeat 0 0 #fff;
-	font-size:12px;	color:#999999;	text-indent:10px;	}
+.sbox_1_item .r a{	margin:14px 0 0 0;	width:60px;	height:22px;	line-height:22px;	float:left;
+	background:url(../images/more1.gif) no-repeat 0 0 #fff;
+	font-size:12px;	color:#999999;	text-indent:10px;
+	margin:16px 0 0 0;
+	color:#0f85f7;		}
+.sbox_1_item .r a[data='on']{	}
+	
 .sbox_1_b{		width:128px;	height:28px;	line-height:28px;	border:1px solid #E5E5E5;	border-top:1px solid #fff;	margin:0 auto;	text-align:center;
 	position:relative;	top:-1px;	z-index:10;		font-size:14px;	color:#6e7991;	}
 .sbox_1_b i{	background:url(/images/sub3.png) no-repeat center center #fff;	float:left;	width:17px;	height:17px;	margin:6px 0 0 20px;	}

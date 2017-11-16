@@ -728,6 +728,7 @@
 		return false;
 	});
 
+
 	/*	设置选中tr背景色	*/
 	function setTrBg(){
 		if($("#select_media tr").length > 1){

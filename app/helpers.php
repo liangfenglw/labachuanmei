@@ -326,6 +326,7 @@ function getAttrValueSale($attr_id,$to_html=false,$or_limit=1,$in_arr_data=[])
                         <span class="l" data="option_'.$key.'" style="">
                             <strong>'.$value['attr_name'].'：</strong>
                         </span>
+						<span class="r" style="display:none;"><a href="javascript:void(0)" data="">更多</a></span>
                         <div class="m">
                             <ul class="sortable" category_id="'.$key.'" set_name="network">
                                 <li>';
@@ -351,7 +352,9 @@ function getAttrValueSale($attr_id,$to_html=false,$or_limit=1,$in_arr_data=[])
                 }
                 
             }
-            $html .= '</ul></div><span class="r"><a href="" data="on">更多</a></span></div>';
+            $html .= '</ul></div>';
+//			$html .= '<span class="r"><a href="javascript:void(0)" data="">更多</a></span>';
+            $html .= '</div>';
         }
         return ['status'=>1,'data'=>['html' => $html, 'media' => $lists, 'select_html' => $select_html],'msg'=>''];
     }

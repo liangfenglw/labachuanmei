@@ -211,7 +211,20 @@ $(function(){
 		});
 	});
 
-
+	//媒体选择隐藏右边的 更多
+	if( $(".sbox_1_item div.m").length > 0 ){
+		$(".sbox_1_item div.m").each(function(){
+			var width_w = $(this).width();
+			var width = $(this).find("ul").width();
+			console.log("width_w",width_w);
+			console.log("width",width);
+			if( width_w > width +1 ){
+				$(this).siblings("span.r").hide();
+			}else{
+				$(this).siblings("span.r").show();
+			}		
+		});
+	}
 });
 
 </script>
