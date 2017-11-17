@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>提现列表</title>
+    <title>提现列表_喇叭传媒</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     @include('console.share.cssjs')
@@ -49,6 +49,7 @@
     <table class="table_in1 cur" id="datatable1">
         <thead>
             <tr>
+                <th>序号</th>
                 <th>订单号</th>
                 <th>用户名</th>
                 <th>用户角色</th>
@@ -62,7 +63,8 @@
         <tbody id="listcontent">
             @foreach($lists as $key => $value)
                 <tr>
-                    <td>{{ $value['order_id'] }}</td>
+                    <td>{{ $value['id'] }}</td>
+                    <td>{{ $value['order_sn'] }}</td>
                     <td>{{ $value['users']['name'] }}</td>
                     <td>
                         @if(!empty($value['ads_user']))

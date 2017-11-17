@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     @include('console.share.cssjs')
-    <title>媒体详情</title>
+    <title>媒体详情_喇叭传媒</title>
 </head>
 <body class="fold">
 @include('console.share.admin_head')

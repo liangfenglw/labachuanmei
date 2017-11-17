@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     @include('console.share.cssjs')
-    <title>供应商详情</title>
+    <title>供应商详情_喇叭传媒</title>
 </head>
 <style>
 .tab2 ul li a {

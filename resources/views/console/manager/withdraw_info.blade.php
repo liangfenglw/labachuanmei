@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>帐户信息</title>
+    <title>帐户信息_喇叭传媒</title>
     @include('console.share.cssjs')
 </head>
 <body class="fold">         <!--    class="fold" 左导航收缩  -->

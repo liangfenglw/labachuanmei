@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>会员管理</title>
+	<title>会员管理_喇叭传媒</title>
 	<meta name="description" content="" />
 	<meta name="keywords" content="" />
 
@@ -61,7 +61,7 @@
 			<th>用户名</th>
 			<th>订单数</th>
 			<th>订单金额</th>
-			<th>占账户收益</th>
+			<th>订单提成</th>
 			<th>创建时间</th>
             <th>状态</th>
 			<th class="nosort">操作</th>

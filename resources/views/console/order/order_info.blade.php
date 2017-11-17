@@ -2,13 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>订单详情</title>
+    <title>订单详情_喇叭传媒</title>
     @include('console.share.cssjs')
 </head>
 <body class="fold">         <!--    class="fold" 左导航收缩  -->
 @include('console.share.admin_head')
 @include('console.share.admin_menu')
-<div class="content"><div class="Invoice">
+<div class="content">
+    <div class="Invoice">
     <div class="place">
         <div class="place_ant"><a href="/console/index">首页</a><a href="/order/order_list" class="cur">订单管理 </a></div>
     </div>

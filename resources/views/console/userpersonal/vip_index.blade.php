@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>高级会员首页</title>
+    <title>高级会员首页_喇叭传媒</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     @include('console.share.cssjs')
@@ -162,9 +162,17 @@
         <div class="row3 row3_2 radius1">
             <h3 class="title2"><strong><a>盈利状况</a></strong></h3>
             <ul>
-                <li class="li1"><p>分销会员总收益<b>￥{{ $vip_all }}</b></p></li>
-                <li class="li2"> <p>纯分销收益<b>￥{{ $parent_commision }}</b></p></li>
-                <li class="li3"><p>占账户总金率<b>{{  get_demical($parent_commision / $user_money) }}</b></p></li>
+                <li class="li1"><p>分销会员总收益<b>￥{{ $child_order_money }}</b></p></li>
+                <li class="li2"> <p>纯分销收益<b>￥{{ $commission_money }}</b></p></li>
+                <li class="li3"><p>占账户总金率<b>
+                    @if($child_order_money == 0)
+                        0
+                    @else
+                        {{  get_demical($commission_money / $child_order_money) }}
+                    @endif
+                    
+                </b></p>
+                </li>
             </ul>
         </div>
         <div class="row3 row3_3 radius1">

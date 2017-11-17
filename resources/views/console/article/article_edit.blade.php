@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>文章管理</title>
+    <title>文章管理_喇叭传媒</title>
     @include('console.share.cssjs')
 	<style>
 		.item_f .r{	margin-left:162px;	}

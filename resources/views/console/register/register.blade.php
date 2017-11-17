@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title></title>
+    <title>注册_喇叭传媒</title>
     <link href="/console/css/style.css" rel="stylesheet" type="text/css"/>
     <script src="http://www.jq22.com/jquery/jquery-1.6.2.js"></script>
     {{--<script type="text/javascript" src="{{url('console/js/jquery.reveal.js')}}"></script>--}}

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>角色列表</title>
+    <title>角色列表_喇叭传媒</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     @include('console.share.cssjs')

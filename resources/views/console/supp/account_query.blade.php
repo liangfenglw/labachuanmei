@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>账户查询</title>
+    <title>账户查询_喇叭传媒</title>
     @include('console.share.cssjs') 
 </head>
 <body class="fold">         <!--    class="fold" 左导航收缩  -->

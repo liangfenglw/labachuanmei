@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>绑定邮箱</title>
+	<title>绑定邮箱_喇叭传媒</title>
 	<meta name="description" content="" />
 	<meta name="keywords" content="" />
 

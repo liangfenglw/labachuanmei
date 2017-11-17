@@ -1301,7 +1301,9 @@ a.sub4_2:hover{	color:#fff;	}
 	margin-left:162px;	}
 .txt_f1{	border:1px solid #E5E5E5;	border-radius:25px;	height:45px;	line-height:45px;	width:28%;	padding:0 2%;	font-size:16px;
 	color:#2f4050;	color:#999;	}
-.txt_ft1{	width:88%;		height:178px;	border:1px solid #E5E5E5;	line-height:26px;	padding:8px 1%;	font-size:14px;	border-radius:25px;	color:#999;	}
+
+.txt_ft1{	width:88%;		min-height:178px;	max-height:500px;	border:1px solid #E5E5E5;	line-height:26px;	padding:8px 1%;	font-size:14px;
+	border-radius:25px;	color:#999;	overflow-y:scroll;	overflow-y:auto;	}
 .sel_f1{	width:22%;	height:45px;	line-height:45px;	font-size:15px;	color:#999999;	border:1px solid #e5e5e5;	padding:0 2%;
 	border-radius:25px;	color:#999;	
 	padding:8px 1%;	padding:8px 1%\9;	height:auto\9;
@@ -1747,7 +1749,12 @@ body .txt_ft1 h5,
 body .txt_ft1 h6,
 body .txt_ft1 div,
 body .txt_ft1 p{	width:auto;	text-align:left;	float:none;	font-size:14px;	color:#999;		padding:8px 1%;		margin-right:0;	}
+body .txt_ft1 img{	max-width:100%;	}
 
+div.dnts{		overflow-y:scroll;	overflow-y:auto;	min-height:178px;	max-height:500px;	border-radius:25px;	color:#999;
+	padding:8px 1%;	font-size:14px;	background:#EBEBE4;	}
+body .dnts p{	max-width:100%;	width:auto;		}
+body .dnts img{	max-width:100%;	}
 
 
 

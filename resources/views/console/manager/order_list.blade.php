@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>订单管理</title>
+    <title>订单管理_喇叭传媒</title>
     @include('console.share.cssjs')    
 </head>
 <body class="fold">
@@ -29,7 +29,7 @@
                         <select name="plate_id" class="sel1" id="mediatype">
                             <option value="0">请选择</option>
                             @foreach($child_plate as $key => $val)
-                            <option value="{{$val['id']}}">{{$val['plate_name']}}</option>
+                            <option value="{{$val['id']}}" @if(Request::input('plate_id') == $val['id']) selected="selected" @endif >{{$val['plate_name']}}</option>
                             @endforeach
                         </select>
                     </div>
@@ -279,6 +279,13 @@
                                     </td>
                                     <td class="color1">
                                         {{ getOrderType($value['order_type']) }}
+                                        @if($value['deal_with_status'] == 2)
+                                            ，重做
+                                        @elseif($value['deal_with_status'] == 1)
+                                            ，此订单退款处理
+                                        @elseif($value['deal_with_status'] == 3) 
+                                            ，不同意申诉，结款
+                                        @endif
                                     </td>
                                     <td><a class="color2" href="/console/manager/order/info/{{ $value['id'] }}">查看</a></td></tr>
                             @endforeach

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>订单管理</title>
+	<title>订单管理_喇叭传媒</title>
 	<meta name="description" content="" />
 	<meta name="keywords" content="" />
 
@@ -79,7 +79,7 @@
                     <li @if($order_type == 3)class="cur" @endif><a href="/order/order_list/3">已流单</a></li>
                   {{--   <li @if($order_type == 2)class="cur" @endif><a href="/order/order_list/2">已拒单</a></li> --}}
                     <li @if($order_type == 100)class="cur" @endif><a href="/order/order_list/100">退款订单</a></li>
-                    {{-- <li @if($order_type == 9)class="cur" @endif><a href="/order/order_list/9">申诉订单</a></li> --}}
+                    <li @if($order_type == 9)class="cur" @endif><a href="/order/order_list/9">申诉订单</a></li>
 				</ul>
 			</div>
 			<div class="tab1_body">
@@ -314,6 +314,25 @@
 											@endif
 										</div>
 	                            	</td>
+		                            <td>
+		                            	@if($value['order_type'] == 13 && $value['deal_with_status'] == 3)
+		                            		退款失败
+		                            	@else
+		                            		{{ $status[$value['order_type']] }}</td>
+		                            	@endif
+		                            	
+		                            <td><a class="color2" href="/order/order_detail/{{ $value['id'] }}">查看</a></td>
+		                        </tr>
+							@elseif($order_type == 3)
+		                    	<tr>
+									<td>{{ $value['id'] }}</td>
+		                            <td>{{ $value['title'] }}</td>
+		                            <td>{{ $value['type_name'] }}</td>
+		                            <td>{{ $value['start_at'] }}</td>
+		                            <td>{{ $value['over_at'] }}</td>
+		                            <td class="color1">￥{{ $value['user_money'] }}</td>
+									<td>{{ $value['self_user']['media_name'] }}</td>
+		                            
 		                            <td>
 		                            	@if($value['order_type'] == 13 && $value['deal_with_status'] == 3)
 		                            		退款失败

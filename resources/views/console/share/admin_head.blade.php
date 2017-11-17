@@ -70,6 +70,9 @@
         <ul>
             <li><a href="{{url('userpersonal/person_edit')}}" class="">用户资料</a></li>
             <li><a href="{{url('userpersonal/account_query')}}" class="">账户查询</a></li>
+            @if($level_id == 2)
+            <li><a href="/userpersonal/account_enchashment">账户提现</a></li>
+            @endif
             <li><a href="{{url('userpersonal/onlnetop_up')}}" class="">账户充值</a></li>
             <li><a href="{{url('order/order_list')}}" class="">订单管理</a></li>
             <li><a href="{{url('userpersonal/person_safe')}}" class="">安全设置</a></li>

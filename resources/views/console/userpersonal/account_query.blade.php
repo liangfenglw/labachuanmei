@@ -2,28 +2,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>账户查询</title>
+	<title>账户查询_喇叭传媒</title>
 	<meta name="description" content="" />
 	<meta name="keywords" content="" />
-
     @include('console.share.cssjs')
-	
-	<style>
-
-	</style>
 </head>
 <body class="fold">			<!--	class="fold" 左导航收缩	-->
-
-@include('console.share.admin_head')
-@include('console.share.admin_menu')			<!--	左弹菜单 普通会员首页	-->
-<div class="content"><div class="Invoice">
-	@include('console.share.user_menu')
-
-	<div class="place">
-		<div class="place_ant"><a href="/">首页</a> <a href="{{url('userpersonal/account_query')}}"  class="cur">账户查询 </a></div>
-	</div>
-	
-	<div class=" clearfix"><div class="main_aq">
+	@include('console.share.admin_head')
+	@include('console.share.admin_menu')			<!--	左弹菜单 普通会员首页	-->
+	<div class="content"><div class="Invoice">
+		@include('console.share.user_menu')
+		<div class="place">
+			<div class="place_ant"><a href="/console/index">首页</a>
+			<a href="{{url('userpersonal/account_query')}}"  class="cur">账户查询 </a></div>
+		</div>
+	<div class="clearfix">
+		<div class="main_aq">
 		   <div class="aq_left">
                 <h2>账户总金额</h2>
                 <h1>{{$user_all_money or '0.00'}}元</h1>
@@ -36,11 +30,9 @@
                     <div class="minh tb_box6" id="tb_ptcx1"></div>
                 </div>
             </div>	
-	</div></div>
-
-	
-
-		{{ csrf_field() }}
+		</div>
+	</div>
+	{{ csrf_field() }}
 	<div class="main_o clearfix margin_top_40" style="padding-bottom:0;">
 		<h3 class="title3" style="padding:20px 0 0 20px;"><strong>财务明细</strong>
             <a href="/userpersonal/account_query/type/0?get_excel=1&start={{ Request::input('start') }}&end={{ Request::input('end') }}&keyword={{ Request::input('keyword') }}&mediatype={{ Request::input('mediatype') }}" class="btn_o" id="get_excel" style="float:right; margin:15px 30px 0 0;" target="_blank">导出财务明细</a>
@@ -49,9 +41,7 @@
 			<div class="tab1">
 				<ul>       
 					<li @if(empty(Request::input('type'))) class="cur" @endif><a href="/userpersonal/account_query?type=0">订单</a></li>
-					<li @if(Request::input('type') == 3) class="cur" @endif><a href="/userpersonal/account_query?type=3">提现</a></li>
 					<li @if(Request::input('type') == 1) class="cur" @endif><a href="/userpersonal/account_query?type=1">充值</a></li>
-					<!--<li @if(Request::input('type') == 2) class="cur" @endif><a href="/userpersonal/account_query?type=2">消费</a></li>-->
 				</ul>
 				<div class="search_2" >
 					 <form action="" method="get" name="">
@@ -113,32 +103,6 @@
 					</table>
 				</div>
 				<div class="tab1_body_m" style="display:none;">
-					<table class="table_in1 cur" id="datatable2">
-						<thead>
-							<tr>
-								<th>日期</th>
-								<th>订单号</th>
-								<th>消费方式</th>
-								<th>消费账号</th>
-								<th>状态</th>
-								<th>金额</th>
-							</tr>
-						</thead>
-						<tbody id="listcontent2">
-							@foreach($get_money as $key => $val)
-								<tr>
-									<td>{{ $val['created_at'] }}</td>
-									<td>{{ $val['order_sn'] }}</td>
-									<td>{{ $val['pay_type'] }}</td>
-									<td>{{ $val['pay_user']}}</td>
-									<td>{{ $val['order_status'] }}</td>
-									<td><span class="color_red2">{{ $val['user_money'] }}元</span></td>
-								</tr>
-							@endforeach
-						</tbody>
-					</table>
-				</div>
-				<div class="tab1_body_m" style="display:none;">
 					<table class="table_in1 cur" id="datatable3">
 						<thead>
 							<tr>
@@ -165,38 +129,6 @@
 						</tbody>
 					</table>
 				</div>
-				<!--<div class="tab1_body_m" style="display:none;">
-					<table class="table_in1 cur" id="datatable4">
-						<thead>
-							<tr>
-								<th>日期</th>
-								<th>订单号</th>
-								<th>订单类型</th>
-								<th>订单名称</th>
-								<th>订单状态</th>
-								<th>截图/链接</th>
-								<th>金额</th>
-							</tr>
-						</thead>
-						<tbody id="listcontent4">
-							@foreach($used as $key => $val)
-								<tr>
-									<td>{{ $val['created_at'] }}</td>
-									<td>{{ $val['order_id'] }}</td>
-									<td>{{ $val['type_name'] }}</td>
-									<td>{{ $val['title'] }}</td>
-									<td>{{ $val['order_type'] }}</td>
-									<td>
-										<a href="{{ $val['success_url'] }}" target="_blank">
-											<img class="link" src="{{ $val['success_pic'] }}" alt="|" />
-										</a>
-										</td>
-									<td><span class="color_red2">{{ $val['user_money'] }}元</span></td>
-								</tr>
-							@endforeach
-						</tbody>
-					</table>
-				</div>-->
 			</div>
 		</div>
 	</div>
@@ -304,9 +236,7 @@ var _token = $('input[name="_token"]').val();
 /*	表格切换分页	*/
 	var datatable0;
 	var datatable1;
-	var datatable2;
 	var datatable3;
-	var datatable4;
 	$(function () {
 			var dt_option = {
 				"searching" : false,		//是否允许Datatables开启本地搜索
@@ -337,7 +267,6 @@ var _token = $('input[name="_token"]').val();
 				,"order" : [[0,"desc"]]
 			};
 			datatable1 =  $('#datatable1').DataTable(dt_option);
-			datatable2 =  $('#datatable2').DataTable(dt_option);
 			datatable3 =  $('#datatable3').DataTable(dt_option);
 			
 			datatable0 = datatable1;
@@ -351,12 +280,6 @@ var _token = $('input[name="_token"]').val();
 					data_table = "#datatable1";
 					data_tbody = "#listcontent1";
 					datatable0 = datatable1;
-				}
-				if( index == "1" ){
-					url = "/userpersonal/account_query/type/3";
-					data_table = "#datatable2";
-					data_tbody = "#listcontent2";
-					datatable0 = datatable2;
 				}
 				if( index == "2" ){
 					url = "/userpersonal/account_query/type/1";

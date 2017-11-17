@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use App\Model\AdminMenuModel;
 use App\Model\PlateModel;
 
-
 use App\Model\SuppUsersModel;
 use App\Model\SuppVsAttrModel;
 use App\Model\PlateAttrModel;
@@ -354,8 +353,8 @@ function getAttrValueSale($attr_id,$to_html=false,$or_limit=1,$in_arr_data=[])
                 
             }
             $html .= '</ul></div>';
+//			$html .= '<span class="r"><a href="javascript:void(0)" data="">更多</a></span>';
             $html .= '</div>';
-
         }
         return ['status'=>1,'data'=>['html' => $html, 'media' => $lists, 'select_html' => $select_html],'msg'=>''];
     }
@@ -405,27 +404,7 @@ function getOrderType($orderType) {
            6 => '供应商反馈', 
            7 => '广告主反馈', 
            8 => '广告主质量反馈', 
-           9 => '申诉中', 
-           10 => '确认完成',
-           // 100 => '未匹配',
-           1000 => '退款',
-           11 => '预约',//'未匹配',
-           12 => '申请退款',
-           13 => '完成',
-           14 => '申请退款',
-           15 => '申请退款',
-        ];
-    } elseif(Auth::user()->user_type == 3) {
-        $status = [ 0 => '全部',
-           1 => '预约', 
-           2 => '拒绝', 
-           3 => '流单', 
-           4 => '正执行', 
-           5 => '供应商完成', 
-           6 => '供应商反馈', 
-           7 => '广告主反馈', 
-           8 => '广告主质量反馈', 
-           9 => '申诉中', 
+           9 => '申诉', 
            10 => '确认完成',
            // 100 => '未匹配',
            1000 => '退款',
@@ -854,19 +833,13 @@ function getOrderCount($user_id, $user_type, $timeInterval = null)
 function getUsedMoney($user_id)
 {
     $used_money = OrderNetworkModel::leftJoin("order",'order.order_sn','=','order_network.order_sn')
-                        ->where('order_network.ads_user_id',$user_id)
-                        ->where(function($query){
-                            $query->where('order_network.order_type', 10)
-                                ->orWhere(function($query){
-                                    $query->where('order_network.order_type', 13)
-                                        ->where('order_network.deal_with_status', 3);
-                                });
-                        })
-                        ->select(DB::raw("sum(order_network.user_money) as user_money"))
-                        ->first()
-                        ->toArray();
+                                            ->where('order.ads_user_id',$user_id)
+                                            ->select(DB::raw("sum(order_network.user_money) as user_money"),
+                                                     DB::raw("sum(order_network.qa_change) as qa_change"))
+                                            ->first()
+                                            ->toArray();
 
-    return $used_money['user_money'];
+    return $used_money['user_money'] - $used_money['qa_change'];
 }
 
 /**

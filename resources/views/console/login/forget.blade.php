@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>找回密码</title>
+    <title>找回密码_喇叭传媒</title>
     <link href="/console/css/style.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="/js/layer.js"></script>

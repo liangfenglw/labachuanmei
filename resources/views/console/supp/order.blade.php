@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>订单管理</title>
+    <title>订单管理_喇叭传媒</title>
     @include('console.share.cssjs')
 </head>
 <body class="fold">
@@ -50,7 +50,7 @@
                     <li @if($order_type == 3)class="cur" @endif><a href="/supp/order/3">已流单</a></li>
                     <li @if($order_type == 2)class="cur" @endif><a href="/supp/order/2">已拒单</a></li>
                     <li @if($order_type == 100)class="cur" @endif><a href="/supp/order/100">退款订单</a></li>
-                    {{-- <li @if($order_type == 9)class="cur" @endif><a href="/supp/order/9">申诉订单</a></li> --}}
+                    <li @if($order_type == 9)class="cur" @endif><a href="/supp/order/9">申诉订单</a></li>
                     <!-- <li><a href="">退还</a></li> -->
                 </ul>
             </div>
@@ -159,7 +159,7 @@
                         @elseif ($order_type == 2)
                             @foreach($order_list as $key => $value)
                                 <tr>
-                                    <td>{{ $value['id'] }}</td>
+                                    <td>{{ $value['order_id'] }}</td>
                                     <td>{{ $value['title'] }}</td>
                                     <td>{{ $value['type_name'] }}</td>
                                     <td>{{ $value['over_at'] }}</td>
@@ -229,9 +229,16 @@
                                     <td>{{ $value['id'] }}</td>
                                     <td>{{ $value['title'] }}</td>
                                     <td>{{ $value['type_name'] }}</td>
-                                    {{-- <td>{{ $value['start_at'] }}</td> --}}
-                                    
-                                    <td>{{ $status[$value['order_type']] }}</td>
+                                    <td>
+                                        {{ getOrderType($value['order_type']) }}
+                                        @if($value['deal_with_status'] == 2)
+                                            ，重做
+                                        @elseif($value['deal_with_status'] == 1)
+                                            ，此订单退款处理
+                                        @elseif($value['deal_with_status'] == 3) 
+                                            ，不同意申诉，结款
+                                        @endif
+                                    </td>
                                     <td>
                                         <a class="color2" href="/supp/order/info/{{ $value['id'] }}">查看</a>
                                     </td>
@@ -246,7 +253,14 @@
                                     {{-- <td>{{ $value['start_at'] }}</td> --}}
                                      <td>{{ $value['over_at'] }}</td>
                                      <td class="color1">￥{{ $value['supp_money'] }}</td>
-                                    <td>{{ $status[$value['order_type']] }}</td>
+                                    <td>{{ getOrderType($value['order_type']) }}
+                                        @if($value['deal_with_status'] == 2)
+                                            ，重做
+                                        @elseif($value['deal_with_status'] == 1)
+                                            ，此订单退款处理
+                                        @elseif($value['deal_with_status'] == 3) 
+                                            ，不同意申诉，结款
+                                        @endif</td>
                                     <td>
                                         <a class="color2" href="/supp/order/info/{{ $value['id'] }}">查看</a>
                                     </td>
@@ -273,7 +287,18 @@
 											@endif
 										</div>
                                     </td>
-                                    <td>{{ $status[$value['order_type']] }}</td>
+                                    <td>{{ $status[$value['order_type']] }}
+                                        @if($value['order_type'] == 13)
+                                            @if($value['deal_with_status'] == 2)
+                                                ，重做
+                                            @elseif($value['deal_with_status'] == 1)
+                                                ，此订单退款处理
+                                            @elseif($value['deal_with_status'] == 3) 
+                                                ，不同意申诉，结款
+                                            @endif
+                                        @endif
+                                        
+                                        </td>
                                     <td>
                                         <a class="color2" href="/supp/order/info/{{ $value['id'] }}">查看</a>
                                     </td>

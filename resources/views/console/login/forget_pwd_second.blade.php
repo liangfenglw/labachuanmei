@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>用户中心</title>
+    <title>用户中心_喇叭传媒</title>
     <link href="/console/css/reset.css" rel="stylesheet" type="text/css" />
     <link href="/console/css/style.css" rel="stylesheet" type="text/css" />
     <link href="/console/css/style2.css" rel="stylesheet" type="text/css" />

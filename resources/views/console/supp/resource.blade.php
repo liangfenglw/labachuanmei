@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>媒体管理</title>
+    <title>媒体管理_喇叭传媒</title>
     @include('console.share.cssjs') 
 </head>
 <body class="fhide">         <!--    class="fold" 左导航收缩  -->
@@ -65,7 +65,7 @@
                                     <td class="logo-title">{{$vv['name']}}</td>
                                     <td>{{ $val['plate_name'] }}</td>
                                     <td class="color1">￥{{ $vv['proxy_price'] }}</td>
-                                    <td>0</td>
+                                    <td>{{ $vv['order_count'] }}</td>
                                     <td>{{$state_status[$vv['is_state']]}}</td>
                                     <td class="color1">{{ $media_status[$vv['is_state']] }}</td>
                                     <td><a href="/supp/resource/info/{{ $vv['id'] }}" class="color2">查看</a></td>

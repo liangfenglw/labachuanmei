@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>新增会员</title>
+	<title>新增会员_喇叭传媒</title>
 	@include('console.share.cssjs')
 	<style>
 	</style>

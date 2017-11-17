@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>同类资源列表</title>
+        <title>同类资源列表_喇叭传媒</title>
         @include('console.share.cssjs')
     </head>
  <style>
@@ -84,7 +84,7 @@
         <td class="color1">￥{{ $user_info['proxy_price'] }}</td>
         <td>{{ getSuppUserType($user_info['is_state']) }}</td>
         <td><a class="color2" href="/usermanager/suppResourceInfo?id={{ $user_info['user_id'] }}">查看</a> &nbsp;  &nbsp; 
-    @if(isset($user_info['belong']))
+    @if(!empty($user_info['parent_id']))
         <label class="color2">
             <input type="checkbox" name="yunxu_jiedan" value="@if($user_info['success_order'] == 1) 2 @else 1 @endif" @if($user_info['success_order'] == 1) checked="true" @endif onclick="update_set(this);" data_id="{{ $user_info['user_id'] }}" /> 允许接单</label>
     @else
@@ -106,12 +106,20 @@
                     <td>{{ $val['order_count'] }}</td>
                     <td class="color1">￥{{ $val['proxy_price'] }}</td>
                     <td>{{ getSuppUserType($val['is_state']) }}</td>
-                    <td><a class="color2" href="/usermanager/suppResourceInfo?id={{ $val['user_id'] }}">查看</a> &nbsp;  &nbsp; 
-                    @if(isset($val['belong']))
+                    <td>
+                     @if(!empty($val['parent_id']))
+                        <a class="color2" href="/usermanager/suppResourceInfo?id={{ $val['user_id'] }}">查看</a> &nbsp;  &nbsp; 
+                     @else
+                        <a class="color2" href="/usermanager/selfMedia?id={{ $val['user_id'] }}">查看</a> &nbsp;  &nbsp; 
+                        
+                     @endif
+                    
+                    @if(!empty($val['parent_id']))
                     <label class="color2">
                         <input type="checkbox" name="yunxu_jiedan" value="
                         @if($val['success_order'] == 1) 2 @else 1 @endif" onclick="update_set(this);"  
                         @if($val['success_order'] == 1) checked="true" @endif  data_id="{{ $val['user_id'] }}"/> 允许接单</label>
+
                     @endif
             </td>
                  </tr>

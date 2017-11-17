@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>代理会员详情</title>
+	<title>代理会员详情_喇叭传媒</title>
 	<meta name="description" content="" />
 	<meta name="keywords" content="" />
     @include('console.share.cssjs')
@@ -88,8 +88,8 @@
 					<div class="clearfix">
 						<div class="l row3_22">
 							<ul style="padding-top:18px;">
-								<li class="li1"><p>总订单数(已完成)<br/><b>{{ $success_order_num }}</b></p></li>
-								<li class="li2"><p>订单提成<br/><b>￥{{ $commission }}</b></p></li>
+								<li class="li1"><p>总订单数(已完成)<br/><b>{{ $info['parent_order_num'] }}</b></p></li>
+								<li class="li2"><p>订单提成<br/><b>￥{{ $info['parent_order_commision'] }}</b></p></li>
 							</ul>
 						</div>
 					<!--	饼状图	-->
@@ -462,7 +462,7 @@ if( $('#tb_dl2').length > 0 ){
 						normal: { show: false }
 					},
 					data:[
-						{value:{{ $commission }}, name:'订单提成'},
+						{value:{{ $info['parent_order_commision'] }}, name:'订单提成'},
 						{value:{{ $user_money }}, name:'账户余额'}
 					]
 				}
