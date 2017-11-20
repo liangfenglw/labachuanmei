@@ -110,7 +110,7 @@
 	<div class="main_o clearfix" style="padding-bottom:0;">
 	
 		<h3 class="title3" style="padding:20px 30px 0 20px;"><strong>订单列表</strong>
-        <a class="btn_o" href="#" style="float:right; margin:5px 0 0 0;">导出列表</a>
+        <a class="btn_o" href="/userpersonal/user_subordinate/{{ $info['id'] }}" style="float:right; margin:5px 0 0 0;">导出列表</a>
         </h3>
 
 

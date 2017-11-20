@@ -77,5 +77,42 @@ $(".table_in1 td a.del2").click(function(){
 });
 </script>
 
+<script>
+    var datatable;
+    $(function () {
+            var dt_option = {
+                "searching" : false,        //是否允许Datatables开启本地搜索
+                "paging" : true,            //是否开启本地分页
+                "pageLength" : 8,           //每页显示记录数
+                "lengthChange" : false,     //是否允许用户改变表格每页显示的记录数 
+                "lengthMenu": [ 5, 10, 100 ],       //用户可选择的 每页显示记录数
+                "info" : true,
+                "columnDefs" : [{
+                    "targets": 'nosort',
+                    "orderable": false
+                }],
+                "pagingType": "simple_numbers",
+                "language": {
+                    "search": "搜索",
+                    sZeroRecords : "没有未读消息",
+                    "info": "显示第 _PAGE_/_PAGES_ 页，共_TOTAL_条",
+                    "infoFiltered": "(筛选自_MAX_条数据)",
+                    "infoEmpty": "没有符合条件的数据",
+                    oPaginate: {    
+                        "sFirst" : "首页",
+                        "sPrevious" : "上一页",
+                        "sNext" : "下一页",
+                        "sLast" : "尾页"    
+                    },
+                    searchPlaceholder: "过滤..."
+                }
+                ,"order" : [[0,"desc"]]
+            };
+            datatable =  $('#datatable1').DataTable(dt_option);
+        
+    });
+    
+</script>
+
 </body>
 </html>

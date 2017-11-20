@@ -366,7 +366,7 @@ class AdminUserController extends CommonController
                                          'order_network.type_id','order.start_at',
                                          'order.over_at','order_network.order_type',
                                          'order_network.success_url','order_network.success_pic',
-                                         'order.title')
+                                         'order.title','order_network.deal_with_status','order_network.media_type')
                             ->get()
                             ->toArray();
             //处理html
@@ -379,7 +379,18 @@ class AdminUserController extends CommonController
                 $htmls .= "<td>".$value['start_at']."</td>";
                 $htmls .= "<td>".$value['over_at']."</td>";
                 $htmls .= "<td class=\"color1\">￥".$value['user_money']."</td>";
-                $htmls .= "<td>".getOrderType($value['order_type'])."</td>";
+                $htmls .= "<td>".getOrderType($value['order_type']);
+                if ($value['deal_with_status'] == 2) {
+                    $htmls .= '，重做';
+                } elseif ($value['deal_with_status'] == 1) {
+                    $htmls .= '，此订单退款处理';
+                } elseif ($value['deal_with_status'] == 3) {
+                    $htmls .= '，不同意申诉，结款';
+                }
+                if ($value['media_type'] == 12) {
+                    $htmls .= ',重指派';
+                }
+                $htmls .= "</td>";
                 $htmls .= "<td>";
                 if ($value['success_url']) {
                     $htmls .= "<a target=\"_blank\" href='".$value['success_url']."'>查看链接</a> | ";
@@ -409,7 +420,9 @@ class AdminUserController extends CommonController
             $info->company = !empty($request->input('company')) ? $request->input('company') : $info->company;
             $info->breif = !empty($request->input('breif')) ? $request->input('breif') : $info->breif;
         }
-        $user_model->is_login = $request->input('is_login');
+        if (!empty($request->is_login)) {
+            $user_model->is_login = $request->input('is_login');
+        }
         $user_model->save();
         //检查是否审核
         if ($request->input('check_status') == 3) { //不通过
@@ -418,7 +431,7 @@ class AdminUserController extends CommonController
             $info->level_id = 2; // 高级会员
             $info->check_status = 4;
             // 清掉上级
-            $info->parent_id = 0;
+            // $info->parent_id = 0;
         }
         if ($info->save()) {
             return redirect('/user/ad_user/'.$request->input('user_id'))->with('status', '更新成功');

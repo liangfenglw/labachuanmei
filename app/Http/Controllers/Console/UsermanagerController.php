@@ -391,8 +391,9 @@ class UsermanagerController extends CommonController
         $id = $request->input('id');
         $info = User::where('id',$id)->with('supp_user')->first();
         if (!$info['supp_user']) {
-            return back()->with('status', '用户数据残缺');
+                return back()->with('status', '用户数据残缺');
         }
+
         $info = $info->toArray();
         $plate = PlateModel::where('pid',0)
                             ->with(['childPlate' => function($query)use($info){
@@ -1648,6 +1649,7 @@ class UsermanagerController extends CommonController
                     'plate_price' => ($excel_data[$key]['平台价率'] / 100) * $excel_data[$key]['价格'] + $excel_data[$key]['价格'],
                     'vip_rate' => $excel_data[$key]['会员价率'],
                     'plate_rate' => $excel_data[$key]['平台价率'],
+                    'created_at' => date("Y-m-d H:i:s", time())
                 ];
                 foreach ($attr as $attr_name => $value) {
                     if (empty($excel_data[$key][$attr_name])) {
@@ -1663,6 +1665,7 @@ class UsermanagerController extends CommonController
                         'attr_value_id' => $value[$excel_data[$key][$attr_name]]['0'],
                         'created_at' => date('Y-m-d H:i:s', time()),
                         'attr_id' => $value[$excel_data[$key][$attr_name]]['1'],
+                        'created_at' => date("Y-m-d H:i:s", time()),
                     ];
                 }
             }
@@ -1690,12 +1693,15 @@ class UsermanagerController extends CommonController
         $excel_data = $excel_data['0'];
         $user_data = $spec_val = [];
         $i = -1;
+        $j = 1;
         $is_state = ['在线' => 1, '下架' => '2', '审核' => 3];
         DB::enableQueryLog();
         foreach ($pic as $key => $value) {
-            if (count($excel_data) < $key+1) {
-                break;
+            if (count($pic) < ($j * 2)) { // 2
+                    break;
             }
+            ++$j;
+            // $info = SuppUsersModel::where('name', $excel_data[$key]['供应商'])->first();
             $info = User::where('name', $excel_data[$key]['供应商'])->first();
             if (empty($info)) {
                 DB::rollBack();
@@ -1769,6 +1775,7 @@ class UsermanagerController extends CommonController
                     'attr_value_id' => $value[$excel_data[$key][$attr_name]]['0'],
                     'created_at' => date('Y-m-d H:i:s', time()),
                     'attr_id' => $value[$excel_data[$key][$attr_name]]['1'],
+                    'created_at' => date("Y-m-d H:i:s", time())
                 ];
             }
 

@@ -1,4 +1,4 @@
-        <div class="item_f"><p><i class="LGntas"></i>关键字：</p>
+        {{-- <div class="item_f"><p><i class="LGntas"></i>关键字：</p>
             <div class="r"><input type="text" name="keyword" id="" class="txt_f1" style="width:75%;" value="{{ $info['parent_order']['keywords'] }}"></div>
         </div>
         <div class="item_f"><p><i class="LGntas"></i>订单备注：</p>
@@ -39,7 +39,8 @@
                     <i>*</i> 平台赚取的盈利
                 </span>
             </div>
-        </div>
+        </div> --}}
+        @if($info['order_type'] != 3) {{-- 流单不用显示 --}}
         <div class="item_f"><p><i class="LGntas"></i>完成链接：</p>
             <div class="r"><input type="text" readonly="readonly" name="textfield" id="textfield" class="txt_f1" style="width:75%;" value="{{$info['success_url']}}" /></div>
         </div>
@@ -54,6 +55,7 @@
 				</span>
 			</div>
         </div>
+        @endif
 
                 @if($info['order_feedback'])
                     <div class="item_f"><p><i class="LGntas"></i>申诉原因：</p>      

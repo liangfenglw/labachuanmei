@@ -229,14 +229,21 @@ class ManagerController extends CommonController
                 $child_lists = $child_lists->where(function($query){
                     $query
                     ->Where(function($query){
-                        $query->whereIn('order_network.order_type',[9,12,14,15])
+                        $query->whereIn('order_network.order_type',[12,14,15])
                                 ->orWhere(function($query){
                                      $query->where('order_network.order_type',13)
                                         ->Where('order_network.deal_with_status',1);
                                 });
                     });
                 });
-            }else{
+            } elseif($type == 9){
+                $child_lists = 
+                    $child_lists->where('order_network.order_type','=',9)
+                        ->orWhere(function($query){
+                            $query->where('order_network.order_type', 13)
+                                ->where('order_network.deal_with_status', 3);
+                        });
+            } else {
                 $child_lists = 
                     $child_lists->where('order_network.order_type','=',$request->type);
             }
@@ -247,8 +254,8 @@ class ManagerController extends CommonController
             //                         ->Where('order_network.deal_with_status','<>',1);
             //             });
         }
-        if (!empty($request->input('mediatype'))) {
-            $child_lists = $child_lists->where('order_network.type_id','=',$request->input('mediatype'));
+        if (!empty($request->input('plate_id'))) {
+            $child_lists = $child_lists->where('order_network.type_id','=',$request->input('plate_id'));
         }
         if (!empty($request->keyword)) {
             $child_lists = $child_lists->where('order_network.id','=',$request->input('keyword'));
@@ -293,26 +300,29 @@ class ManagerController extends CommonController
                 '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户',
                 '供应商','媒体名称','完成链接/截图','订单状态'
             ],
-            11 => [
+            11 => [ // 未匹配
                 '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','媒体名称','订单状态'
             ],
-            1 => [
+            1 => [ // 预约状态
                 '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','供应商','媒体名称','订单状态'
             ],
-            10 => [
+            10 => [ // 已完成
                 '订单号','稿件标题','稿件类型','价格','所属用户','供应商','媒体名称','完成链接/截图','订单状态'
             ],
-            4 => [
+            4 => [ // 正执行
                 '订单号','稿件标题','稿件类型','价格','所属用户','供应商','媒体名称','完成链接/截图','订单状态'
             ],
-            3 => [
+            3 => [ // 已流单
                 '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','供应商','媒体名称','订单状态'
             ],
-            2 => [
+            2 => [ // 
                 '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','供应商','媒体名称','订单状态'
             ],
-            12 => [
+            12 => [ // 退款订单
                 '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','供应商','媒体名称','完成链接/截图','订单状态'
+            ],
+            9 => [
+                '订单号', '稿件类型', '所属用户', '供应商', '媒体名称', '完成链接/截图', '申诉状态'
             ]
         ];
         $cell_data = [];
@@ -320,13 +330,29 @@ class ManagerController extends CommonController
         foreach ($data as $key => $value) {
             switch ($type) {
                 case '0':
+                    $tmp = '';
+                    if ($value['deal_with_status'] == 2) {
+                        $tmp = '，重做';
+                    } elseif ($value['deal_with_status'] == 1) {
+                        $tmp = '，此订单退款处理';
+                    } elseif ($value['deal_with_status'] == 3) {
+                        $tmp = '，不同意申诉，结款';
+                    }
+                    if ($value['media_type'] == 12) {
+                        $tmp = ',重指派';
+                    }
                     $cell_data[] = [
                         $value['id'],
                         $value['title'],
                         $value['type_name'],
                         $value['start_at'],
-                        $value['over_at'],$value['user_money'],$value['username'],$value['supp_user']['parent_user']['name'],$value['media_name'],$value['success_url'],
-                        getOrderType($value['order_type'])
+                        $value['over_at'],
+                        $value['user_money'],
+                        $value['username'],
+                        $value['supp_user']['parent_user']['name'],
+                        $value['supp_user']['media_name'],
+                        $value['success_url'],
+                        getOrderType($value['order_type']).$tmp
                     ];
                     break;
                 case '11':
@@ -341,16 +367,22 @@ class ManagerController extends CommonController
                         $value['over_at'],
                         $value['user_money'],
                         $value['username'],
-                        $value['media_name'],
+                        $value['supp_user']['media_name'],
                         getOrderType($value['order_type']).$tmp,
                     ];
                     break;
                 case '1':
                     $cell_data[] = [
-                        $value['id'],$value['title'],$value['type_name'],
-                        $value['start_at'],$value['over_at'],$value['user_money'],
-                        $value['username'],$value['supp_user']['parent_user']['name'],
-                        $value['media_name'],getOrderType($value['order_type'])
+                        $value['id'],
+                        $value['title'],
+                        $value['type_name'],
+                        $value['start_at'],
+                        $value['over_at'],
+                        $value['user_money'],
+                        $value['username'],
+                        $value['supp_user']['parent_user']['name'],
+                        $value['supp_user']['media_name'],
+                        getOrderType($value['order_type'])
                     ];
                 break;
                 case '10':
@@ -365,11 +397,25 @@ class ManagerController extends CommonController
                         $value['user_money'],
                         $value['username'],
                         $value['supp_user']['parent_user']['name'],
-                        $value['media_name'],
+                        $value['supp_user']['media_name'],
                         $value['success_url'],
                         getOrderType($value['order_type']).$tmp,
                     ];
                 break;
+                case '3':
+                    $cell_data[] = [
+                        $value['id'],
+                        $value['title'],
+                        $value['type_name'],
+                        $value['start_at'],
+                        $value['over_at'],
+                        $value['user_money'],
+                        $value['username'],
+                        $value['supp_user']['parent_user']['name'],
+                        $value['supp_user']['media_name'],
+                        '流单',
+                    ];
+                    break;
                 case '4':
                     $tmp = '';
                     if ($value['deal_with_status'] == 2) {
@@ -383,15 +429,46 @@ class ManagerController extends CommonController
                         $value['id'],
                         $value['title'],
                         $value['type_name'],
-                        $value['start_at'],
-                        $value['over_at'],
                         $value['user_money'],
                         $value['username'],
                         $value['supp_user']['parent_user']['name'],
+                        $value['supp_user']['media_name'],
+                        $value['success_url'],
                         getOrderType($value['order_type']).$tmp,
                     ];
                     break;
+                case '9':
+                    $tmp = '';
+                    if($value['deal_with_status'] == 2) {
+                        $tmp = '，重做';
+                    } elseif ($value['deal_with_status'] == 1) {
+                        $tmp = '，此订单退款处理';
+                    } elseif ($value['deal_with_status'] == 3) {
+                        $tmp = '，不同意申诉，结款';
+                    }
+                    $cell_data[] = [
+                        $value['id'],
+                        $value['title'],
+                        $value['type_name'],
+                        $value['supp_user']['parent_user']['name'],
+                        $value['supp_user']['media_name'],
+                        $value['success_url'],
+                        getOrderType($value['order_type']).$tmp,
+                    ];
+                    break;
+                case '12':
                 default:
+                    $tmp = '';
+                    if ($value['deal_with_status'] == 2) {
+                        $tmp = '，重做';
+                    } elseif ($value['deal_with_status'] == 1) {
+                        $tmp = '，此订单退款处理';
+                    } elseif ($value['deal_with_status'] == 3) {
+                        $tmp = '，不同意申诉，结款';
+                    } 
+                    if ($value['media_type'] == 12) {
+                        $tmp = '重指派';
+                    }
                     $cell_data[] = [
                         $value['id'],
                         $value['title'],
@@ -403,7 +480,7 @@ class ManagerController extends CommonController
                         $value['supp_user']['parent_user']['name'],
                         $value['media_name'],
                         $value['success_url'],
-                        getOrderType($value['order_type'])
+                        getOrderType($value['order_type']).$tmp
                         ];
                     break;
             }
@@ -595,8 +672,14 @@ class ManagerController extends CommonController
 
                 if ($order_info->commission > 0) {
                     $ads_user = AdUsersModel::where('user_id', $order_info->ads_user_id)->first();
+
+                    $ads_user->parent_order_commision = $ads_user->parent_order_commision + $order_info->commission;
+                    $ads_user->parent_order_num = $ads_user->parent_order_num + 1;
+                    $ads_user->save();
+
                     $parent_user = AdUsersModel::where('user_id', $ads_user->user_id)->first();
                     $parent_user->user_money = $parent_user->user_money + $order_info->commission;
+
                     $tmp3 = $parent_user->save();
                     $tmp4 = UserAccountLogModel::insert(
                         ['user_id' => $parent_user->user_id, 
@@ -687,9 +770,14 @@ class ManagerController extends CommonController
 
                 if ($order_info->commission > 0) {
                     $ads_user = AdUsersModel::where('user_id', $order_info->ads_user_id)->first();
+                    $ads_user->parent_order_commision = $ads_user->parent_order_commision + $order_info->commission;
+                    $ads_user->parent_order_num = $ads_user->parent_order_num + 1;
+                    $ads_user->save();
+
                     $parent_user = AdUsersModel::where('user_id', $ads_user->user_id)->first();
                     $parent_user->user_money = $parent_user->user_money + $order_info->commission;
                     $tmp3 = $parent_user->save();
+
                     $tmp4 = UserAccountLogModel::insert(
                         ['user_id' => $parent_user->user_id, 
                          'user_money' => $order_info->commission,
@@ -811,7 +899,7 @@ class ManagerController extends CommonController
                     }]);
             }
             if ($request->input('mediatype') == 1 && !empty($request->input('orderid'))) {
-                $lists = $lists->where('user_account_log.order_id',$request->input('orderid'));
+                $lists = $lists->where('user_account_log.order_sn',$request->input('orderid'));
             }
             if ($request->input('start')) {
                 $lists = $lists->where('user_account_log.start','>=',$request->input('start'));
@@ -828,7 +916,8 @@ class ManagerController extends CommonController
             $html = "";
             foreach ($lists as $key => $value) {
                 $html .= "<tr>";
-                $html .= "<td>".$value['order_id']."</td>";
+                $html .= "<td>".$value['id']."</td>";
+                $html .= "<td>".$value['order_sn']."</td>";
                 $html .= "<td>".$value['users']['name']."</td><td>";
                 $html .= !empty($value['ads_user']) ? $value['ads_user']['level']['level_name'] : '供应商';
                 $html .=  "<td class=\"color1\">￥".$value['user_money']."</td>";
@@ -836,7 +925,6 @@ class ManagerController extends CommonController
                 $html .= "<td>".$log_status[$value['status']]."</td>";
                 $html .= "<td><a class=\"color2\" href=\"/console/withdraw/".$value['id']."\">查看</a></td></tr>";
             }
-
             return $html;
         }
         $lists = $lists::with(['ads_user.level' => function($query){
@@ -847,6 +935,7 @@ class ManagerController extends CommonController
                     ->orderBy('id','desc')
                     ->get()
                     ->toArray();
+
         return view('console.manager.withdraw', ['lists' => $lists, 'log_status' => $log_status]);
     }
 

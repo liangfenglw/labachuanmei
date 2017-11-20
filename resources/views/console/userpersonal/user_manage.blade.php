@@ -44,6 +44,7 @@
 					<div class="l">
 						<input type="text" name="keyword" id="keyword" class="txt5" placeholder="用户名" />
 						<input type="submit" name="submit" class="sub4_3" id="searchnews" value="查询" />
+						<a class="sub4_2" style="background:#7db6eb;" href="javascript:;" id="get_excel" onclick="get_excel()">导出列表</a>
 					</div>
 				</div>
 <!--

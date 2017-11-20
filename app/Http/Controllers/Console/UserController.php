@@ -200,26 +200,41 @@ class UserController extends CommonController
                         ->where('is_delete',1) //未删除
                         ->where('status',0) //未支付
                         ->count();
-        $child_order_num = OrderNetworkModel::whereIn('ads_user_id',function($query) use($user_id){
-                                $query->from('ad_users')->where('parent_id',$user_id)->select('user_id');
-                            })
-                            ->count();
+        $child_order_num = AdUsersModel::where('parent_id',$user_id)
+                            ->sum('parent_order_num');
+        // 分销会员收益
+        $child_order_money = OrderNetworkModel::whereIn('ads_user_id', function($query) 
+            use($user_id) {
+                $query->from('ad_users')
+                    ->where('parent_id', $user_id)
+                    ->select('user_id')
+                    ->get();
+            })->where(function($query){
+                $query->where('order_type', 10)
+                    ->orWhere(function($query){
+                        $query->where('order_type', 13)
+                            ->where('deal_with_status', 3);
+                    });
+            });
+        $commission_money = clone($child_order_money);
+        $commission_money = $commission_money->sum('commission'); // 提成
+        $child_order_money = $child_order_money->sum('user_money');
 
-        $success_money = OrderNetworkModel::whereIn('order_sn',function($query) use($user_id) {
-                                $query->from('order')
-                                    ->where('ads_user_id',$user_id)
-                                    ->select('order_sn');
-                         })
-                        ->where('order_type',10)
-                        ->sum('user_money');
+        // $success_money = OrderNetworkModel::whereIn('order_sn',function($query) use($user_id) {
+        //                         $query->from('order')
+        //                             ->where('ads_user_id',$user_id)
+        //                             ->select('order_sn');
+        //                  })
+        //                 ->where('order_type',10)
+        //                 ->sum('user_money');
 
-        $qa_change = OrderNetworkModel::whereIn('order_sn',function($query) use($user_id) {
-                            $query->from('order')->where('ads_user_id',$user_id)->select('order_sn');
-                    })
-                    ->where('order_type',10)
-                    ->sum('qa_change');
+        // $qa_change = OrderNetworkModel::whereIn('order_sn',function($query) use($user_id) {
+        //                     $query->from('order')->where('ads_user_id',$user_id)->select('order_sn');
+        //             })
+        //             ->where('order_type',10)
+        //             ->sum('qa_change');
 
-        $vip_all = $success_money - $qa_change;
+        // $vip_all = $success_money - $qa_change;
 
         //纯分销收益
         $parent_commision = OrderNetworkModel::whereIn('ads_user_id',
@@ -274,14 +289,16 @@ class UserController extends CommonController
                  'order_count' => $order_count,
                  'child_user_count' => getMychildUserCount(),//代理会员数
                  'order_list' => $order_list,
-                 'vip_all' => $vip_all,
+                 // 'vip_all' => $vip_all,
                  'parent_commision' => get_demical($parent_commision),
                  'order_status_count' => $order_status_count,
                  'month' => date("m",time()),
                  'data_all' => $toufang['0'],
                  'data_sum' => $toufang['1'],
                  'article_new_list' => $this->getNewsLists(),
-                 'child_order_num' => $child_order_num]);
+                 'child_order_num' => $child_order_num,
+                 'commission_money' => $commission_money,
+                 'child_order_money' => $child_order_money]);
 
     }
 

@@ -120,7 +120,7 @@ class OrderController extends CommonController
                        6 => '供应商反馈', 
                        7 => '广告主反馈', 
                        8 => '广告主质量反馈', 
-                       9 => '申诉', 
+                       9 => '申诉中', 
                        10 => '广告主确认完成',
                        11 => '预约',
                        12 => '申请退款',
@@ -339,7 +339,11 @@ class OrderController extends CommonController
                         'status' => 1,
                         'son_charge' => 2,
                     ];
-                    $tmp4 = AdUsersModel::where('user_id',$parent_id)->increment('user_money',$commission);
+                    $tmp4 = AdUsersModel::where('user_id',$parent_id)
+                            ->increment('user_money',$commission);
+
+                    AdUsersModel::where('user_id',Auth::user()->id)->increment('parent_order_commision',$commission);
+                    AdUsersModel::where('user_id',Auth::user()->id)->increment('parent_order_num',1);
                     UserAccountLogModel::insert($accountlog_data);
                 }
             }

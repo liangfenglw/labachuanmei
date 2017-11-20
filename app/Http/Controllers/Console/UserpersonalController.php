@@ -653,7 +653,10 @@ class UserpersonalController extends CommonController
         $money_percent['user_money'] = $user['user_money'];
         // 已发布订单数
         $order_count_all = $order_count_all ? $order_count_all : 0;
-        return view('console.userpersonal.account_query',[
+        $level_id = AdUsersModel::where('user_id', $user['user_id'])->first()->level_id;
+        $view = $level_id == 1 ? 'account_query' : 'vip_account_query';
+
+        return view("console.userpersonal.$view",[
             'active'=>'account_query',
             'money_percent'=>$money_percent,
             'order_count_all' => $order_count_all,
@@ -745,25 +748,17 @@ class UserpersonalController extends CommonController
 
     public function getAccountLogExcel($type,$data)
     {
-        $title = [1 => '充值', 2 => '消费', 3 => '提现', 0 => '全部'];
+        $title = [1 => '充值', 2 => '订单', 3 => '提现', 0 => '全部'];
         $tab = [
-            0 => ['日期', '订单号', '订单类型', '活动名称', '状态', '完成链接 / 截图', '金额'],
+            0 => ['日期', '订单号', '稿件类型', '活动名称', '状态', '完成链接 / 截图', '金额'],
             1 => ['日期', '订单号', '消费方式', '消费账号', '状态', '金额'],
-            2 => ['日期', '订单号', '订单类型', '订单名称', '订单状态', '完成链接 / 截图', '金额'],
+            2 => ['日期', '订单号', '稿件类型', '订单名称', '订单状态', '完成链接 / 截图', '金额'],
             3 => ['日期', '订单号', '消费方式', '消费账号', '状态', '金额'],
         ];
         $cell_data = [];
         foreach ($data as $key => $value) {
             if ($type == 0) {
-                $cell_data[] = [
-                    $value['created_at'],
-                    $value['order_id'],
-                    $value['type_name'],
-                    $value['order_title'],
-                    $value['order_type'],
-                    $value['success_url'],
-                    $value['user_money']
-                ];
+                
             } elseif ($type == 3) {
                 $cell_data[] = [
                     $value['created_at'],
@@ -774,13 +769,14 @@ class UserpersonalController extends CommonController
                     $value['user_money']
                 ];
             } elseif ($type == 1) {
+                $tmp = $value['status'] == 1 ? '充值成功' : '充值失败';
                 $cell_data[] = [
                     $value['created_at'],
                     $value['order_sn'],
                     $value['pay_type'],
                     $value['pay_user'],
-                    $value['order_type'],
-                    $value['user_money']
+                    $tmp,
+                    $value['user_money'],
                 ];
             } elseif ($type == 2) {
                 $cell_data[] = [
@@ -790,7 +786,7 @@ class UserpersonalController extends CommonController
                     $value['title'],
                     $value['order_type'],
                     $value['success_url'],
-                    $value['user_money']
+                    $value['user_money'],
                 ];
             }
         }
@@ -1099,19 +1095,14 @@ class UserpersonalController extends CommonController
             $qa_feedback = [1 => '好', 2 => '中', 3 => '差'];
             $login_status = [1 => '上线', 2 => '下架'];
             foreach ($order_list as $key => $value) {
-                    $percent = '';
-                    $percent = round((intval($value['parent_commision'])/intval($user['user_money']))*100).'%';
-                    if($user['user_money'] == 0){
-                        $percent = '100%';
-                    }
                     if (!$value['user_money_all']) {
                         $value['user_money_all'] = 0;
                     }
                     $html .= "<tr><td>$value[user_id]</td>
                             <td>".$value['name']."</td>
-                            <td>".$value['order_num']."</td>
+                            <td>".$value['parent_order_num']."</td>
                             <td class=\"color1\">￥".$value['user_money_all']."</td>
-                            <td>".$percent."</td>
+                            <td>".$value['parent_order_commision']."</td>
                             <td>".$value['user_created_at']."</td>
                             <td>".$login_status[$value['is_login']]."</td>";
                    
@@ -1152,20 +1143,11 @@ class UserpersonalController extends CommonController
         $plate_data = getOrderCount($user_id,2,getTimeInterval('now_week'));
         // 会员总金额
         $user_money = AdUsersModel::where('user_id',$user_id)->value('user_money');
-        // 平台纯收益
-        $commission = OrderNetworkModel::where('ads_user_id',$user_id)
-                                        ->where(function($query){
-                                            $query->where('order_type', 10)
-                                                ->orWhere(function($query){
-                                                    $query->where('order_type', 13)
-                                                        ->where('deal_with_status',3);
-                                                });
-                                        })
-                                        ->sum('commission');
+
         // 总完成订单订单数
-        $success_order_num = OrderNetworkModel::where('ads_user_id',$user_id)
-                                    ->where('order_type',10)
-                                    ->count();
+        // $success_order_num = OrderNetworkModel::where('ads_user_id',$user_id)
+        //                             ->where('order_type',10)
+        //                             ->count();
         // 订单明细
         $data_lists = getAdsUserOrderList($user_id);
         $media = PlateModel::where('pid',0)->get()->toArray();
@@ -1174,10 +1156,10 @@ class UserpersonalController extends CommonController
              'info' => $user_subordinate,
              'plate_data' => $plate_data,
              'user_money' => $user_money,
-             'commission' => get_demical($commission),
              'data_lists' => $data_lists,
              'media' => $media,
-             'success_order_num' => $success_order_num]);
+             // 'success_order_num' => $success_order_num
+             ]);
     }
 
     /**

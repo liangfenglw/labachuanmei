@@ -35,7 +35,7 @@
 	{{ csrf_field() }}
 	<div class="main_o clearfix margin_top_40" style="padding-bottom:0;">
 		<h3 class="title3" style="padding:20px 0 0 20px;"><strong>财务明细</strong>
-            <a href="/userpersonal/account_query/type/0?get_excel=1&start={{ Request::input('start') }}&end={{ Request::input('end') }}&keyword={{ Request::input('keyword') }}&mediatype={{ Request::input('mediatype') }}" class="btn_o" id="get_excel" style="float:right; margin:15px 30px 0 0;" target="_blank">导出财务明细</a>
+            <a href="/userpersonal/account_query/type/2?get_excel=1&start={{ Request::input('start') }}&end={{ Request::input('end') }}&keyword={{ Request::input('keyword') }}&mediatype={{ Request::input('mediatype') }}" class="btn_o" id="get_excel" style="float:right; margin:15px 30px 0 0;" target="_blank">导出财务明细</a>
 		</h3>
 		<div class="dhorder_m">
 			<div class="tab1">
@@ -304,12 +304,9 @@ var _token = $('input[name="_token"]').val();
 					$(".search_2").hide();
 				}
 				if( index == "0" ){
-					url = "/userpersonal/account_query/type/0";
+					url = "/userpersonal/account_query/type/2";
 				}
 				if( index == "1" ){
-					url = "/userpersonal/account_query/type/3";
-				}
-				if( index == "2" ){
 					url = "/userpersonal/account_query/type/1";
 				}
 				

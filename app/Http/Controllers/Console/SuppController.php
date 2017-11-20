@@ -116,7 +116,7 @@ class SuppController extends CommonController
             $query->from('supp_users')->where('parent_id', Auth::user()->id)
                     ->select('user_id')
                     ->get();
-        })->whereIn('order_type',[4,5]) 
+        })->whereIn('order_type',[4,5,1,9,11,12,14,15])
           ->sum('supp_money') + $user_money;
 
         //拥有媒体资源数
@@ -230,7 +230,7 @@ class SuppController extends CommonController
              3 => [3], //流单
              2 => [2], //拒单
              100 => [12,13,14], //退款
-             9 => [9], //申诉订单,
+             9 => [9,15], //申诉订单,
         ];
         $supp_uid = Auth::user()->id;
         if ($order_type == 2) {
@@ -256,6 +256,9 @@ class SuppController extends CommonController
             if ($order_type != 2) {
                 $order_list = $order_list->whereIn('order_network.order_type',$order_status[$order_type]);
             }
+            // if ($order_type == 9) {
+            //     $order_list = $order_list->whereIn('order_network.order_type',$order_status[$order_type]);
+            // }
         }
 
         if ($request->input('start')) {
@@ -299,7 +302,6 @@ class SuppController extends CommonController
                                 ->get()
                                 ->toArray();
         }
-        // dd($order_list);
 
             $status = [
         	   0 => '取消',
@@ -840,7 +842,7 @@ class SuppController extends CommonController
 
     public function uploadMedia(Request $request)
     {
-         $data = parent::uploadExcel($request->file);
+        $data = parent::uploadExcel($request->file);
         if ($data['status_code'] != 200) {
             return back()->with('status', '上传失败');
         }
@@ -867,15 +869,18 @@ class SuppController extends CommonController
         $excel_data = $excel_data['0'];
         $user_data = $spec_val = [];
         $i = -1;
+        $j = 1;
         $is_state = ['在线' => 1, '下架' => '2', '审核' => 3];
         DB::enableQueryLog();
         $info = User::where('id', Auth::user()->id)->first();
         foreach ($pic as $key => $value) {
-            if (count($excel_data) < $key+1) {
+            // dd($excel_data);
+            if (count($pic) < ($j * 2)) { // 2
                 break;
             }
             $tmp = ++$i;
             $tmp2 = ++$i;
+            ++$j;
             if (empty($excel_data[$key]['媒体名称'])) {
                 break;
             }
@@ -993,7 +998,6 @@ class SuppController extends CommonController
         } else if(Auth::user()->user_type == 3) {
             $order_list = $order_list->Where('order_network.supp_user_id',Auth::user()->id);
         }
-
         $order_list = $order_list->orderBy('order_network.updated_at','desc')
                                 ->select(
                                     'order_network.ads_user_id',
