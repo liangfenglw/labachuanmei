@@ -29,10 +29,10 @@
     <thead>
         <tr>
             <th style="border-radius:12px 0 0 0;">序号</th>
-            <th>资源名称</th>
-            <th>资源类型</th>
+            <th>媒体名称</th>
+            <th>媒体类型</th>
             <th>入口示意图</th>
-            <th>资源简介</th>
+            <th>媒体优势</th>
             <th>金额</th>
             <th style="border-radius:0 12px 0 0;" class="nosort">操作</th>
         </tr>
@@ -45,7 +45,7 @@
                 <td>{{ $val['plate_name'] }}</td>
                 <td><img src="{{ $val['index_logo'] }}"></td>
                 <td>
-					<div style="text-overflow:ellipsis;padding:6px 5px;white-space:nowrap;max-width:500px;overflow:hidden;height:1.5em;display:inline-block;">{{ $val['breif'] }}</div>
+					<div style="text-overflow:ellipsis;padding:6px 5px;white-space:nowrap;max-width:500px;overflow:hidden;height:1.5em;display:inline-block;">{{ $val['remark'] }}</div>
 				</td>
                 <td class="color1">￥{{ $val['proxy_price'] }}</td>
                 <td><a class="color2" href="/media/sale_media/{{ $val['plate_id'] }}?user_id={{ $val['user_id'] }}">任务发布</a></td>
@@ -89,7 +89,7 @@
                     },
                     searchPlaceholder: "过滤..."
                 },
-                "order" : [[3,"desc"]]
+                "order" : [[0,"desc"]]
             };
             datatable =  $('#datatable1').DataTable(dt_option);
     });

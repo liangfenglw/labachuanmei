@@ -114,7 +114,9 @@
                                     <strong>{{ $val['value']['attr_name'] }}：</strong>
                                 </span>
                                 <div class="m">
+									<div style="line-height:45px;">
                                       {{ $val['value']['attr_value'] }}
+									</div>
                                 </div>
                             </div>
                         @endforeach

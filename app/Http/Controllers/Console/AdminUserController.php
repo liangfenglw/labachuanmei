@@ -290,9 +290,10 @@ class AdminUserController extends CommonController
                     $value['is_login'] == 1 ? '在线' : '下架',
                 ];
             } elseif ($user_type == 2) {
+                dd($value);
                 $cell_data[] = [
                     $value['user_id'],
-                    $value['nickname'],
+                    $value['name'],
                     $parent_name,
                     $value['created_at'],
                     $value['order_count'],

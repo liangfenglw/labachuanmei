@@ -937,11 +937,13 @@ class SuppController extends CommonController
             foreach ($attr as $attr_name => $value) {
                 if (empty($excel_data[$key][$attr_name])) {
                     DB::rollBack();
-                    return back()->with('status', '存在缺少的数据');
+//					return back()->with('status', '存在缺少的数据');
+                    return back()->with('status', '存在缺少的数据【'.$attr_name.'】');
                 }
                 if (empty($value[$excel_data[$key][$attr_name]]['0'])) {
                     DB::rollBack();
-                    return back()->with('status', '不存在该分类属性值');
+//					return back()->with('status', '不存在该分类属性值');
+                    return back()->with('status', '不存在该分类属性值【'.$attr_name.'】');
                 }
                 $spec_val[] = [
                     'user_id' => $user_id,

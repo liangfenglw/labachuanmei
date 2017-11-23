@@ -445,7 +445,7 @@ class UsermanagerController extends CommonController
         foreach ($data as $key => $value) {
             if ($type == 1) {
                 $cell_data[] = [
-                    $value['id'], 
+                    $value['user_id'], 
                     $value['name'], 
                     $value['created_at'], 
                     $value['order_count'], 
@@ -455,7 +455,7 @@ class UsermanagerController extends CommonController
                 ];
             } else {
                 $cell_data[] = [
-                    $value['id'], 
+                    $value['user_id'], 
                     $value['name'], 
                     $value['plate']['plate_name'], 
                     $value['created_at'], 
