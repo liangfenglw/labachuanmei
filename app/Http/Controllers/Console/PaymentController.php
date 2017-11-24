@@ -236,7 +236,7 @@ class PaymentController extends Controller
                 $accountlog = UserAccountLogModel::where('order_sn', '=', $request->input('out_trade_no'))
                                                   ->where('account_type', '=', 1)
                                                   ->first();
-                $accountlog->state =1;
+                $accountlog->status =1;
                 $accountlog->pay_user = $request->input('buyer_email');
 
                 // $user = User::find($accountlog->user_id);

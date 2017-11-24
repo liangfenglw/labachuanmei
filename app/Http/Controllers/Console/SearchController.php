@@ -16,6 +16,8 @@ use App\Model\UsersEnchashmentModel;
 use App\Model\ApplySuppsModel;
 use App\Model\AdUsersModel;
 use App\Model\UserLevelModel;
+use App\Model\ActivityModel;
+use App\Model\ActivityVsUserModel;
 use App\User;
 use Auth;
 use DB;
@@ -25,28 +27,53 @@ class SearchController extends CommonController
     public function index(Request $request)
     {
         $user = $this->getUser();
+        $activity = ActivityModel::where('start','<=',date("Y-m-d H:i:s",time()))
+                        ->where('over','>=',date("Y-m-d H:i:s",time()))
+                        ->select('vip_rate','plate_rate','id')
+                        ->first();
+        $user_ids = [];
+        if (!empty($activity)) {
+            $user_ids = ActivityVsUserModel::where('activity_id',$activity->id)
+                            ->pluck('user_id')
+                            ->toArray();
+        }
         if ($user['level_id'] >= 2) {
-            $supp_list = SuppUsersSelfModel::leftJoin('plate','supp_users_self.plate_id','=','plate.id')
+            $lists = SuppUsersSelfModel::leftJoin('plate','supp_users_self.plate_id','=','plate.id')
                             ->where('supp_users_self.is_state',1)
                             ->where('supp_users_self.media_name','like','%'.$request->input('keyword').'%')
                             ->select("plate.plate_name",'supp_users_self.*',"supp_users_self.vip_price as proxy_price")
                             ->get()
                             ->toArray();
         } else {
-            $supp_list = SuppUsersSelfModel::leftJoin('plate','supp_users_self.plate_id','=','plate.id')
+            $lists = SuppUsersSelfModel::leftJoin('plate','supp_users_self.plate_id','=','plate.id')
                             ->where('supp_users_self.is_state',1)
                             ->where('supp_users_self.media_name','like','%'.$request->input('keyword').'%')
                             ->select("plate.plate_name",'supp_users_self.*',"supp_users_self.plate_price as proxy_price")
                             ->get()
                             ->toArray();
         }
+
+        if ($user['level_id'] >= 2) {
+            $rate = number_format($activity->vip_rate / 100, 2);
+        } else {
+            $rate = number_format($activity->plate_rate / 100, 2);
+        }
+        foreach ($lists as $key => $value) {
+            if (in_array($value['user_id'], $user_ids)) {
+                $lists[$key]['proxy_price'] = number_format($value['proxy_price'] * $rate, 2);
+            }
+        }
+
+        
+        // dd($supp_list);
+
         // $supp_list = SuppUsersSelfModel::leftJoin('plate','supp_users_self.plate_id','=','plate.id')
                         
         //                 ->select('plate.plate_name','supp_users_self.*')
         //                 ->orderBy('supp_users_self.id','desc')
         //                 ->get()
         //                 ->toArray();
-        return view('search.supp_list',['supp_list' => $supp_list]);
+        return view('search.supp_list',['supp_list' => $lists]);
     }
 
     public function getUser()

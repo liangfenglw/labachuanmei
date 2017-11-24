@@ -93,7 +93,6 @@ class MediaController extends CommonController
                                    ->toArray();
 
         }
-		$user_ids2 = $user_ids;
         // 查看活动
         $activity = ActivityModel::where('start','<=',date("Y-m-d H:i:s",time()))
                         ->where('over','>=',date("Y-m-d H:i:s",time()))
@@ -138,21 +137,21 @@ class MediaController extends CommonController
         }
         $lists = matched_list($id,$category_id,$lists);
 
-        if (count($user_ids2)>(count($lists)+$page['limit_start'])) {
+        if (count($user_ids)>(count($lists)+$page['limit_start'])) {
             $page['page_statue'] = 1;
         }
 
         $page['limit_start']+= count($lists);
 
         if (\Request::ajax()) {
-                return ['status'=>1,'data'=>$lists,'msg'=>'操作成功','resource_count'=>count($user_ids2),'page'=>$page];
+                return ['status'=>1,'data'=>$lists,'msg'=>'操作成功','resource_count'=>count($user_ids),'page'=>$page];
         }
         // 怕需要扩展 for_apply修改
         $assign = [
             1 => ['user' => $user, 
                   'html' => $html,
                   'lists' => $lists,
-                  'resource_count' => count($user_ids2),
+                  'resource_count' => count($user_ids),
                   'page_statue',
                   'page' => $page, 
                   'media' => $media,

@@ -17,7 +17,8 @@ use App\Model\PlateModel;
 use App\Model\ArticleModel;
 use App\Model\PhoneOrderModel;
 use App\Model\UserAccountLogModel;
-
+use App\Model\SuppUsersSelfModel;
+use Excel;
 use App\User;
 use Auth;
 use DB;
@@ -58,7 +59,7 @@ class UserController extends CommonController
             // 平台用户
             $ads_user_count = AdUsersModel::where('level_id','=','1')->count();
             // 平台资源
-            $supp_user_count = SuppUsersModel::count();
+            $supp_user_count = SuppUsersModel::where('parent_id', '<>', 0)->count();
             // 平台资源
             $user_count = User::whereIn('user_type',[2,3])->count();
             //获取我的最新订单
@@ -545,4 +546,72 @@ class UserController extends CommonController
         }
         return [$data_all, implode(',', $all_sum)];
     }
+
+    public function excelAccountExcel()
+    {
+        $supp_cellData = [];
+        $supp_cellData[] = [
+            '序号','供应商','时间','消费类型','金额','流水订单号','订单名称','所属会员','会员佣金','平台获利','状态'
+        ];
+        $supp_lists = UserAccountLogModel::with(['suppUser','order.parent_order.user'])
+                ->leftJoin('users','users.id','=','user_account_log.user_id')
+                ->where('user_type', 3)
+                ->get();
+        $account_type = [ 1 => '充值', 2 => '消费', 3 => '提现', 4 => '收入', 5 => '退款'];
+        foreach ($supp_lists as $key => $value) {
+            $supp_cellData[] = [
+                $value['id'],
+                $value['suppUser']['name'],
+                $value['created_at'],
+                $account_type[$value['account_type']],
+                $value['user_money'],
+                $value['order_id'],
+                $value['order']['parent_order']['title'],
+                $value['order']['parent_order']['user']['name'],
+                $value['order']['commission'],
+                $value['order']['platform'],
+                $value['status'] == 1 ? '到账' : '未到账',
+            ];
+        }
+        $ads_cellData = [];
+        $ads_cellData[] = [
+            '序号','会员','时间','消费类型','描述','金额','流水订单号','订单名称','供应商','会员佣金','平台获利','状态'
+        ];
+
+        $supp_lists = UserAccountLogModel::with(['ads_user',
+            'suppUser.order',
+            'order.parent_order',
+            'order.suppUser'])
+            ->leftJoin('users','users.id','=','user_account_log.user_id')
+                ->where('users.user_type', 2)
+                ->orderBy('user_account_log.id','desc')
+                ->get()->toArray();
+        $account_type = [ 1 => '充值', 2 => '消费', 3 => '提现', 4 => '收入', 5 => '退款'];
+        foreach ($supp_lists as $key => $value) {
+            $ads_cellData[] = [
+                $value['id'],
+                $value['ads_user']['nickname'],
+                $value['created_at'],
+                $account_type[$value['account_type']],
+                $value['desc'],
+                $value['user_money'],
+                $value['order_id'],
+                $value['order']['parent_order']['title'],
+                $value['order']['supp_user']['name'],
+                $value['order']['commission'],
+                $value['order']['platform'],
+                $value['status'] == 1 ? '到账' : '未到账',
+            ];
+        }
+        Excel::create('财务流水'.date('Y/m/d H:i',time()),function($excel) use ($supp_cellData,$ads_cellData){
+            $excel->sheet('供应商金额流水', function($sheet) use ($supp_cellData){
+                $sheet->rows($supp_cellData);
+            });
+            $excel->sheet('会员流水', function($sheet)use($ads_cellData){
+                $sheet->rows($ads_cellData);
+            });
+        })->export('xls');
+    }
+
+
 }

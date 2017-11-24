@@ -18,7 +18,7 @@ use App\Model\CartNetworkModel;
 use App\Model\OrderModel;
 use App\Model\OrderNetworkModel;
 use App\Model\UserAccountLogModel;
-
+use App\Model\NoticeModel;
 use Auth;
 use Cache;
 use DB;
@@ -431,6 +431,12 @@ class AdminUserController extends CommonController
         } elseif ($request->input('check_status') == 4) {
             $info->level_id = 2; // 高级会员
             $info->check_status = 4;
+            $notice = new NoticeModel;
+            $notice->is_read = 2;
+            $notice->user_id = $info->user_id;
+            $notice->content = "恭喜您升级为高级会员";
+            $notice->operaer = Auth::user()->id;
+            $notice->save();
             // 清掉上级
             // $info->parent_id = 0;
         }
@@ -451,7 +457,7 @@ class AdminUserController extends CommonController
         if (\Request::ajax() || $request->input('get_excel') == 1) {
             return $this->adsUserList();
         }
-        $ad_user_list = AdUsersModel::with('parentUser')
+        $ad_user_list = AdUsersModel::with(['parentUser','user'])
                             ->leftJoin("order_network",'ad_users.user_id','=','order_network.ads_user_id');
 
         $ad_user_list = $ad_user_list->where('ad_users.check_status','=',2);

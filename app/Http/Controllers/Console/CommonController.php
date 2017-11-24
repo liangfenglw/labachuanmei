@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redis;
-
+use Illuminate\Contracts\Auth\Guard;
 use App\Model\NoticeModel;
 
 use Auth;
@@ -24,7 +24,6 @@ class CommonController extends Controller
 {
     public function __construct()
     {
-
     }
     
     public function checkNotice()

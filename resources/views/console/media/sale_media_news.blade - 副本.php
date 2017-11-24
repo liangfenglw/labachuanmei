@@ -252,11 +252,15 @@
 	var id = {{$media['id']}}; 
     var limit_start = {{$page['limit_start']}};
     var page_num = {{$page['page_num']}};
+console.log("limit_start:", limit_start);
+console.log("page_num:", page_num);
+	
 	/*	百度编辑器	*/
 	var ue = UE.getEditor('container');
 	var _token = $('input[name="_token"]').val();
 	
 	function page_load (argument) {
+console.log("page_load");
 		page_num_new = $("#page_nums").val();			//每页显示条数
         var category_arr = [];
         var id_arr = [];
@@ -266,6 +270,9 @@
         })
         data_id = category_arr.toString();
         category_id = id_arr.toString();
+
+console.log("data_id:",data_id);
+console.log("category_id:",category_id);
 
 		$.ajax({
 			url: '',
@@ -462,13 +469,17 @@
 	//筛选媒体
 	$(".sbox_1_item .m ul li a").click(function () {
 		var option = $(this).parents(".m").prev("span").prev("span").attr("data");
+console.log("option:", option);
 		var value = $.trim($(this).html());
+console.log("value:", value);
+//console.log(":", );
 		if( typeof($(this).parent().attr("data_id")) == "undefined" ){
 			var data_id = "-1";
 		}else{
 			var data_id = $(this).parent().attr("data_id");
 		}
 		var li = "<li data='" + option + "' data_id='" + data_id + "'><a href=''>" + value + "</a></li>";
+console.log("li:", li);
 		
 		if( data_id == "-1" ){
 			$(this).addClass("cur").parent().siblings("li").find("a").removeClass("cur");
@@ -500,6 +511,7 @@
 		}
 		
 		var  opt = getDataArr2();
+console.log("opt:", opt);
 		var  key ='category_id';
 		var  dt=[];
 		for(var i=0;i< opt.length;i++){
@@ -508,6 +520,7 @@
 			}
 		}
 		dt = opt;
+console.log("dt:", dt);
 		if(dt ==''){
 			$('#wrapper_i').html($page_data2);
 			/*	返回数据 分页	*/
@@ -527,6 +540,8 @@
         })
         data_id = category_arr.toString();
         category_id = id_arr.toString();
+console.log("data_id", data_id);
+console.log("category_id:", category_id);
         // alert(category_id);
 		//请求数据，加载页面
 		$.ajax({
@@ -643,12 +658,15 @@ console.log("ajax-data:", data);
 							// alert(43);
 						$('#page').append('<a href="javascript:void(0);" onclick="page_load()" class="more"  style="adisplay:none;">加载更多</a>');
 					}
+					$('#page').append('<a href="javascript:void(0);" onclick="page_load()" class="more2"  style="adisplay:none;">加载更多2</a>');
 					
 					/*	返回数据 分页	*/
+/*
 					$page_data = $("#wrapper_i tr");
 					data_len = $page_data.length;
 					nums = $("#page_nums").val();
 					laypage_l($("#wrapper_i"), $("#demo1"), $page_data, data_len, nums);
+*/
 					
 				} else {
 					layer.msg(data.msg || '请求失败');

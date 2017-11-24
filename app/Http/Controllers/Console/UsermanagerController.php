@@ -456,7 +456,7 @@ class UsermanagerController extends CommonController
             } else {
                 $cell_data[] = [
                     $value['user_id'], 
-                    $value['name'], 
+                    $value['media_name'], 
                     $value['plate']['plate_name'], 
                     $value['created_at'], 
                     $value['order_count'], 

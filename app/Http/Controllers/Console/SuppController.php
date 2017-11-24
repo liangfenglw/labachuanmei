@@ -177,28 +177,31 @@ class SuppController extends CommonController
 
     public function getAccountExcel($type, $data) {
         $cell_data = [];
-        if ($type == '1') { // 提现
-            $cell_data[] = ['日期','订单号','消费方式','消费账号','状态','金额'];
-        } elseif ($type == '2') {
-            $cell_data[] = ['日期','订单号','订单类型','订单名称','订单状态','截图 / 链接','金额'];
+        if ($type == '1') {
+            $cell_data[] = ['日期','订单号','稿件类型','稿件名称','订单状态','截图 / 链接','金额'];
+        } elseif ($type == '2') {// 提现
+            $cell_data[] = ['日期','订单号','提现方式','提现账号','状态','金额'];
         }
         foreach ($data as $key => $value) {
-            if ($this->request->input('query_type') == 1) {
-                $cell_data[] = [$value['created_at'],
-                                    $value['order_sn'],
-                                    getPayType([$value['pay_type']]),
-                                    $value['pay_user'],
-                                    getCashStatus([$value['status']]),
-                                    $value['user_money']
-                                ];
+            if ($type == 2) {
+                $cell_data[] = [
+                    $value['created_at'],
+                    $value['order_sn'],
+                    $value['pay_type'],
+                    $value['pay_user'],
+                    suppWithdrawStatus($value['status']),
+                    $value['user_money'],
+                ];
             } else {
-                 $cell_data[] = [$value['created_at'],
-                                 $value['order_id'],
-                                 $value['type_name'],
-                                 $value['title'],
-                                 $value['order_type'],
-                                 "<img class=\"link\" src=\"".$value['success_pic']."\" alt=\"|\" />".$value['success_url'],
-                                $value['supp_money']];
+                $cell_data[] = [
+                    $value['created_at'],
+                    $value['order_id'],
+                    $value['type_name'],
+                    $value['title'],
+                    ($value['order_type']),
+                    $value['success_url'],
+                    $value['supp_money']
+                ];
             }
         }
         $title = [1 => '收入', 2 => '提现'];
