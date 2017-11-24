@@ -30,7 +30,7 @@
 					<input type="file" name="file" class="txt6 txt6_up upfile upload_f1" style="width:100%;height:30px;display:none;opacity:0;"	/>
 					<input type="hidden" name="plate_id" id="plate_id" />
 				</form>
-				<a class="sub4_2" style="background:#7db6eb;" href="javascript:;" id="get_excel" onclick="get_excel()">导出模板</a>
+				<a class="sub4_2" style="background:#7db6eb;" href="javascript:;" id="get_excel" onclick="window.open('/uploads/file/供应商媒体上传模板.zip')">导出模板</a>
 			</div>
         </h3>
 		

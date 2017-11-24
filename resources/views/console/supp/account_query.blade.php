@@ -96,39 +96,6 @@
                         </tbody>
                     </table>
                 </div>
-                {{-- <div class="tab1_body_m" style="display:none;">
-                    <table class="table_in1 cur" id="datatable2">
-                        <thead>
-                            <tr>
-                                <th>日期</th>
-                                <th>订单号</th>
-                                <th>消费方式</th>
-                                <th>消费账号</th>
-                                <th>状态</th>
-                                <th>金额</th>
-                            </tr>
-                        </thead>
-                        <tbody id="listcontent2">
-                            
-                        </tbody>
-                    </table>
-                </div>
-                <div class="tab1_body_m" style="display:none;">
-                    <table class="table_in1 cur" id="datatable3">
-                        <thead>
-                            <tr>
-                                <th>日期</th>
-                                <th>订单号</th>
-                                <th>消费方式</th>
-                                <th>消费账号</th>
-                                <th>状态</th>
-                                <th>金额</th>
-                            </tr>
-                        </thead>
-                        <tbody id="listcontent3">
-                        </tbody>
-                    </table>
-                </div> --}}
                 <div class="tab1_body_m" @if(Request::input('search_type') == 1) style="display:block;" @else style="display:none;" @endif>
                     <table class="table_in1 cur" id="datatable4">
                         <thead>

@@ -63,7 +63,7 @@
                         @foreach($lists as $key => $value)
                             <tr>
                                 <td>{{ $value['user_id'] }}</td>
-                                <td>{{ $value['nickname'] }}</td>
+                                <td>{{ $value['user']['name'] }}</td>
                                 <td>{{ $value['created_at'] }}</td>
                                 <td>{{ $value['order_count'] }}</td>
                                 <td class="color1">{{ $value['user_money'] }}</td>

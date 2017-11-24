@@ -265,12 +265,12 @@ aa#datatable1_filter{	display:none;	}
 .sbox_1_w{	/*	border:1px solid #E5E5E5;	border-radius:6px;		*/}
 .sbox_1_item{		height:52px;	aline-height:74px;	/*border-bottom:1px dashed #E5E5E5;	*/font-size:18px;	color:#333333;	overflow:hidden;		}
 .sbox_1_item .l{	awidth:10%;	width:110px;	float:left;	/*	background:#F7F8FA;	*/height:52px;	text-align:center;
-	width:130px;	text-align:right;	}
-.sbox_1_item .l strong{		afloat:left;		height:30px;	line-height:30px;	margin:11px 0 11px 10px;	font-weight:400;	color:#7db6eb;
+	width:150px;	text-align:right;	}
+.sbox_1_item .l strong{		afloat:left;		height:30px;	line-height:30px;	margin:11px 0 11px 0px;	font-weight:400;	color:#7db6eb;
 	display:block;	}
 .sbox_1_item .m{	awidth:83.3%;	afloat:left;	background:#FFFFFF;	
 	display:block;	margin-right:90px;	margin-left:120px;
-	min-height:52px;	margin-left:130px;	}
+	min-height:52px;	margin-left:150px;	}
 .sbox_1_item:last-child{	border-bottom:none;	}
 .sbox_1_item .m ul{		float:left;	margin:11px 0 11px -20px;	height:30px;	overflow:hidden;
 	margin:11px 0 11px 0px;

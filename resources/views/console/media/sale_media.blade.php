@@ -247,8 +247,6 @@
 	var _token = $('input[name="_token"]').val();
 	function page_load (argument) {
 		page_num_new = $("#page_nums").val();
-
-
         var category_arr = [];
         var id_arr = [];
         $('#attr_val ul[set_name="network"] a.cur').each(function(){

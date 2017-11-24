@@ -77,7 +77,7 @@
                     <div class="colcntimg"></div>
                 </li>
 				<li class="colcnt colcnt2_nt" style="background:#fca652;">
-                	<span><a href="/console/add_view?blade_name=list_2">媒体总数<p>{{$supp_user_count}}</p></a></span>
+                	<span><a href="/usermanager/suppMediaList">媒体总数<p>{{$supp_user_count}}</p></a></span>
                     <div class="colcntimg"></div>
                 </li>
 				<li class="colcnt colcnt3_nt" style="background:#a3da85; margin-left:2%;">
@@ -192,7 +192,8 @@
             <div class="clr"></div>
         </div>
         <div class="row3 row3_2 radius1">
-			<h3 class="title2"><strong><a >盈利状况</a></strong></h3>
+			<h3 class="title2"><strong><a >盈利状况</a></strong>
+            <a href="javascript:;" onclick="window.open('/manager/excelAccountExcel')" class="btn2_o" style="margin:22px 15px 0 0;padding:0 15px;font-size:16px;">导出</a></h3>
 			<ul>
                 <li class="li1"><p>会员总金额<b>￥{{$ads_user_money}}</b></p></li>
                 <li class="li2"><p>平台纯收益<b>￥{{$platform_money}}</b></p></li>

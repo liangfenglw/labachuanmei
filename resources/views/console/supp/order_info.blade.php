@@ -27,9 +27,6 @@
             <div class="item_f"><p><i class="LGntas"></i>稿件名称：</p>
                 <div class="r"><input type="text" name="textfield" id="textfield" class="txt_f1" style="width:52%;" readonly="readonly" value="{{ $info['parent_order']['title'] }}"></div>
             </div>
-            <div class="item_f"><p><i class="LGntas"></i>订单总价：</p>
-                <div class="r"><input type="text" name="textfield" id="textfield" class="txt_f1" style="width:16%;" value="{{$info['parent_order']['user_money']}}" disabled /><span class="color1" style="padding-left:10px;">元</span></div>
-            </div>
                     @if($info['parent_order']['cooperation_mode'])
         <div class="item_f"><p><i class="LGntas"></i>合作方式：</p>
             <div class="r"><input type="text" name="textfield" id="textfield" disabled="disabled" class="txt_f1" value="{{ $info['parent_order']['cooperation_mode'] }}"></div>

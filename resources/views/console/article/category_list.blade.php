@@ -32,8 +32,9 @@
                         @foreach($category_list as $key => $val)
                             <tr data-id="{{ $val['id'] }}" data-name="{{ $val['category_name'] }}">
                                 <td>{{ $val['id'] }}</td>
-                                <td>{{ $category_type[$val['type_id']] }}</td>
                                 <td>{{ $val['category_name'] }}</td>
+                                <td>{{ $category_type[$val['type_id']] }}</td>
+                                
                                 <td>{{ $val['status'] == 1 ? '在线' : '下架'}}</td>
                                 <td><a class="color2" href="/console/article/category/{{ $val['id'] }}">查看</a> <span class="color2">|</span> <a class="color2 del2" href="javascript:;" stype="font-size:10px">删除</a></td>
                             </tr>
