@@ -46,14 +46,14 @@
                             @if(Auth::user()->user_type == 2)
                                 @foreach($news as $key => $val)
                                 <tr>
-									<td><span class="hide">{{ $val['id'] }}</span></td>
+									<td><span class="hide">{{ $val['created_at'] }}</span></td>
                                     <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /order/order_detail/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
                                 </tr> 
                             @endforeach
                             @else
                                 @foreach($news as $key => $val)
                                     <tr>
-										<td><span class="hide">{{ $val['id'] }}</span></td>
+										<td><span class="hide">{{ $val['created_at'] }}</span></td>
                                         <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /supp/order/info/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
                                     </tr> 
                                 @endforeach
@@ -76,14 +76,14 @@
                             @if(Auth::user()->user_type == 2)
                                  @foreach($read_news as $key => $val)
                                     <tr>
-										<td><span class="hide">{{ $val['id'] }}</span></td>
+										<td><span class="hide">{{ $val['created_at'] }}</span></td>
                                         <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /order/order_detail/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
                                     </tr> 
                                 @endforeach
                             @else
                                  @foreach($read_news as $key => $val)
                                     <tr>
-										<td><span class="hide">{{ $val['id'] }}</span></td>
+										<td><span class="hide">{{ $val['created_at'] }}</span></td>
                                         <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /supp/order/info/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
                                     </tr> 
                                 @endforeach

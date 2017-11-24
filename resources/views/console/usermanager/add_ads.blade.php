@@ -28,7 +28,7 @@
                     <div class="item_f"><p style="padding-top:25px;"><i class="LGntas"></i>供应商LOGO：</p>
                         <div class="r" style="position:relative;">
                             <div class="img_show">
-                                <img src="/console/images/z_add2.png" id="img_upload" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
+                                <img src="/console/images/z_add2.png" data-src="/console/images/z_add2.png" id="img_upload" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
                                 <input type="file" name="media_logo" id="documents_upload_button" class="txt6 txt6_up upfile upload_f1" accept="image/jpg,image/jpeg,image/png" style="width:130px;height:130px;display:none;opacity:0;"	/>
                             </div>
                             <span class="info1_f valign_m" style="height:95px;padding:0;">
@@ -39,7 +39,7 @@
                     <div class="item_f"><p style="padding-top:25px;"><i class="LGntas"></i>入口示意图：</p>
                         <div class="r" style="position:relative;">
                             <div class="img_show">
-                                <img src="/console/images/z_add2.png" id="img_upload2" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
+                                <img src="/console/images/z_add2.png" data-src="/console/images/z_add2.png" id="img_upload2" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
                                 <input type="file" name="index_logo" id="documents_upload_button2" class="txt6 txt6_up upfile upload_f1" accept="image/jpg,image/jpeg,image/png" style="width:130px;height:130px;display:none;opacity:0;"	/>
                             </div>
                             <span class="info1_f valign_m" style="height:95px;padding:0;">
@@ -96,7 +96,7 @@
                         <div class="item_f"><p style="padding-top:25px;"><i class="LGntas"></i></p>
                             <div class="r" style="position:relative;">
                                 <div class="img_show">
-                                    <img src="/console/images/z_add2.png" id="img_upload3" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
+                                    <img src="/console/images/z_add2.png" data-src="/console/images/z_add2.png" id="img_upload3" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
                                     <input type="file" name="media_check_file" id="documents_upload_button3" class="txt6 txt6_up upfile upload_f1" accept="image/jpg,image/jpeg,image/png" style="width:130px;height:130px;display:none;opacity:0;"	/>
                                 </div>
                                 <span class="info1_f valign_m" style="height:95px;padding:0;">
@@ -201,15 +201,15 @@
             layer.msg("媒体名称必须填写");
             return false;
         }
-        if (!$("#documents_upload_button").val()) {
+		if (!$("#documents_upload_button").val()) {
              layer.msg("媒体logo必须添加");
             return false;
         }
-        if (!$("#documents_upload_button2").val()) {
+		if (!$("#documents_upload_button2").val()) {
              layer.msg("入口示意图必须添加");
             return false;
         }
-        if (!$("#documents_upload_button3").val()) {
+		if (!$("#documents_upload_button3").val()) {
             layer.msg("媒体认证图必须添加");
             return false;
         }

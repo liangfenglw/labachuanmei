@@ -103,7 +103,7 @@
                     <div class="item_f"><p style="padding-top:25px;"><i class="LGntas"></i>供应商LOGO：</p>
                         <div class="r" style="position:relative;">
                             <div class="img_show">
-                            	<img src="@if($info['supp_user']['media_logo']) {{$info['supp_user']['media_logo']}} @else /console/images/z_add2.png @endif" id="img_upload" name="" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
+                            	<img src="@if($info['supp_user']['media_logo']) {{$info['supp_user']['media_logo']}} @else /console/images/z_add2.png @endif" data-src="@if($info['supp_user']['media_logo']) {{$info['supp_user']['media_logo']}} @else /console/images/z_add2.png @endif" id="img_upload" name="" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
                             	<input type="file" name="media_logo" id="documents_upload_button" placeholder="未选择任何文件" accept="image/jpg,image/jpeg,image/png" class="txt6 txt6_up upfile upload_f1" style="width:130px;height:130px;display:none;opacity:0;"	/>
                             </div>
                             <span class="info1_f valign_m" style="height:95px;padding:0;">
@@ -114,7 +114,7 @@
                     <div class="item_f"><p style="padding-top:25px;"><i class="LGntas"></i>入口示意图：</p>
                         <div class="r" style="position:relative;">
                             <div class="img_show">
-                            	<img src="@if($info['supp_user']['index_logo']) {{$info['supp_user']['index_logo']}} @else /console/images/z_add2.png @endif" id="img_upload2" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
+                            	<img src="@if($info['supp_user']['index_logo']) {{$info['supp_user']['index_logo']}} @else /console/images/z_add2.png @endif" data-src="@if($info['supp_user']['index_logo']) {{$info['supp_user']['index_logo']}} @else /console/images/z_add2.png @endif" id="img_upload2" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
                             	<input type="file" name="index_logo" id="documents_upload_button2" placeholder="未选择任何文件"  class="txt6 txt6_up upfile upload_f1" style="width:130px;height:130px;display:none;opacity:0;"	 accept="image/jpg,image/jpeg,image/png" />
                             </div>
                             <span class="info1_f valign_m" style="height:95px;padding:0;">
@@ -171,7 +171,7 @@
                         <div class="item_f"><p style="padding-top:25px;"><i class="LGntas"></i></p>
                             <div class="r" style="position:relative;">
                                 <div class="img_show">
-                                    <img src="@if($info['supp_user']['media_check_file']) {{$info['supp_user']['media_check_file']}} @else /console/images/z_add2.png @endif" id="img_upload3" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
+                                    <img src="@if($info['supp_user']['media_check_file']) {{$info['supp_user']['media_check_file']}} @else /console/images/z_add2.png @endif" data-src="@if($info['supp_user']['media_check_file']) {{$info['supp_user']['media_check_file']}} @else /console/images/z_add2.png @endif" id="img_upload3" style="cursor:pointer;float:left;margin-right:8px;width:130px; height:130px;" />
                                     <input type="file" name="media_check_file" id="documents_upload_button3" placeholder="未选择任何文件" accept="image/jpg,image/jpeg,image/png" class="txt6 txt6_up upfile upload_f1" style="width:130px;height:130px;display:none;opacity:0;"	/>
                                 </div>
                                 <span class="info1_f valign_m" style="height:95px;padding:0;">

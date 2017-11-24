@@ -1176,9 +1176,11 @@ html .content.fold{	margin-left:70px;	}
 .tab2 ul li a{		font-size:16px;	color:#7db6eb;	height:74px;	line-height:74px;	padding:0 10px;	margin-right:3px;	}
 .tab2_body{		padding:18px 25px 11px 22px;	}
 .tab2_body ul{		width:100%;	}
-.tab2_body ul li{		width:18%;height:auto;overflow:hidden;float:left; margin:2.3% 3.5% 3% 3.5%;text-align:center;	}
+.tab2_body ul li{		width:18%;height:auto;overflow:hidden;float:left; margin:2.3% 3.5% 3% 3.5%;text-align:center;
+	margin:1.3% 3.5% 1% 3.5%;	}
 .tab2_body ul li a{		display:block;	font-size:14px;	color:#2f4050;}
 .tab2_body ul li a img{	width:100%;	height:auto;	border-radius:72px;	}
+.tab2_body ul li a p{	width:100%;	height:36px;	line-height:18px;		overflow:hidden;	margin:5px 0 0;	}
 
 .title2{	min-height:75px;	border-bottom:1px solid #E5E5E5;	font-weight:400;	font-size:24px;		color:#333333;		background:#fff;
 	border-radius:6px 6px 0 0;	}

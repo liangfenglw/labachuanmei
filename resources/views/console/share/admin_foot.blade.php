@@ -197,10 +197,17 @@ $(function(){
 		btn = $this.find('.upfile'),
 		img = $this.find('img');
 		btn.on('change',function(){
-//			console.log($(this));
-			var file = $(this)[0].files[0],
-			imgSrc = $(this)[0].value,
-			url = URL.createObjectURL(file);
+			var file = $(this)[0].files[0];
+//			console.log(typeof(file));
+			if( typeof(file) == 'undefined' ){
+				console.log("no file");
+				if( typeof(img.attr("data-src")) != 'undefined' ){
+					img.attr('src',img.attr("data-src"));
+				}
+				return false;
+			}
+			var imgSrc = $(this)[0].value;
+			var url = URL.createObjectURL(file);
 			if (!/\.(jpg|jpeg|png|JPG|gif|GIF|PNG|JPEG)$/.test(imgSrc)){
 				alert("请上传jpg或png格式的图片！");
 				return false;

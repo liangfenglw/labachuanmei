@@ -59,7 +59,7 @@
 				</div>
 				<div class="clr"></div>
 			</div>	
-			<div class="tixian_right"><img src="/console/images/tixian_right.png" /></div>
+			<div class="tixian_right"><img src="/console/images/tixian_right.jpg" /></div>
 		</div>
 	</div>
 	
