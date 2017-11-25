@@ -31,7 +31,7 @@
 			<div class="wrap_fl clearfix" style="width:35%;">
 				<form action="" method="post">
 					<div class="item_f"><p><i class="LGntas"></i>用户名：</p>
-						<div class="r"><input type="text" name="textfield" id="textfield" class="txt_f1" style="width:75%;" value="{{ $info['name'] }}" readonly="readonly"></div>
+						<div class="r"><input type="text" name="textfield" id="textfield" class="txt_f1" style="width:75%;" value="{{ $info['nickname'] }}" readonly="readonly"></div>
 					</div>
 					<div class="item_f"><p><i class="LGntas"></i>创建时间：</p>
 						<div class="r"><input type="text" name="textfield" id="datepicker3" class="txt_f1" style="width:75%;" value="{{ $info['created_at'] }}" readonly="readonly"></div>
@@ -110,38 +110,35 @@
 	<div class="main_o clearfix" style="padding-bottom:0;">
 	
 		<h3 class="title3" style="padding:20px 30px 0 20px;"><strong>订单列表</strong>
-        <a class="btn_o" href="/userpersonal/user_subordinate/{{ $info['id'] }}" style="float:right; margin:5px 0 0 0;">导出列表</a>
+        <a class="btn_o" target="_blank"
+         href="/userpersonal/user_subordinate/{{ $info['user_id'] }}?start={{ Request::input('start') }}&end={{ Request::input('end') }}&keyword={{ Request::input('keyword') }}&get_excel=1" style="float:right; margin:5px 0 0 0;">导出列表</a>
         </h3>
 
 
 		<h3 class="title4 clearfix">
 			<div class="search_1" style="float:none;margin-left:55px;margin-right:30px;">
-
+				<form action="" method="get">
 				<div style="float:left;">
 					<div class="l">
 						<span>起始时间</span>
 					</div>
 					<div class="l">
-						<input type="text" class="txt2" id="datepicker1" />-<input type="text" class="txt2" id="datepicker2" />
+						<input type="text" class="txt2" id="datepicker1" name="start" value="{{ Request::input('start') }}" />-<input type="text" name="end" value="{{ Request::input('end') }}" class="txt2" id="datepicker2" />
 					</div>
 					<div class="l">
 						<select name="" class="sel1" id="mediatype" style="display:none;">
 							<option value="35">网络媒体</option>
-<!--
 							@foreach($media as $key => $val)
 								<option value="{{ $val['id'] }}">{{ $val['plate_name'] }}</option>
 							@endforeach
--->
 						</select>
 					</div>
 					<div class="l">
-						<input type="text" name="keyword" id="keyword" class="txt5" placeholder="订单号" />
-						<input type="submit" name="submit" class="sub4_3" id="searchnews" value="查询" />
+						<input type="text" value="{{ Request::input('keyword') }}" name="keyword" id="keyword" class="txt5" placeholder="订单号" />
+						<input type="submit" name="submit" class="sub4_3" value="查询" />
 					</div>
 				</div>
-<!--
 				</form>
--->
 			</div>
 			<div class="clr"></div>
 		</h3>
@@ -173,7 +170,6 @@
 				<td class="color1">￥{{ $val['user_money'] }}</td>
 				<td class="color1">￥{{ $val['commission'] }}</td>
 				<td>{{ $val['order_type'] }}</td>
-<!--			<td class="link-pic"><a href="{{ $val['success_url'] }}"><img src="{{ $val['success_pic'] }}"></a></td>		-->
 				<td class="link-pic">
 					<div class="success-urlpic">
 						@if( $val['success_url'] && $val['success_pic'] )
@@ -271,46 +267,6 @@
 			datatable =  $('#datatable1').DataTable(dt_option);
 			var _token = $('input[name="_token"]').val();
             $("#searchnews").click(function () {
-                $.ajax({
-                    type:"post",
-					url:"/userpersonal/ajax_child_order_list",
-					dataType: 'json',
-                    data:{
-						'start':$("#datepicker1").val(),
-						'end':$("#datepicker2").val(),
-						'mediatype':$("#mediatype").val(),
-						'orderid':$("#keyword").val(),
-						'user_id':{{$info['user_id']}},
-						'_token':_token
-                    },
-                    success:function (msg) {
-                        if (msg) {
-							if( $.fn.dataTable.isDataTable(" #datatable1 ") ){
-								datatable.destroy();
-							}
-							var htmls = "";
-							for ( var i in msg) {
-								htmls += '<tr>';
-								htmls += '<td>'+msg[i]['order_id']+'</td>';
-								htmls += '<td>'+msg[i]['title']+'</td>';
-								htmls += '<td>'+msg[i]['type_name']+'</td>';
-								htmls += '<td>'+msg[i]['start_at']+'</td>';
-								htmls += '<td>'+msg[i]['over_at']+'</td>';
-								htmls += '<td class="color1">'+msg[i]['user_money']+'</td>';
-								htmls += '<td class="color1">'+msg[i]['commission']+'</td>';
-								htmls += '<td>'+msg[i]['order_type']+'</td>';
-								htmls += '<td class="link-pic"><a href="'+msg[i]['success_url']+'"><img src="'+msg[i]['success_pic']+'"></a></td></td></tr>';
-							}
-							$('#listcontent').html(htmls);
-							datatable =  $('#datatable1').DataTable(dt_option);
-                        } else {
-							if( $.fn.dataTable.isDataTable(" #datatable1 ") ){
-								datatable.destroy();
-							}
-                            $('#listcontent').html("<tr><td colspan='9'>没有查询到数据！</td></tr>");
-                        }
-                    }
-                })
             })
 	});
 if( $('#tb_dl2').length > 0 ){

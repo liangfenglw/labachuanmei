@@ -38,7 +38,7 @@ class SuppUsersModel extends Model
 
     public function parentUser()
     {
-        return $this->belongsTo('App\Model\SuppUsersModel','belong','user_id');
+        return $this->belongsTo('App\Model\SuppUsersModel','parent_id','user_id');
     }
 
     public function orderNetwork()

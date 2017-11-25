@@ -19,9 +19,19 @@ class UserAccountLogModel extends Model
         return $this->belongsTo('App\User','user_id','id');
     }
 
+    public function suppUser()
+    {
+        return $this->belongsTo('App\Model\SuppUsersModel','user_id','user_id');
+    }
+
     public function ads_user()
     {
         return $this->belongsTo('App\Model\AdUsersModel','user_id','user_id');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo('App\Model\OrderNetworkModel','order_sn','order_sn');
     }
 
     public static function searchList($user_id, $request, $type) {

@@ -20,4 +20,5 @@ class OrderModel extends Model
         return $this->hasone('App\Model\UsersModel','id','ads_user_id');
     }
 
+
 }

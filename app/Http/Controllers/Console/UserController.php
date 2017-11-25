@@ -603,12 +603,57 @@ class UserController extends CommonController
                 $value['status'] == 1 ? '到账' : '未到账',
             ];
         }
-        Excel::create('财务流水'.date('Y/m/d H:i',time()),function($excel) use ($supp_cellData,$ads_cellData){
+        // 平台收益
+        $form_cellData = [];
+        $form_cellData[] = [
+            '序号','用户名','用户角色','消费类型','消费金额','平台获利','描述','时间','流水订单号','订单名称','状态'
+        ];
+        $form_lists = UserAccountLogModel::
+                    leftJoin('users','users.id','=','user_account_log.user_id')
+                    ->whereIn('user_account_log.account_type', [1,3,4])
+                    ->with(['suppUser','ads_user','order'])
+                    ->get();
+
+        foreach ($form_lists as $key => $value) {
+            if ($value['user_type'] == 3) {
+                $user_class = '供应商';
+                $username = $value['suppUser']['name'];
+            } elseif ($value['user_type'] == 2) {
+                if ($value['ads_user']['level_id'] > 2) {
+                    $user_class = '高级会员';
+                } else {
+                    if ($value['ads_user']['parent_id'] == 0) {
+                        $user_class = '注册会员';
+                    } else {
+                        $user_class = '代理会员';
+                    }
+                }
+                $username = $value['ads_user']['nickname'];
+            }
+            $form_cellData[] = [
+                $value['id'],
+                $username,
+                $user_class,
+                $account_type[$value['account_type']],
+                $value['user_money'],
+                $value['order']['platform'],
+                $value['desc'],
+                $value['created_at'],
+                $value['order_id'],
+                $value['order']['parent_order']['title'],
+                $value['status'] == 1 ? '到账' : '未到账',
+            ];
+        }
+
+        Excel::create('财务流水'.date('Y/m/d H:i',time()),function($excel) use ($supp_cellData,$ads_cellData,$form_cellData){
             $excel->sheet('供应商金额流水', function($sheet) use ($supp_cellData){
                 $sheet->rows($supp_cellData);
             });
             $excel->sheet('会员流水', function($sheet)use($ads_cellData){
                 $sheet->rows($ads_cellData);
+            });
+            $excel->sheet('平台收益流水', function($sheet)use($form_cellData){
+                $sheet->rows($form_cellData);
             });
         })->export('xls');
     }

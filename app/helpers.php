@@ -899,8 +899,8 @@ function getAdsUserOrderList($user_id, $where = [])
                                     $query->from('plate')->where('pid',$pid)->select('id');
                                   });
     }
-    if (!empty($where['orderid'])) {
-        $lists = $lists->where('order_network.id','=',$where['orderid']);
+    if (!empty($where['keyword'])) {
+        $lists = $lists->where('order_network.id','=',$where['keyword']);
     }
 
     $lists = $lists->where('order_network.ads_user_id',$user_id)

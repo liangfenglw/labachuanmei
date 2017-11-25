@@ -314,7 +314,6 @@ class UsermanagerController extends CommonController
         $lists = [];
         $type = 1;
         //获取供应商列表
-        \DB::enableQueryLog();
         $lists = SuppUsersModel::withCount(['childUser','orderNetwork'])
                     ->with(['user'])
                     ->leftJoin('users','users.id','=','supp_users.user_id')
@@ -437,7 +436,7 @@ class UsermanagerController extends CommonController
     function getSuppListExcel($data,$type=1)
     {
         if ($type == 1) { // 供应商
-            $cell_data[] = ['序号', '用户名','创建时间', '订单数', '媒体资源','账户余额', '状态'];
+            $cell_data[] = ['序号', '用户名','创建时间', '订单数', '媒体资源','账户余额', '状态', '负责人', '联系电话', '电子邮箱', '联系QQ', '联系地址', '邮编'];
         } else {
             $cell_data[] = ['序号', '资源名称', '资源类型', '创建时间', '订单数', '代理价', '状态'];
         }
@@ -452,6 +451,12 @@ class UsermanagerController extends CommonController
                     $value['child_user_count'],
                     $value['user_money'],
                     getSuppUserType($value['is_state']),
+                    $value['media_contact'],
+                    $value['contact_phone'],
+                    $value['email'],
+                    $value['qq'],
+                    $value['address'],
+                    $value['zip_code'],
                 ];
             } else {
                 $cell_data[] = [

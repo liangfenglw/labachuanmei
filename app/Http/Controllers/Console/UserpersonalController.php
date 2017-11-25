@@ -801,6 +801,8 @@ class UserpersonalController extends CommonController
     public function account_enchashment()
     {
         $pay_list = \Config::get('paylist');
+        unset($pay_list['laba']);
+        unset($pay_list['debug']);
         $user = $this->getUser();
         return view('console.userpersonal.account_enchashment',[
             'active'=>'account_query',
@@ -1021,6 +1023,31 @@ class UserpersonalController extends CommonController
         return view('console.userpersonal.add_user',['user'=>$user_array,'active'=>'user_add']);
     }
 
+    public function userManageExcel($order_list)
+    {
+        $cell_data[] = [
+            '序号',
+            '用户名',
+            '订单数',
+            '订单金额',
+            '订单提成',
+            '创建时间',
+            '状态',
+        ];
+        foreach ($order_list as $key => $value) {
+            $cell_data[] = [
+                $value['user_id'],
+                $value['nickname'],
+                $value['parent_order_num'],
+                $value['user_money_all'],
+                $value['parent_order_commision'],
+                $value['user_created_at'],
+                $value['is_login']
+            ];
+        }
+        getExcel('会员管理'.date('Y-m-d',time()), date('Y-m-d',time()), $cell_data);
+    }
+
     /*
     *会员管理
     */
@@ -1034,85 +1061,41 @@ class UserpersonalController extends CommonController
         if ($user_array['level_id'] == 1) {
             return redirect('/')->withInput()->with('status', '非法操作');
         }
-        if (\Request::ajax()) {
-            //订单状态
-            // $order_status = [
-            //      0 => [0], //取消订单
-            //      1 => [1], //预约状态
-            //      5 => [10], //已完成
-            //      4 => [5,4,6,7,8], //正执行
-            //      3 => [3], //流单
-            //      2 => [2], //拒单
-            //      9 => [9], //申诉订单
-            // ];
-            $user_id = Auth::user()->id;
-            // 这里
-            $order_list = AdUsersModel::where('ad_users.parent_id',$user_id)
-                            ->leftJoin('users','users.id','=','ad_users.user_id')
-                            ->leftJoin('order','order.ads_user_id','=','ad_users.user_id')
-                            ->leftJoin('order_network','order.order_sn','=','order_network.order_sn')
-                            ->select("*",DB::raw("count(order_network.id) as order_num"),
-                                DB::raw("
-                                    sum(case when 
-                                        order_network.order_type = 10
-                                        or (order_network.order_type = 13 and deal_with_status = 3)
-                                         then order_network.user_money end)
-                                   as user_money_all"),
-                                "users.created_at as user_created_at",'users.is_login'
-                                )
-                            ->groupBy('ad_users.id');
-                                    // ->get()
-                                    // ->groupBy('user_id')
-                                    // ->toArray();
-                            // ->orWhere('order.ads_user_id',Auth::user()->id);
-            //                 ->get()
-
-            // dd($order_list);
-            //订单状态
-            // if (!empty($request->input('ordertype'))) {
-            //     $order_list = $order_list->whereIn('order_network.order_type',$order_status[$request->input('ordertype')]);
-            // }
-
-            if ($request->input('start')) {
-                $order_list = $order_list->where("order.start_at",'>=',$request->input('start')." 00:00:00");
-            }
-            if ($request->input('end')) {
-                $order_list = $order_list->where("order.over_at",'<=',$request->input('end')." 23:59:59");
-            }
-
-         
-            //订单id
-            if ($request->input('name')) {
-                $name = $request->input('name');
-                $order_list = $order_list->where('users.name','like',"%$name%");
-            }
-            DB::enableQueryLog();
-            $order_list = $order_list->orderBy('users.id','desc')
-                                    ->get()
-                                    ->toArray();
-            // dd(DB::getQueryLog());
-            $html = "";
-            $qa_feedback = [1 => '好', 2 => '中', 3 => '差'];
-            $login_status = [1 => '上线', 2 => '下架'];
-            foreach ($order_list as $key => $value) {
-                    if (!$value['user_money_all']) {
-                        $value['user_money_all'] = 0;
-                    }
-                    $html .= "<tr><td>$value[user_id]</td>
-                            <td>".$value['name']."</td>
-                            <td>".$value['parent_order_num']."</td>
-                            <td class=\"color1\">￥".$value['user_money_all']."</td>
-                            <td>".$value['parent_order_commision']."</td>
-                            <td>".$value['user_created_at']."</td>
-                            <td>".$login_status[$value['is_login']]."</td>";
-                   
-                    $html .= "<td><a class=\"color2\" href=\"/userpersonal/user_subordinate/".$value['user_id']."\">查看</a></td></tr>";
-               
-            }
-            echo $html;
-            exit();
+        $order_list = AdUsersModel::childUserVsOrder($user_id,$order_type='success',$request);
+        if ($request->get_excel == 1) {
+            return $this->userManageExcel($order_list);
         }
-        return view('console.userpersonal.user_manage',['user'=>$user_array,'active'=>'user_manage']);
+        return view('console.userpersonal.user_manage',
+            ['user' => $user_array, 'active'=>'user_manage', 'order_list' => $order_list]);
+    }
+
+    public function getChildUserOrdersExcel($user_name,$data)
+    {
+        $cell_data[] = [
+            '订单号',
+            '稿件名称',
+            '稿件类型',
+            '开始时间',
+            '结束时间',
+            '平台价格',
+            '返利',
+            '订单状态',
+            '完成链接'
+        ];
+        foreach ($data as $key => $val) {
+            $cell_data[] = [
+                $val['order_id'],
+                $val['title'],
+                $val['type_name'],
+                $val['start_at'],
+                $val['over_at'],
+                $val['user_money'],
+                $val['commission'],
+                $val['order_type'],
+                $val['success_url'],
+            ];
+        }
+        getExcel($user_name.'_订单列表'.date('Y-m-d',time()), date('Y-m-d',time()), $cell_data);
     }
 
     /**
@@ -1120,14 +1103,12 @@ class UserpersonalController extends CommonController
      * @param  [type] $user_id [description]
      * @return [type]          [description]
      */
-    public function user_subordinate($user_id)
+    public function user_subordinate($user_id,Request $request)
     {
         $user = $this->getUser();
-
         if ($user['level_id'] == 1) {
             return redirect('/')->withInput()->with('status', '非法操作');
         }
-
         $user_subordinate = AdUsersModel::with('user')
                                         ->leftJoin('users','users.id','=','ad_users.user_id')
                                         ->where('ad_users.parent_id',$user['user_id'])
@@ -1137,19 +1118,17 @@ class UserpersonalController extends CommonController
         if (!$user_subordinate) {
             return redirect("/userpersonal/user_manage")->withInput()->with('status', '非法操作');
         }
+        // 订单明细
+        $data_lists = getAdsUserOrderList($user_id,$request->all());
+        if ($request->get_excel == 1) {
+            return $this->getChildUserOrdersExcel($user_subordinate['nickname'], $data_lists);
+        }
 
         $user_subordinate = $user_subordinate->toArray();
         // 柱状图 订单统计 
         $plate_data = getOrderCount($user_id,2,getTimeInterval('now_week'));
         // 会员总金额
         $user_money = AdUsersModel::where('user_id',$user_id)->value('user_money');
-
-        // 总完成订单订单数
-        // $success_order_num = OrderNetworkModel::where('ads_user_id',$user_id)
-        //                             ->where('order_type',10)
-        //                             ->count();
-        // 订单明细
-        $data_lists = getAdsUserOrderList($user_id);
         $media = PlateModel::where('pid',0)->get()->toArray();
         return view('console.userpersonal.user_subordinate',
             ['active' => 'user_manage',
@@ -1158,12 +1137,11 @@ class UserpersonalController extends CommonController
              'user_money' => $user_money,
              'data_lists' => $data_lists,
              'media' => $media,
-             // 'success_order_num' => $success_order_num
              ]);
     }
 
     /**
-     * ajax订单列表
+     * ajax订单列表 TODO可能被废弃
      * @return [type] [description]
      */
     public function ajaxChildOrderList(Request $request)

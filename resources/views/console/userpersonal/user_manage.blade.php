@@ -31,25 +31,21 @@
 		
 		<h3 class="title4"><strong><a href="javascript:;">会员管理</a></strong>
 			<div class="search_1">
-<!--
 				<form action="" method="" name="">
--->
-				<div style="float:right;">
-					<div class="l">
-						<span>起始时间</span>
-					</div>
-					<div class="l">
-						<input type="text" class="txt2" id="datepicker1" />-<input type="text" class="txt2" id="datepicker2" />
-					</div>
-					<div class="l">
-						<input type="text" name="keyword" id="keyword" class="txt5" placeholder="用户名" />
-						<input type="submit" name="submit" class="sub4_3" id="searchnews" value="查询" />
-						<a class="sub4_2" style="background:#7db6eb;" href="javascript:;" id="get_excel" onclick="get_excel()">导出列表</a>
-					</div>
-				</div>
-<!--
+    				<div style="float:right;">
+    					<div class="l">
+    						<span>起始时间</span>
+    					</div>
+    					<div class="l">
+    						<input type="text" class="txt2" id="datepicker1" value="{{ Request::input('start') }}" name="start" />-<input type="text" class="txt2" id="datepicker2" name="end" value="{{ Request::input('end') }}" />
+    					</div>
+    					<div class="l">
+    						<input type="text" name="keyword" value="{{ Request::input('keyword') }}" id="keyword" class="txt5" placeholder="用户名" />
+    						<input type="submit" name="submit" class="sub4_3" id="searchnews" value="查询" />
+    						<a class="sub4_2" style="background:#7db6eb;" href="javascript:window.open('/userpersonal/user_manage?start={{ Request::input('start') }}&end={{ Request::input('end') }}&keyword={{ Request::input('keyword') }}&get_excel=1');" id="get_excel" onclick="get_excel()">导出列表</a>
+    					</div>
+    				</div>
 				</form>
--->
 			</div>
 			<div class="clr"></div>
 		</h3>
@@ -69,7 +65,19 @@
 		</tr>
 	</thead>
 	<tbody id="listcontent">
-
+        @foreach($order_list as $key => $value)
+            <tr>
+                <td>{{ $value['user_id'] }}</td>
+                <td>{{ $value['nickname'] }}</td>
+                <td>{{ $value['parent_order_num'] }}</td>
+                <td class="color1">￥{{ $value['user_money_all'] }}</td>
+                <td>{{ $value['parent_order_commision'] }}</td>
+                <td>{{ $value['user_created_at'] }}</td>
+                <td>{{ $value['is_login'] }}</td>
+                <td>
+                <a class="color2" href="/userpersonal/user_subordinate/{{ $value['user_id'] }}">查看</a></td>
+            </tr>
+        @endforeach
 	</tbody>
 </table>
 			</div>
@@ -147,12 +155,11 @@ $(function(){
 			
 //			var _token = $('input[name="_token"]').val();
             $("#searchnews").click(function () {
-            	get_son_order_list();
              })
             
     })
 $(function(){
-    get_order_list();
+    // get_order_list();
 })
 
 function get_order_list()
