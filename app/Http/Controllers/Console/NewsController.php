@@ -44,12 +44,12 @@ class NewsController extends CommonController
                     ->toArray();
         if (Auth::user()->user_type == 2) {
             $notice_list = NoticeModel::where('user_id', $user_id)
-                                ->where('type',1)
+                                ->whereIn('type',[1,2])
                                 ->where('is_read',2)
                                 ->get()
                                 ->toArray();
             $read_notice = NoticeModel::where('user_id', $user_id)
-                                    ->where('type',1)
+                                    ->whereIn('type',[1,2])
                                     ->where('is_read',1)
                                     ->get()
                                     ->toArray();

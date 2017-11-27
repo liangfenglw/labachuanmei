@@ -18,7 +18,7 @@
     </div>
     
     <div class="place">
-        <div class="place_ant"><a href="/console/index">首页</a><a class="cur">新闻中心 </a></div>
+        <div class="place_ant"><a href="/console/index">首页</a><a class="cur">消息中心 </a></div>
     </div>
     
     <div class="main_o">
@@ -47,7 +47,16 @@
                                 @foreach($news as $key => $val)
                                 <tr>
 									<td><span class="hide">{{ $val['created_at'] }}</span></td>
-                                    <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /order/order_detail/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
+                                    @if(!empty($val['type']) && $val['type'] == 2) {{-- vip通知 --}}
+                                         <td><a href="/userpersonal/vip_notice?id={{ $val['id'] }}">
+                                         <div class="XTnews_list">
+                                            {{ $val['content'] }}
+                                         </div><div class="XTRnews_list">
+                                         {{$val['created_at']}}</div></a></td>
+                                    @else
+                                         <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /order/order_detail/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
+                                    @endif
+                                   
                                 </tr> 
                             @endforeach
                             @else
@@ -77,7 +86,16 @@
                                  @foreach($read_news as $key => $val)
                                     <tr>
 										<td><span class="hide">{{ $val['created_at'] }}</span></td>
-                                        <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /order/order_detail/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
+                                        @if(!empty($val['type']) && $val['type'] == 2) {{-- vip通知 --}}
+                                             <td><a href="/userpersonal/vip_notice?id={{ $val['id'] }}">
+                                             <div class="XTnews_list">
+                                                {{ $val['content'] }}
+                                             </div><div class="XTRnews_list">
+                                             {{$val['created_at']}}</div></a></td>
+                                        @else
+                                            <td><a href="@if(!empty($val['article_name'])) /news/{{ $val['id'] }} @else /order/order_detail/{{ $val['order_id'] }} @endif"><div class="XTnews_list">{{$val['article_name'] or $val['content']}}</div><div class="XTRnews_list">{{$val['created_at']}}</div></a></td>
+                                        @endif
+                                    
                                     </tr> 
                                 @endforeach
                             @else

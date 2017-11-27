@@ -52,12 +52,15 @@ class SearchController extends CommonController
                             ->get()
                             ->toArray();
         }
-
-        if ($user['level_id'] >= 2) {
-            $rate = number_format($activity->vip_rate / 100, 2);
-        } else {
-            $rate = number_format($activity->plate_rate / 100, 2);
+        $rate = 1;
+        if (!empty($activity)) {
+            if ($user['level_id'] >= 2) {
+                $rate = number_format($activity->vip_rate / 100, 2);
+            } else {
+                $rate = number_format($activity->plate_rate / 100, 2);
+            }
         }
+        
         foreach ($lists as $key => $value) {
             if (in_array($value['user_id'], $user_ids)) {
                 $lists[$key]['proxy_price'] = number_format($value['proxy_price'] * $rate, 2);

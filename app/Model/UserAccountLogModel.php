@@ -88,8 +88,10 @@ class UserAccountLogModel extends Model
         foreach ($order_list as $key => $value) {
             $order_list[$key]['order_type'] = $value['desc'];
             $order_list[$key]['order_title'] = $value['desc'];
+            if (!empty($paylist[$value['pay_type']])) {
+                $order_list[$key]['pay_type'] = $value['pay_type'];
+            }
             // var_dump($value['pay_type']);
-            $order_list[$key]['pay_type'] = $paylist[$value['pay_type']];
             $order_list[$key]['order_status'] = $recharge_consume[$value['status']];
         }
         return $order_list;

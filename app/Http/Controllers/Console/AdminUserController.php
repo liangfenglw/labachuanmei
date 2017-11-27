@@ -61,7 +61,13 @@ class AdminUserController extends CommonController
                         'ad_users.parent_id',
                         'users.is_login',
                         'users.name',
-                        DB::raw("count(order_network.id) as order_count")
+                        'ad_users.mobile',
+                        'ad_users.qq',
+                        'ad_users.email',
+                        'ad_users.address',
+                        'ad_users.contact',
+                        DB::raw("count(order_network.id) as order_count"),
+                        DB::raw("sum(case when ((order_network.order_type = 10) or (order_network.order_type = 13 and deal_with_status <>1)) then order_network.user_money end) as pay_money")
                     )
                     ->groupBy('ad_users.id')
                     ->get()
@@ -100,8 +106,13 @@ class AdminUserController extends CommonController
                             'ad_users.child_user_num',
                             'ad_users.check_status',
                             'ad_users.parent_id',
-                            DB::raw("count(order_network.id) as order_count"),
-                            'users.is_login'
+                            'users.is_login',
+                                        'ad_users.mobile',
+                                        'ad_users.qq',
+                                        'ad_users.email',
+                                        'ad_users.address',
+                                        DB::raw("count(order_network.id) as order_count"),
+                                        DB::raw("sum(case when ((order_network.order_type = 10) or (order_network.order_type = 13 and deal_with_status <>1)) then order_network.user_money end) as pay_money")
                         )
                     ->groupBy('ad_users.id')
                     ->get()
@@ -185,7 +196,7 @@ class AdminUserController extends CommonController
      */
     public function adsUserList($type='ajax')
     {
-        $ad_user_list = AdUsersModel::with('parentUser')
+        $ad_user_list = AdUsersModel::with('parentUser.user')
                             ->leftJoin('users','users.id','=','ad_users.user_id')
                             ->leftJoin("order_network",'ad_users.user_id','=','order_network.ads_user_id');
 
@@ -226,8 +237,14 @@ class AdminUserController extends CommonController
                                         'ad_users.child_user_num',
                                         'ad_users.check_status',
                                         'ad_users.parent_id',
+                                        'ad_users.mobile',
+                                        'ad_users.qq',
+                                        'ad_users.email',
+                                        'ad_users.address',
                                         DB::raw("count(order_network.id) as order_count"),
-                                        'users.is_login'
+                                        DB::raw("sum(case when order_network.order_type=10 or order_network.order_type = 13 and order_network.deal_with_status <> 1 then order_network.user_money end) as pay_money"),
+                                        'users.is_login',
+                                        'users.name'
                                     )
                                 ->groupBy('ad_users.id')
                                 ->get()
@@ -267,9 +284,9 @@ class AdminUserController extends CommonController
     public function getUserExcel($data, $user_type)
     {
         $tab = [
-            1 => ['序号', '用户名', '创建时间', '订单数(发布)', '账户余额', '状态'], // 普通会员
-            2 => ['序号', '用户名', '所属会员', '创建时间', '订单数', '账户余额', '会员资源'], // 广告主
-            3 => ['序号', '用户名', '所属会员', '创建时间', '订单数', '账户余额', '申请状态'], // 申请高级会员
+            1 => ['序号', '用户名', '创建时间', '订单数(发布)', '账户余额','消费总金额', '状态', '联系电话','联系qq','邮箱','联系地址'], // 普通会员
+            2 => ['序号', '用户名', '所属会员', '创建时间', '订单数', '账户余额', '会员资源','状态','联系电话', '联系qq', '邮箱', '联系地址'], // 广告主
+            3 => ['序号', '用户名', '所属会员', '创建时间', '订单数', '账户余额','消费总金额', '申请状态','状态','联系电话', '联系qq', '邮箱', '联系地址'], // 申请高级会员
         ];
         $title = [
             1 => '普通会员列表',
@@ -279,7 +296,7 @@ class AdminUserController extends CommonController
         $cell_data[] = $tab[$user_type];
         foreach ($data as $key => $value) {
             if (is_null($value['user_id'])) continue;
-            $parent_name = !empty($value['parent_user']) ? $value['parent_user']['nickname'] : '';
+            $parent_name = !empty($value['parent_user']) ? $value['parent_user']['user']['name'] : '';
             if ($user_type == 1) {
                 $cell_data[] = [
                     $value['user_id'],
@@ -287,10 +304,14 @@ class AdminUserController extends CommonController
                     $value['created_at'],
                     $value['order_count'],
                     $value['user_money'],
+                    $value['pay_money'],
                     $value['is_login'] == 1 ? '在线' : '下架',
+                    $value['mobile'],
+                    $value['qq'],
+                    $value['email'],
+                    $value['address'],
                 ];
             } elseif ($user_type == 2) {
-                dd($value);
                 $cell_data[] = [
                     $value['user_id'],
                     $value['name'],
@@ -299,6 +320,11 @@ class AdminUserController extends CommonController
                     $value['order_count'],
                     $value['user_money'],
                     $value['child_user_num'],
+                    $value['is_login'] == 1 ? '在线' : '下架',
+                    $value['mobile'],
+                    $value['qq'],
+                    $value['email'],
+                    $value['address'],
                 ];
             } else {
                 $cell_data[] = [
@@ -308,7 +334,13 @@ class AdminUserController extends CommonController
                     $value['created_at'],
                     $value['order_count'],
                     $value['user_money'],
+                    $value['pay_money'],
                     getVipCheckType($value['check_status']),
+                    $value['is_login'] == 1 ? '在线' : '下架',
+                    $value['mobile'],
+                    $value['qq'],
+                    $value['email'],
+                    $value['address'],
                 ];
             }
             
@@ -433,6 +465,7 @@ class AdminUserController extends CommonController
             $info->check_status = 4;
             $notice = new NoticeModel;
             $notice->is_read = 2;
+            $notice->type = 2;
             $notice->user_id = $info->user_id;
             $notice->content = "恭喜您升级为高级会员";
             $notice->operaer = Auth::user()->id;

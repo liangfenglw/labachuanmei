@@ -304,7 +304,9 @@ function getAttrValue($attr_id,$to_html=false,$in_arr_data=[],$all_id=[])
  */
 function getAttrValueSale($attr_id,$to_html=false,$or_limit=1,$in_arr_data=[])
 {
-    $lists = PlateModel::with(['plateVsAttr','plateVsAttr.attrVsVal'])
+    $lists = PlateModel::with(['plateVsAttr' => function($query){
+        $query->orderBy('sort', 'asc');
+    },'plateVsAttr.attrVsVal'])
                         ->where('id',$attr_id)
                         ->first()
                         ->toArray();
@@ -490,15 +492,15 @@ function get_supp_users_id($attr_id_one,$attr_val,$level_id) {
     $user_ids = [];
     $all_0 = 0;
     $is_null = 0;
-    $attr_val = explode(",",$attr_val);
+    $attr_val = explode(",",$attr_val); // 规格id-规格值id
     $rebate_percent = UserLevelModel::where('id',$level_id)->value('rebate_percent');
     $rebate_percent = $rebate_percent?$rebate_percent:1;
-
-    $plate_attr = PlateAttrModel::where("plate_id",$attr_id_one)
+    $plate_attr = PlateAttrModel::where("plate_id",$attr_id_one) // 新闻约稿 2级
+                                    ->orderBy('sort','asc')
                                     ->get()
                                     ->toArray();
 
-    foreach ($plate_attr as $key => $value) {
+    foreach ($plate_attr as $key => $value) { // 2级新闻约稿所有规格值
         $screen_array[$value['id']] = $value;
         $screen_array[$value['id']]['screen'] = [];
         if ($key == count($plate_attr)-1) {
@@ -537,9 +539,8 @@ function get_supp_users_id($attr_id_one,$attr_val,$level_id) {
                            ->pluck('user_id')
                            ->toArray();
     }
-
     if ($offer) {
-            $user_ids = select_price($attr_id_one,$user_ids,$offer,$rebate_percent);
+        $user_ids = select_price($attr_id_one,$user_ids,$offer,$rebate_percent);
     }
 
     if ($is_null>0) {
@@ -650,12 +651,14 @@ function select_price($plate_id,$user_ids=[],$offer,$rebate_percent,$last_user =
         
     }else if (strpos($offer, '以下')) {
         $SuppVsAttrModel = $SuppVsAttrModel->where(DB::raw("supp_users_self.proxy_price * $rebate_percent"),'<',preg_replace('/\D/s', '', $offer));
-    }else{
+    }else {
         $offer = rtrim($offer, "元");
         $offer = explode("-", $offer);
-
         $SuppVsAttrModel = $SuppVsAttrModel->whereBetween(DB::raw("supp_users_self.proxy_price * $rebate_percent"),[$offer[0],$offer[1]]);
-    }
+    } 
+    // else {
+    //     return $user_ids; // TODO:避免不是价格的规格值
+    // }
 
     $user_ids = $SuppVsAttrModel->distinct()->pluck('supp_users_self.user_id')
                                  ->toArray();

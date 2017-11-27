@@ -16,7 +16,7 @@ class AdUsersModel extends Model
 
     public function parentUser()
     {
-        return $this->hasOne('App\Model\AdUsersModel','user_id','belong');
+        return $this->hasOne('App\Model\AdUsersModel','user_id','parent_id');
     }
 
     public function user()
@@ -36,7 +36,7 @@ class AdUsersModel extends Model
                             DB::raw("
                                 sum(case when 
                                     order_network.order_type = 10
-                                    or (order_network.order_type = 13 and deal_with_status = 3)
+                                    or (order_network.order_type = 13 and deal_with_status <> 1)
                                      then order_network.user_money end)
                                as user_money_all"),
                             "users.created_at as user_created_at",'users.is_login'

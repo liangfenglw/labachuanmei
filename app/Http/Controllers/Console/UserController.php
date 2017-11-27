@@ -556,16 +556,23 @@ class UserController extends CommonController
         $supp_lists = UserAccountLogModel::with(['suppUser','order.parent_order.user'])
                 ->leftJoin('users','users.id','=','user_account_log.user_id')
                 ->where('user_type', 3)
+                ->select('user_account_log.*')
                 ->get();
         $account_type = [ 1 => '充值', 2 => '消费', 3 => '提现', 4 => '收入', 5 => '退款'];
         foreach ($supp_lists as $key => $value) {
+            $order_id = 0;
+            if (in_array($value['account_type'], [1,3])) {
+                $order_id = $value['order_id'];
+            } else {
+                $order_id = $value['order']['id'];
+            }
             $supp_cellData[] = [
                 $value['id'],
                 $value['suppUser']['name'],
                 $value['created_at'],
                 $account_type[$value['account_type']],
                 $value['user_money'],
-                $value['order_id'],
+                $order_id,
                 $value['order']['parent_order']['title'],
                 $value['order']['parent_order']['user']['name'],
                 $value['order']['commission'],
@@ -585,9 +592,18 @@ class UserController extends CommonController
             ->leftJoin('users','users.id','=','user_account_log.user_id')
                 ->where('users.user_type', 2)
                 ->orderBy('user_account_log.id','desc')
-                ->get()->toArray();
+                ->select('user_account_log.*')
+                ->get()
+                ->toArray();
         $account_type = [ 1 => '充值', 2 => '消费', 3 => '提现', 4 => '收入', 5 => '退款'];
         foreach ($supp_lists as $key => $value) {
+            $order_id = 0;
+
+            if (in_array($value['account_type'], [1,3])) {
+                $order_id = $value['order_id'];
+            } else {
+                $order_id = $value['order']['id'];
+            }
             $ads_cellData[] = [
                 $value['id'],
                 $value['ads_user']['nickname'],
@@ -595,7 +611,7 @@ class UserController extends CommonController
                 $account_type[$value['account_type']],
                 $value['desc'],
                 $value['user_money'],
-                $value['order_id'],
+                $order_id,
                 $value['order']['parent_order']['title'],
                 $value['order']['supp_user']['name'],
                 $value['order']['commission'],
@@ -612,8 +628,9 @@ class UserController extends CommonController
                     leftJoin('users','users.id','=','user_account_log.user_id')
                     ->whereIn('user_account_log.account_type', [1,3,4])
                     ->with(['suppUser','ads_user','order'])
+                    ->select('user_account_log.*','users.user_type')
+                    ->where('users.user_type', '<>', 1)
                     ->get();
-
         foreach ($form_lists as $key => $value) {
             if ($value['user_type'] == 3) {
                 $user_class = '供应商';
@@ -630,6 +647,12 @@ class UserController extends CommonController
                 }
                 $username = $value['ads_user']['nickname'];
             }
+            $order_id = 0;
+            if (in_array($value['account_type'], [1,3])) {
+                $order_id = $value['order_id'];
+            } else {
+                $order_id = $value['order']['id'];
+            }
             $form_cellData[] = [
                 $value['id'],
                 $username,
@@ -639,7 +662,7 @@ class UserController extends CommonController
                 $value['order']['platform'],
                 $value['desc'],
                 $value['created_at'],
-                $value['order_id'],
+                $order_id,
                 $value['order']['parent_order']['title'],
                 $value['status'] == 1 ? '到账' : '未到账',
             ];

@@ -155,7 +155,9 @@ class ManagerController extends CommonController
                                 ->get()
                                 ->toArray();
         // \DB::enableQueryLog();
-        $lists = PlateModel::with(['plateVsAttr','plateVsAttr.attrVsVal'])
+        $lists = PlateModel::with(['plateVsAttr'=>function($query){
+            $query->orderBy('sort','asc');
+        },'plateVsAttr.attrVsVal'])
                         ->where('pid',$plate_id)
                         ->get()
                         ->toArray();
@@ -208,7 +210,7 @@ class ManagerController extends CommonController
                     ->leftJoin('users','users.id','=','order.ads_user_id')
                     ->leftJoin('supp_users_self as media','media.user_id','=','order_network.self_uid');
         } else {
-            $child_lists = OrderNetworkModel::with(['suppUser.parentUser','selfUser'])->leftJoin('order','order_network.order_sn','=','order.order_sn')
+            $child_lists = OrderNetworkModel::with(['suppUser.parentUser','selfUser','ad_user.parentUser.user'])->leftJoin('order','order_network.order_sn','=','order.order_sn')
                     ->leftJoin('users','users.id','=','order.ads_user_id')
                     ->leftJoin('supp_users_self as media','media.user_id','=','order_network.self_uid');
         }
@@ -273,7 +275,7 @@ class ManagerController extends CommonController
         // }
             
 
-        $child_lists = $child_lists->get()->toArray();
+        $child_lists = $child_lists->orderBy('id','desc')->get()->toArray();
         // dd(\DB::getQueryLog());
         // dd($child_lists);
         if ($request->input('get_excel') == 1) {
@@ -298,19 +300,19 @@ class ManagerController extends CommonController
         $cell = [
             0 => [
                 '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户',
-                '供应商','媒体名称','完成链接/截图','订单状态'
+                '供应商','媒体名称','完成链接/截图','会员佣金','平台获利','订单状态'
             ],
             11 => [ // 未匹配
-                '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','媒体名称','订单状态'
+                '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','订单状态'
             ],
             1 => [ // 预约状态
                 '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','供应商','媒体名称','订单状态'
             ],
             10 => [ // 已完成
-                '订单号','稿件标题','稿件类型','价格','所属用户','供应商','媒体名称','完成链接/截图','订单状态'
+                '订单号','稿件标题','稿件类型','价格','所属用户','供应商','媒体名称','完成链接/截图','会员佣金','平台获利','订单状态'
             ],
             4 => [ // 正执行
-                '订单号','稿件标题','稿件类型','价格','所属用户','供应商','媒体名称','完成链接/截图','订单状态'
+                '订单号','稿件标题','稿件类型','价格','所属用户','供应商','媒体名称','完成链接/截图','会员佣金','平台获利','订单状态'
             ],
             3 => [ // 已流单
                 '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','供应商','媒体名称','订单状态'
@@ -319,10 +321,10 @@ class ManagerController extends CommonController
                 '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','供应商','媒体名称','订单状态'
             ],
             12 => [ // 退款订单
-                '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','供应商','媒体名称','完成链接/截图','订单状态'
+                '订单号','稿件标题','稿件类型','开始时间','结束时间','价格','所属用户','供应商','媒体名称','完成链接/截图','会员佣金','平台获利','订单状态','供应商退款状态','平台退款状态'
             ],
             9 => [
-                '订单号', '稿件类型', '所属用户', '供应商', '媒体名称', '完成链接/截图', '申诉状态'
+                '订单号','创建时间','稿件标题','稿件类型', '开始时间','结束时间','价格','所属用户', '供应商', '媒体名称', '完成链接/截图', '会员佣金','平台所得','申诉状态'
             ]
         ];
         $cell_data = [];
@@ -352,6 +354,8 @@ class ManagerController extends CommonController
                         $value['supp_user']['parent_user']['name'],
                         $value['supp_user']['media_name'],
                         $value['success_url'],
+                        $value['commission'],
+                        $value['platform'],
                         getOrderType($value['order_type']).$tmp
                     ];
                     break;
@@ -367,7 +371,6 @@ class ManagerController extends CommonController
                         $value['over_at'],
                         $value['user_money'],
                         $value['username'],
-                        $value['supp_user']['media_name'],
                         getOrderType($value['order_type']).$tmp,
                     ];
                     break;
@@ -399,6 +402,8 @@ class ManagerController extends CommonController
                         $value['supp_user']['parent_user']['name'],
                         $value['supp_user']['media_name'],
                         $value['success_url'],
+                        $value['commission'],
+                        $value['platform'],
                         getOrderType($value['order_type']).$tmp,
                     ];
                 break;
@@ -434,6 +439,8 @@ class ManagerController extends CommonController
                         $value['supp_user']['parent_user']['name'],
                         $value['supp_user']['media_name'],
                         $value['success_url'],
+                        $value['commission'],
+                        $value['platform'],
                         getOrderType($value['order_type']).$tmp,
                     ];
                     break;
@@ -448,11 +455,18 @@ class ManagerController extends CommonController
                     }
                     $cell_data[] = [
                         $value['id'],
+                        $value['created_at'],
                         $value['title'],
                         $value['type_name'],
+                        $value['start_at'],
+                        $value['over_at'],
+                        $value['user_money'],
+                        !empty($value['ad_user']['parent_user']['user']['name']) ? $value['ad_user']['parent_user']['user']['name'] : '',
                         $value['supp_user']['parent_user']['name'],
                         $value['supp_user']['media_name'],
                         $value['success_url'],
+                        $value['commission'],
+                        $value['platform'],
                         getOrderType($value['order_type']).$tmp,
                     ];
                     break;
@@ -460,14 +474,20 @@ class ManagerController extends CommonController
                 default:
                     $tmp = '';
                     if ($value['deal_with_status'] == 2) {
-                        $tmp = '，重做';
+                        $tmp = '重做';
                     } elseif ($value['deal_with_status'] == 1) {
-                        $tmp = '，此订单退款处理';
+                        $tmp = '此订单退款处理';
                     } elseif ($value['deal_with_status'] == 3) {
-                        $tmp = '，不同意申诉，结款';
+                        $tmp = '不同意申诉，结款';
                     } 
                     if ($value['media_type'] == 12) {
                         $tmp = '重指派';
+                    }
+                    $supp_desc = '';
+                    if ($value['supp_refund_status'] == 1) {
+                        $supp_desc = '同意';
+                    } else if($value['supp_refund_status'] == 2) {
+                        $supp_desc = '拒绝';
                     }
                     $cell_data[] = [
                         $value['id'],
@@ -480,7 +500,11 @@ class ManagerController extends CommonController
                         $value['supp_user']['parent_user']['name'],
                         $value['media_name'],
                         $value['success_url'],
-                        getOrderType($value['order_type']).$tmp
+                        $value['commission'],
+                        $value['platform'],
+                        getOrderType($value['order_type']),
+                        $supp_desc,
+                        $tmp
                         ];
                     break;
             }
@@ -1201,6 +1225,9 @@ class ManagerController extends CommonController
     public function articleDel(Request $request)
     {
         $id = $request->input('id');
+        if ($id == 26) {
+            return ['status_code' => 201, 'msg' => '这个通知消息不能删除'];
+        }
         $res = ArticleModel::where('id',$id)->delete();
         if ($res)
             return ['status_code' => 200, 'msg' => '删除成功'];

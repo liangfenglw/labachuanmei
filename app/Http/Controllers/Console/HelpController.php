@@ -28,7 +28,7 @@ class HelpController extends CommonController
         $category_type = \Config::get("category");
         $lists = CategoryModel::whereIn('type_id',array_keys($category_type))
                                     ->where('status',1)
-                                    ->where('id','<>',22) //最新消息
+                                    ->whereNotIn('id',[22,27]) //最新消息
                                     ->orderBy('sortorder','desc') 
                                     ->get()
                                     ->toArray();
@@ -55,7 +55,7 @@ class HelpController extends CommonController
         $lists = CategoryModel::whereIn('type_id',array_keys($category_type))
                                     ->where('status',1)
                                     ->orderBy('sortorder','desc')
-                                    ->where('id','<>',22) //最新消息
+                                    ->whereNotIn('id',[22,27]) //最新消息
                                     ->get()
                                     ->toArray();
 

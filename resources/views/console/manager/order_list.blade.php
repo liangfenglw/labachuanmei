@@ -160,6 +160,7 @@
                         @elseif(Request::input('type') == 9)
                             <tr>
                                 <th>订单号</th>
+                                <th>稿件标题</th>
                                 <th>稿件类型</th>
                                 <th>所属用户</th>
                                 <th>供应商</th>
@@ -177,7 +178,6 @@
                                 <th>结束时间</th>
                                 <th>价格</th>
                                 <th>所属用户</th>
-                                <th>媒体名称</th>
                                 <th>订单状态</th>
                                 <th class="nosort">操作</th>
                             </tr>
@@ -263,6 +263,7 @@
                                     <td>{{ $value['id'] }}</td>
                                     <td>{{ $value['title'] }}</td>
                                     <td>{{ $value['type_name'] }}</td>
+                                    <td>{{ $value['ad_user']['parent_user']['user']['name'] or '' }}</td>
                                     <td>{{ $value['supp_user']['parent_user']['name'] }}</td>
                                     <td>{{ $value['supp_user']['media_name'] }}</td>
                                     <td>
@@ -332,7 +333,6 @@
                                     <td>{{ $value['over_at'] }}</td>
                                     <td class="color1">{{ $value['user_money'] }}</td>
                                     <td>{{ $value['username'] }}</td>
-                                    <td>{{ $value['supp_user']['media_name'] }}</td>
                                     <td class="color1">
                                     {{ getOrderType($value['order_type']) }}
                                     @if($value['media_type'] == 12)

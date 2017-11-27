@@ -23,9 +23,9 @@ use App\Model\UserAccountLogModel;
 use App\Model\OrderModel;
 use App\Model\OrderNetworkModel;
 use App\Model\PlateModel;
-
+use App\Model\NoticeModel;
 use App\User;
-
+use App\Model\ArticleModel;
 use Auth;
 use Cache;
 use DB;
@@ -40,6 +40,18 @@ class UserpersonalController extends CommonController
         $this->request = $request;
     }
 
+    public function vipNotice(Request $request){
+        $info = NoticeModel::where('user_id', Auth::user()->id)->where('type', 2)->first();
+        if (!$info) {
+            return back()->with('status', '错误请求');
+        }
+        $info->is_read = 1;
+        $info->save();
+        $notice_date = $info['created_at'];
+        $info = ArticleModel::where('id', 26)->first();
+        
+        return view('console.supp.vip_notice', ['info' => $info, 'notice_date' => $notice_date]);
+    }
 
     /*
     *用户修改资料
