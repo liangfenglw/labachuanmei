@@ -560,11 +560,16 @@ class UserController extends CommonController
                 ->get();
         $account_type = [ 1 => '充值', 2 => '消费', 3 => '提现', 4 => '收入', 5 => '退款'];
         foreach ($supp_lists as $key => $value) {
-            $order_id = 0;
+            $order_id = $platform = 0;
             if (in_array($value['account_type'], [1,3])) {
                 $order_id = $value['order_id'];
             } else {
                 $order_id = $value['order']['id'];
+            }
+            if ($value['account_type'] == 1) {
+                $platform = $value['user_money'];
+            } else {
+                $platform = $value['order']['platform'];
             }
             $supp_cellData[] = [
                 $value['id'],
@@ -597,13 +602,18 @@ class UserController extends CommonController
                 ->toArray();
         $account_type = [ 1 => '充值', 2 => '消费', 3 => '提现', 4 => '收入', 5 => '退款'];
         foreach ($supp_lists as $key => $value) {
-            $order_id = 0;
-
+            $order_id = $platform = 0;
             if (in_array($value['account_type'], [1,3])) {
                 $order_id = $value['order_id'];
             } else {
                 $order_id = $value['order']['id'];
             }
+            if ($value['account_type'] == 1) {
+                $platform = $value['user_money'];
+            } else {
+                $platform = $value['order']['platform'];
+            }
+
             $ads_cellData[] = [
                 $value['id'],
                 $value['ads_user']['nickname'],
@@ -647,18 +657,23 @@ class UserController extends CommonController
                 }
                 $username = $value['ads_user']['nickname'];
             }
-            $order_id = 0;
+            $order_id = $platform = 0;
             if (in_array($value['account_type'], [1,3])) {
                 $order_id = $value['order_id'];
             } else {
                 $order_id = $value['order']['id'];
+            }
+            if ($value['account_type'] == 1) {
+                $platform = $value['user_money'];
+            } else {
+                $platform = $value['order']['platform'];
             }
             $form_cellData[] = [
                 $value['id'],
                 $username,
                 $user_class,
                 $account_type[$value['account_type']],
-                $value['user_money'],
+                $value['order']['user_money'],
                 $value['order']['platform'],
                 $value['desc'],
                 $value['created_at'],

@@ -223,8 +223,8 @@ $(function(){
 		$(".sbox_1_item div.m").each(function(){
 			var width_w = $(this).width();
 			var width = $(this).find("ul").width();
-			console.log("width_w",width_w);
-			console.log("width",width);
+		//	console.log("width_w",width_w);
+		//	console.log("width",width);
 			if( width_w > width +1 ){
 				$(this).siblings("span.r").hide();
 			}else{

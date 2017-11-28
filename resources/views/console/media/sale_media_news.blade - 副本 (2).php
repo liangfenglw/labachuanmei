@@ -466,7 +466,7 @@
 	
 	//筛选媒体
 	$(".sbox_1_item .m ul li a").click(function () {
-		var option = $(this).parents(".m").siblings("span.l").attr("data");
+		var option = $(this).parents(".m").prev("span").prev("span").attr("data");
 		var value = $.trim($(this).html());
 		if( typeof($(this).parent().attr("data_id")) == "undefined" ){
 			var data_id = "-1";
@@ -504,9 +504,165 @@
 			}
 		}
 		
-		//根据筛选获取数据
-		ajaxGetChooseData();
+		var  opt = getDataArr2();
+		var  key ='category_id';
+		var  dt=[];
+		for(var i=0;i< opt.length;i++){
+			if(opt[i].data_id != ''){
+				dt[i]=opt[i].data_id
+			}
+		}
+		dt = opt;
+		if(dt ==''){
+			$('#wrapper_i').html($page_data2);
+			/*	返回数据 分页	*/
+			$page_data = $("#wrapper_i tr");
+			data_len = $page_data.length;
+			nums = $("#page_nums").val();
+			laypage_l($("#wrapper_i"), $("#demo1"), $page_data, data_len, nums);
+			return false;
+		}
 
+        var category_arr = [];
+        var id_arr = [];
+		page_num_new = $("#page_nums").val();
+        $('#attr_val ul[set_name="network"] a.cur').each(function(){
+            id_arr.push($(this).attr('data_id'));
+            category_arr.push($(this).attr('category_id'));
+        })
+        data_id = category_arr.toString();
+        category_id = id_arr.toString();
+        // alert(category_id);
+		//请求数据，加载页面
+		$.ajax({
+			url: '',
+			data: {
+				'id':id,
+				'category_id':category_id,
+				'page_num':page_num_new,
+				// 'limit_start':limit_start,
+				// 'data': [
+					// {"category_id": opt[0]["category_id"], "data_id": opt[0]["data_id"]},
+					// {"category_id": opt[1]["category_id"], "data_id": opt[1]["data_id"]},
+					// {"category_id": opt[2]["category_id"], "data_id": opt[2]["data_id"]},
+					// {"category_id": opt[3]["category_id"], "data_id": opt[3]["data_id"]},
+					// {"category_id": opt[4]["category_id"], "data_id": opt[4]["data_id"]},
+					// {"category_id": opt[5]["category_id"], "data_id": opt[5]["data_id"]}
+				// ],
+				'_token': _token
+			},
+			type: 'post',
+			dataType: "json",
+			stopAllStart: true,
+			success: function (data) {
+					// $("#resource_table a").remove();
+console.log("ajax-data:", data);
+				var sum = data.data.length;
+				var get_data = data.data;
+				limit_start  = data.page.limit_start;
+				page_num  = data.page.page_num;
+				// result='<thead><tr class="normal"><th style="width:18%;">资源名称</th>'+'<th>发布类型</th>'+
+				// 				'<th>频道类型</th><th>指定效果</th><!-- <th>阅读量</th> --><th>价格</th>'+
+				// 				'<th style="width:20%;">备注</th></tr></thead>'+
+				// 		'<tbody id="wrapper_i">';
+				result='';
+				if (data.status == '1') {
+					if (data.data.length>0) {
+
+						$('#title_bbs').show();
+						//页面渲染
+						for(var i=0; i< sum; i++){
+							var vg=get_data[i].standard;
+							var vt=get_data[i].Entrance_form;
+							var vb=get_data[i].Entrance_level;
+							console.log("get_data["+i+"]:", get_data[i]);
+							if( !get_data[i].standard || get_data[i].standard==''){
+								vg  = "不限";
+							}else{
+	//                            vg= get_data[i].standard[0].name;
+								vg= get_data[i].standard;
+							}
+							if( !get_data[i].Entrance_form || get_data[i].Entrance_form==''){
+								vt = "不限";
+							}else{
+	//							vt= get_data[i].Entrance_form[0].name;
+								vt= get_data[i].Entrance_form;
+							}
+							if( !get_data[i].Entrance_level || get_data[i].Entrance_level==''){
+								vb  = "不限";
+							}else{
+	//							vb= get_data[i].Entrance_level[0].name;
+								vb= get_data[i].Entrance_level;
+							}
+							if (!data.data[i]['web_type'] && isNaN(data.data[i]['web_type'])) {
+								data.data[i]['web_type']='不限';
+							};
+							if (!data.data[i]['channel_type'] && isNaN(data.data[i]['channel_type'])) {
+								data.data[i]['channel_type']='不限';
+							};
+							if (!data.data[i]['channel_level'] && isNaN(data.data[i]['channel_level'])) {
+								data.data[i]['channel_level']='不限';
+							};
+							if (!data.data[i]['included_reference'] && isNaN(data.data[i]['included_reference'])) {
+								data.data[i]['included_reference']='不限';
+							};
+							if (!data.data[i]['text_link'] && isNaN(data.data[i]['text_link'])) {
+								data.data[i]['text_link']='不限';
+							};
+							if (!data.data[i]['index_logo']) {
+								data.data[i]['index_logo']='';
+							}else{
+								data.data[i]['index_logo']='<img src="'+data.data[i]['index_logo']+'">';
+							}
+							result += '<tr rst_id="'+data.data[i]['user_id']+'">' + 
+								'<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>' + 
+								'<td class="logo-title"><img src="'+data.data[i]['media_logo']+'">' +
+								data.data[i]['media_name']+'</td><td>'
+								+data.data[i]['web_type']+'</td><td>'
+								+data.data[i]['channel_type']+'</td><td>'
+								+data.data[i]['channel_level']+'</td><td>'+
+								data.data[i]['included_reference']+'</td>'+'</td><td>'+data.data[i]['text_link']+'</td><td>'+
+								data.data[i]['index_logo']+'</td>'+
+								'<td class="color1">￥'+data.data[i]['proxy_price']+'</td><td>'+
+								data.data[i]['remark']+'</td></tr>';
+						}
+
+						
+						$('#resource_count').html(data.resource_count);
+						$('#wrapper_i').html('');
+						// $('#resource_table').html("");
+						$("#error_show a").remove();
+						$('#wrapper_i').append(result);
+					}else{
+						$('#resource_count').html(0);
+						$('#title_bbs').hide();
+						$('#wrapper_i').html(result);
+						// $('#resource_table').html("");
+						$("#error_show a").remove();
+						$('#resource_table').append('<a>抱歉，暂无资源</a>');
+					}
+					// $('#wrapper_i').html("");
+					// $('#wrapper_i').append(result);
+					$('#page').html('');
+					if (data.page.page_statue>0) {
+							// alert(43);
+						$('#page').append('<a href="javascript:void(0);" onclick="page_load()" class="more"  style="adisplay:none;">加载更多</a>');
+					}
+					
+					/*	返回数据 分页	*/
+					$page_data = $("#wrapper_i tr");
+					data_len = $page_data.length;
+					nums = $("#page_nums").val();
+					laypage_l($("#wrapper_i"), $("#demo1"), $page_data, data_len, nums);
+					
+				} else {
+					layer.msg(data.msg || '请求失败');
+				}
+			},
+			error: function (data) {
+				layer.msg(data.msg || '网络发生错误');
+			}
+		});
 		return false;
 	});
 
@@ -532,7 +688,7 @@
 					});
 				}
 		});
-//		console.log("opt_2:", opt_2);
+		console.log("opt_2:", opt_2);
 		return opt_2;
 		
 	}
@@ -635,12 +791,12 @@
 	}
 
 	/*	默认数据 分页	*/
-/*	var $page_data = $("#wrapper_i tr");
+	var $page_data = $("#wrapper_i tr");
 	var $page_data2 = $("#wrapper_i").html();
 	var data_len = $page_data.length;
 	var nums = 10;
 	laypage_l($("#wrapper_i"), $("#demo1"), $page_data, data_len, nums);
-*/
+
 	// $("#page_nums").change(function(){
 	// 	var nums = $(this).val();
 	// 	laypage_l($("#wrapper_i"), $("#demo1"), $page_data, data_len, nums);
@@ -943,8 +1099,8 @@ function setOffset(ele1,ele2){
 	var top = $(ele2).offset().top;
 	var left = $(ele2).offset().left;
 	$(ele1).show().offset({"left":left,"top":top});
-//	console.log(left)
-//	console.log(top)
+	console.log(left)
+	console.log(top)
 }	
 setOffset("#Manuscripts","#upload_file");
 	
@@ -980,147 +1136,12 @@ $('#wrapper_i').on("click","tr td input",function(event){
 	}
 });
 
-
-//根据筛选获取数据
-function ajaxGetChooseData(){
-	var  choose = getDataArr2();			//选中项字符串
-	var category_arr = [];
-	var id_arr = [];
-	page_num_new = $("#page_nums").val();
-	$('#attr_val ul[set_name="network"] li a.cur').each(function(){
-		id_arr.push($(this).attr('data_id'));
-		category_arr.push($(this).attr('category_id'));
-	})
-	data_id = category_arr.toString();
-	category_id = id_arr.toString();
-//	console.log("data_id:", data_id);
-//	console.log("category_id:", category_id);
-	
-	//请求数据，加载页面
-	$.ajax({
-		url: '',
-		data: {
-			'id':id,
-			'category_id':category_id,
-			'page_num':page_num_new,
-			'_token': _token
-		},
-		type: 'post',
-		dataType: "json",
-//		stopAllStart: true,
-		success: function (data) {
-			// $("#resource_table a").remove();
-			//console.log("ajax-data:", data);
-			var sum = data.data.length;
-			var get_data = data.data;
-			limit_start  = data.page.limit_start;
-			page_num  = data.page.page_num;
-			// result='<thead><tr class="normal"><th style="width:18%;">资源名称</th>'+'<th>发布类型</th>'+
-			// 				'<th>频道类型</th><th>指定效果</th><!-- <th>阅读量</th> --><th>价格</th>'+
-			// 				'<th style="width:20%;">备注</th></tr></thead>'+
-			// 		'<tbody id="wrapper_i">';
-			result='';
-			if (data.status == '1') {
-				if (sum>0) {
-					$('#title_bbs').show();
-					//页面渲染
-					for(var i=0; i< sum; i++){
-						var vg=get_data[i].standard;
-						var vt=get_data[i].Entrance_form;
-						var vb=get_data[i].Entrance_level;
-//						console.log("get_data["+i+"]:", get_data[i]);
-						if( !get_data[i].standard || get_data[i].standard==''){
-							vg  = "不限";
-						}else{
-//							vg= get_data[i].standard[0].name;
-							vg= get_data[i].standard;
-						}
-						if( !get_data[i].Entrance_form || get_data[i].Entrance_form==''){
-							vt = "不限";
-						}else{
-	//						vt= get_data[i].Entrance_form[0].name;
-							vt= get_data[i].Entrance_form;
-						}
-						if( !get_data[i].Entrance_level || get_data[i].Entrance_level==''){
-							vb  = "不限";
-						}else{
-	//						vb= get_data[i].Entrance_level[0].name;
-							vb= get_data[i].Entrance_level;
-						}
-						if (!data.data[i]['web_type'] && isNaN(data.data[i]['web_type'])) {
-							data.data[i]['web_type']='不限';
-						};
-						if (!data.data[i]['channel_type'] && isNaN(data.data[i]['channel_type'])) {
-							data.data[i]['channel_type']='不限';
-						};
-						if (!data.data[i]['channel_level'] && isNaN(data.data[i]['channel_level'])) {
-							data.data[i]['channel_level']='不限';
-						};
-						if (!data.data[i]['included_reference'] && isNaN(data.data[i]['included_reference'])) {
-							data.data[i]['included_reference']='不限';
-						};
-						if (!data.data[i]['text_link'] && isNaN(data.data[i]['text_link'])) {
-							data.data[i]['text_link']='不限';
-						};
-						if (!data.data[i]['index_logo']) {
-							data.data[i]['index_logo']='';
-						}else{
-							data.data[i]['index_logo']='<img src="'+data.data[i]['index_logo']+'">';
-						}
-						result += '<tr rst_id="' + data.data[i]['user_id'] + '">'
-							+ '<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>'
-							+ '<td class="logo-title"><img src="' + data.data[i]['media_logo'] + '">' + data.data[i]['media_name'] + '</td>'
-							+ '<td>' + data.data[i]['web_type'] + '</td>'
-							+ '<td>' + data.data[i]['channel_type'] + '</td>'
-							+ '<td>' + data.data[i]['channel_level'] + '</td>'
-							+ '<td>' + data.data[i]['included_reference'] + '</td>'
-							+ '<td>' + data.data[i]['text_link'] + '</td>'
-							+ '<td>' + data.data[i]['index_logo'] + '</td>'
-							+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-							+ '<td>' + data.data[i]['remark'] + '</td>'
-							+ '</tr>';
-					}
-
-					$('#resource_count').html(data.resource_count);
-					$('#wrapper_i').html('');
-					// $('#resource_table').html("");
-					$("#error_show a").remove();
-					$('#wrapper_i').append(result);
-				}else{
-					$('#resource_count').html(0);
-					$('#title_bbs').hide();
-					$('#wrapper_i').html(result);
-					// $('#resource_table').html("");
-					$("#error_show a").remove();
-					$('#resource_table').append('<a>抱歉，暂无资源</a>');
-				}
-				$('#page').html('');
-				if (data.page.page_statue>0) {
-					$('#page').append('<a href="javascript:void(0);" onclick="page_load()" class="more">加载更多</a>');
-				}
-
-				/*	返回数据 分页	*/
-/*				$page_data = $("#wrapper_i tr");
-				data_len = $page_data.length;
-				nums = $("#page_nums").val();
-				laypage_l($("#wrapper_i"), $("#demo1"), $page_data, data_len, nums);
-*/
-			} else {
-				layer.msg(data.msg || '请求失败');
-			}
-		},
-		error: function (data) {
-			layer.msg(data.msg || '网络发生错误');
-		}
-	});
-	
-}
-
-@if(!empty(Request::input('user_id')))
-$(function(){
-	ajaxGetChooseData();
-});
-@endif
+	@if(!empty(Request::input('user_id')))
+		$("#wrapper_i").hide();
+		var last_cur = $(".sbox_1_item .m ul li a.cur");
+		last_cur.last().click().click();
+		$("#wrapper_i").show();
+	@endif
 	
 </script>
 </body>

@@ -1019,6 +1019,7 @@ class UserpersonalController extends CommonController
             $AdUsersModel->parent_id = $user_id;
             $AdUsersModel->email = $email;
             $AdUsersModel->address = $address;
+            $AdUsersModel->breif = $breif;
             $add_adduser_id = $AdUsersModel->save();
               
             if ($add_adduser_id) {
