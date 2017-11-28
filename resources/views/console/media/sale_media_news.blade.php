@@ -60,7 +60,7 @@
 							<option value="1">1</option>
 						</select>条记录
 					</span>
-                    <strong class="l">共<b id='resource_count'>{{$resource_count}}</b>条媒体</strong>
+                    <strong class="l">共<b id='resource_count'> @if(!empty(Request::input('user_id'))) 0 @else {{$resource_count}} @endif </b>条媒体</strong>
 				</h4>
 				<div class="sbox_3_table tab1_body clearfix" style="margin-top:15px;" id="error_show">
 					<table class="table_in1 cur" style="margin:0;" id="resource_table">
@@ -1081,13 +1081,13 @@ function ajaxGetChooseData(){
 							+ '</tr>';
 					}
 
-					$('#resource_count').html(data.resource_count);
+					$('#resource_count').html(' '+data.resource_count+' ');
 					$('#wrapper_i').html('');
 					// $('#resource_table').html("");
 					$("#error_show a").remove();
 					$('#wrapper_i').append(result);
 				}else{
-					$('#resource_count').html(0);
+					$('#resource_count').html(' 0 ');
 					$('#title_bbs').hide();
 					$('#wrapper_i').html(result);
 					// $('#resource_table').html("");

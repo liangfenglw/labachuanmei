@@ -344,6 +344,7 @@ class OrderController extends CommonController
 
                     AdUsersModel::where('user_id',Auth::user()->id)->increment('parent_order_commision',$commission);
                     AdUsersModel::where('user_id',Auth::user()->id)->increment('parent_order_num',1);
+                    AdUsersModel::where('user_id', Auth::user()->id)->increment('parent_order_money',$info['user_money']);
                     UserAccountLogModel::insert($accountlog_data);
                 }
             }

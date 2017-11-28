@@ -699,6 +699,8 @@ class ManagerController extends CommonController
 
                     $ads_user->parent_order_commision = $ads_user->parent_order_commision + $order_info->commission;
                     $ads_user->parent_order_num = $ads_user->parent_order_num + 1;
+                    $ads_user->parent_order_money += $order_info->user_money;
+
                     $ads_user->save();
 
                     $parent_user = AdUsersModel::where('user_id', $ads_user->user_id)->first();
@@ -796,6 +798,7 @@ class ManagerController extends CommonController
                     $ads_user = AdUsersModel::where('user_id', $order_info->ads_user_id)->first();
                     $ads_user->parent_order_commision = $ads_user->parent_order_commision + $order_info->commission;
                     $ads_user->parent_order_num = $ads_user->parent_order_num + 1;
+                    $ads_user->parent_order_money += $order_info->user_money;
                     $ads_user->save();
 
                     $parent_user = AdUsersModel::where('user_id', $ads_user->user_id)->first();
@@ -1332,11 +1335,13 @@ class ManagerController extends CommonController
         } else {
             $activity_model = new ActivityModel;
         }
+        $start = $request->start." ".$request->name4_1.":".$request->name4_2.":00";
+        $over = $request->over." ".$request->name5_1.':'.$request->input('name5_2').':00';
         $activity_model->activity_name = $request->input('activity_name');
-        $activity_model->start = $request->input('start')." ".$request->input('name4_1').'-'.$request->input('name4_2').'00';
-        $activity_model->over = $request->input('over')." ".$request->input('name5_1').'-'.$request->input('name5_2').'00';
-        $activity_model->plate_rate = $request->input('plate_rate');
-        $activity_model->vip_rate = $request->input('vip_rate');
+        $activity_model->start = $start;
+        $activity_model->over = $over;
+        $activity_model->plate_rate = $request->plate_rate;
+        $activity_model->vip_rate = $request->vip_rate;
         $activity_model->save();
         return redirect('/console/activity/list')->with('status', '更新成功');
     }

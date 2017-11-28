@@ -33,12 +33,7 @@ class AdUsersModel extends Model
                         ->leftJoin('order_network','order.order_sn','=','order_network.order_sn');
         if ($order_type == 'success') { // 完单
             $order_list = $order_list->select("*",DB::raw("count(order_network.id) as order_num"),
-                            DB::raw("
-                                sum(case when 
-                                    order_network.order_type = 10
-                                    or (order_network.order_type = 13 and deal_with_status <> 1)
-                                     then order_network.user_money end)
-                               as user_money_all"),
+                            'ad_users.parent_order_money as user_money_all',
                             "users.created_at as user_created_at",'users.is_login'
                             );
         }
