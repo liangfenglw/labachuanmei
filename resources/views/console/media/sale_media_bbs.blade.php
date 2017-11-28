@@ -56,11 +56,10 @@
 							<option value="1">1</option>
 						</select>条记录
 					</span>
-                    <strong class="l">共<b id='resource_count'>{{$resource_count}}</b>条媒体</strong>
+					<strong class="l">共<b id='resource_count'> @if(!empty(Request::input('user_id'))) 0 @else {{$resource_count}} @endif </b>条媒体</strong>
 				</h4>
 				<div class="sbox_3_table tab1_body clearfix" style="margin-top:15px;" id="error_show">
 					<table class="table_in1 cur" style="margin:0;" id="resource_table">
-						@if($lists)
 						<thead id="title_bbs">
 							<tr class="normal">
 								<th><label class="check_all" style="margin:0;"><input type="checkbox" name="checkall" value="1" class="checkall" />全选</label></th>
@@ -70,27 +69,33 @@
 								<th>指定效果</th>
 								<!-- <th>阅读量</th> -->
 								<th>价格</th>
+								<th style="min-width:120px;">活动价</th>
 								<th style="width:20%;">备注</th>
 							</tr>
 						</thead>
-						<tbody id="wrapper_i">
-							@foreach($lists as $k => $v)
-							<tr rst_id="{{$v['user_id']}}">
-								<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>
-								<td class="logo-title"><img src="{{$v['media_logo']}}">{{$v['media_name']}}</td>
-								<td>@if(isset($v['publish_type'])){{$v['publish_type']}}@else 不限 @endif</td>
-								<td>@if(isset($v['channel_type'])){{$v['channel_type']}}@else 不限 @endif</td>
-								<td>@if(isset($v['appoint_type'])){{$v['appoint_type']}}@else 不限 @endif</td>
-								<td class="color1">￥{{$v['proxy_price']}}</td>
-								<td>{{$v['remark']}}</td>
-							</tr>
-							@endforeach
-							
-						</tbody>
+						
+						@if(!empty(Request::input('user_id')))
+						<tbody id="wrapper_i"></tbody>
 						@else
-						<a>抱歉，暂无媒体</a>
+						<tbody id="wrapper_i">
+							@if($lists)
+								@foreach($lists as $k => $v)
+								<tr rst_id="{{$v['user_id']}}">
+									<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>
+									<td class="logo-title"><img src="{{$v['media_logo']}}">{{$v['media_name']}}</td>
+									<td>@if(isset($v['publish_type'])){{$v['publish_type']}}@else 不限 @endif</td>
+									<td>@if(isset($v['channel_type'])){{$v['channel_type']}}@else 不限 @endif</td>
+									<td>@if(isset($v['appoint_type'])){{$v['appoint_type']}}@else 不限 @endif</td>
+									<td class="color1">￥{{$v['proxy_price']}}</td>
+									<td class="color1">@if(empty($v['member_price'])) @else ￥{{$v['member_price']}} @endif</td>
+									<td>{{$v['remark']}}</td>
+								</tr>
+								@endforeach
+							@else
+								<tr id="no-data"><td colspan="10"><a>抱歉，暂无媒体</a></td></tr>
+							@endif
+						</tbody>
 						@endif
-
 					</table>
 					<div class="sbox_3_b" style="width:auto;height:auto;" id="page">
 						@if($page['page_statue'])<a href="javascript:void(0);" onclick="page_load()" class="more"  style="adisplay:none;">加载更多</a>

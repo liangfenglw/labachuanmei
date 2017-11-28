@@ -1,5 +1,4 @@
 <script>
-	var tdata;
 	var id = {{$media['id']}};
     var limit_start = {{$page['limit_start']}};
     var page_num = {{$page['page_num']}};
@@ -30,7 +29,6 @@
 			dataType: "json",
 //			stopAllStart: true,
 			success: function (data) {
-				tdata = data;
 				var sum = data.data.length;
 				var member_price;
 				limit_start  = data.page.limit_start;
@@ -64,7 +62,8 @@
 									data.data[i]['index_logo']='<img src="' + data.data[i]['index_logo'] + '">';
 								}
 								
-								member_price = !data.data[i]['member_price'] ? "" : ( "￥" + data.data[i]['member_price'] );
+								member_price = data.data[i]['member_price'];
+								if( member_price != '' ){	member_price = "￥" + member_price;	}
 								
 								result += '<tr rst_id="' + data.data[i]['user_id'] + '">'
 									+ '<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>'
@@ -98,7 +97,8 @@
 									data.data[i]['sex_type']='不限';
 								}
 								
-								member_price = !data.data[i]['member_price'] ? "" : ( "￥" + data.data[i]['member_price'] );
+								member_price = data.data[i]['member_price'];
+								if( member_price != '' ){	member_price = "￥" + member_price;	}
 
 								result += '<tr rst_id="' + data.data[i]['user_id'] + '">'
 									+ '<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>'
@@ -127,7 +127,8 @@
 									data.data[i]['appoint_type']='不限';
 								}
 								
-								member_price = !data.data[i]['member_price'] ? "" : ( "￥" + data.data[i]['member_price'] );
+								member_price = data.data[i]['member_price'];
+								if( member_price != '' ){	member_price = "￥" + member_price;	}
 
 								result += '<tr rst_id="' + data.data[i]['user_id'] + '">'
 									+ '<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>'
@@ -152,7 +153,8 @@
 									data.data[i]['fans']='不限';
 								}
 
-								member_price = !data.data[i]['member_price'] ? "" : ( "￥" + data.data[i]['member_price'] );
+								member_price = data.data[i]['member_price'];
+								if( member_price != '' ){	member_price = "￥" + member_price;	}
 								
 								result +='<tr rst_id="' + data.data[i]['user_id'] + '" screen_attr_value_ids ="' + data.data[i]['screen_attr_value_ids'] + '" >'
 									+ '<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>'
@@ -185,7 +187,8 @@
 									data.data[i]['appoint_type']='不限';
 								}
 
-								member_price = !data.data[i]['member_price'] ? "" : ( "￥" + data.data[i]['member_price'] );
+								member_price = data.data[i]['member_price'];
+								if( member_price != '' ){	member_price = "￥" + member_price;	}
 								
 								result += '<tr rst_id="' + data.data[i]['user_id'] + '">'
 									+ '<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>'
@@ -611,6 +614,10 @@
 				var member_price;
 				limit_start  = data.page.limit_start;
 				page_num  = data.page.page_num;
+				// result='<thead><tr class="normal"><th style="width:18%;">资源名称</th>' + '<th>发布类型</th>' +
+				// 				'<th>频道类型</th><th>指定效果</th><!-- <th>阅读量</th> --><th>价格</th>' +
+				// 				'<th style="width:20%;">备注</th></tr></thead>' +
+				// 		'<tbody id="wrapper_i">';
 				result='';
 				if (data.status == '1') {
 					if (sum>0) {
@@ -662,7 +669,8 @@
 									data.data[i]['index_logo']='<img src="' + data.data[i]['index_logo'] + '">';
 								}
 								
-								member_price = !data.data[i]['member_price'] ? "" : ( "￥" + data.data[i]['member_price'] );
+								member_price = data.data[i]['member_price'];
+								if( member_price != '' ){	member_price = "￥" + member_price;	}
 								
 								result += '<tr rst_id="' + data.data[i]['user_id'] + '">'
 									+ '<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>'
@@ -718,19 +726,13 @@
 									data.data[i]['sex_type']='不限';
 								};
 
-								member_price = !data.data[i]['member_price'] ? "" : ( "￥" + data.data[i]['member_price'] );
-								
-								result += '<tr rst_id="' + data.data[i]['user_id'] + '">'
-									+ '<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>'
-									+ '<td class="logo-title"><img src="' + data.data[i]['media_logo'] + '">' + data.data[i]['media_name'] + '</td>'
-									+ '<td>' + data.data[i]['publish_type'] + '</td>'
-									+ '<td>' + data.data[i]['video_type'] + '</td>'
-									+ '<td>' + data.data[i]['fans'] + '</td>'
-									+ '<td>' + data.data[i]['sex_type'] + '</td>'
-									+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-									+ '<td class="color1">' + member_price + '</td>'
-									+ '<td>' + data.data[i]['remark'] + '</td>'
-									+ '</tr>';
+								result += '<tr rst_id="'+data.data[i]['user_id']+'">' + 
+									'<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>' + 
+									'<td class="logo-title"><img src="'+data.data[i]['media_logo']+'">' +
+									data.data[i]['media_name']+'</td><td>'+data.data[i]['publish_type']+'</td><td>'+
+									data.data[i]['video_type']+'</td><td>'+data.data[i]['fans']+'</td><td>'+
+									data.data[i]['sex_type']+'</td><td class="color1">￥'+data.data[i]['proxy_price']+'</td><td>'+
+									data.data[i]['remark']+'</td></tr>';
 							}
 						}
 						
@@ -768,19 +770,25 @@
 								if (!data.data[i]['appoint_type']) {
 									data.data[i]['appoint_type']='不限';
 								};
-								
-								member_price = !data.data[i]['member_price'] ? "" : ( "￥" + data.data[i]['member_price'] );
-								
-								result += '<tr rst_id="' + data.data[i]['user_id'] + '">'
-									+ '<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>'
-									+ '<td class="logo-title"><img src="' + data.data[i]['media_logo'] + '">' + data.data[i]['media_name'] + '</td>'
-									+ '<td>' + data.data[i]['publish_type'] + '</td>'
-									+ '<td>' + data.data[i]['channel_type'] + '</td>'
-									+ '<td>' + data.data[i]['appoint_type'] + '</td>'
-									+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-									+ '<td class="color1">' + member_price + '</td>'
-									+ '<td>' + data.data[i]['remark'] + '</td>'
-									+ '</tr>';
+								// result += '<tr rst_id="'+get_data[i].id+'">' +
+								// 	'<td>'+get_data[i].id+'</td>' +
+								// 	'<td class="sbox_3_t1">' +
+								// 	'<img src="'+get_data[i].media_md5+'"  style="width: 100px;height:30px">'+get_data[i].media_name+'</td>' +
+								// 	'<td class="sbox_3_t2">'+vt+'</td>' +
+								// 	'<td class="sbox_3_t3">'+vb+'</td>' +
+								// 	'<td>'+vg+'</td>' +
+								// 	'<td class="sbox_3_t5"><img src="'+get_data[i].diagram_img+'" style="width:50px;height:20px"></td>' +
+								// 	'<td class="red">'+get_data[i].pf_price+'</td>' +
+								// 	'<td class="red">'+get_data[i].px_price+'</td>' +
+								// 	'<td class="red">'+get_data[i].mb_price+'</td>' +
+								// 	'</tr>';
+								result += '<tr rst_id="'+data.data[i]['user_id']+'">' + 
+									'<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>' + 
+									'<td class="logo-title"><img src="'+data.data[i]['media_logo']+'">' +
+									data.data[i]['media_name']+'</td><td>'+data.data[i]['publish_type']+'</td><td>'+
+									data.data[i]['channel_type']+'</td><td>'+data.data[i]['appoint_type']+'</td>'+
+									'<td class="color1">￥'+data.data[i]['proxy_price']+'</td><td>'+
+									data.data[i]['remark']+'</td></tr>';
 							}
 						}
 						
@@ -816,8 +824,6 @@
 									data.data[i]['fans']='不限';
 								};
 
-								member_price = !data.data[i]['member_price'] ? "" : ( "￥" + data.data[i]['member_price'] );
-								
 								result +='<tr rst_id="' + data.data[i]['user_id'] + '" screen_attr_value_ids ="' + data.data[i]['screen_attr_value_ids'] + '" >'
 									+ '<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>'
 									+ '<td class="logo-title">' + '<img src="' + data.data[i]['media_logo'] + '">' +data.data[i]['media_name'] + '</td>'
@@ -827,7 +833,6 @@
 									+ '<td>' + data.data[i]['fans'] + '</td>'
 									+ '<td>' + data.data[i]['cankao'] + '</td>'
 									+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-									+ '<td class="color1">' + member_price + '</td>'
 									+ '<td>' + data.data[i]['remark'] + '</td>'
 									+ '</tr>';
 							}
@@ -871,7 +876,8 @@
 									data.data[i]['appoint_type']='不限';
 								};
 								
-								member_price = !data.data[i]['member_price'] ? "" : ( "￥" + data.data[i]['member_price'] );
+								member_price = data.data[i]['member_price'];
+								if( member_price != '' ){	member_price = "￥" + member_price;	}
 
 								result += '<tr rst_id="' + data.data[i]['user_id'] + '">'
 									+ '<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>'
