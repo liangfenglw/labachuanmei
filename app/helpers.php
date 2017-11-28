@@ -317,7 +317,10 @@ function getAttrValueSale($attr_id,$to_html=false,$or_limit=1,$in_arr_data=[])
     if ($to_html) {
         $select_html = ""; // 已选择的
         $html = "";
+        $tmp = true;
+        // dd($lists['plate_vs_attr'], $in_arr_data);
         foreach ($lists['plate_vs_attr'] as $key => $value) {
+            $tmp = true;
             if ($key == 5 && $value['attr_name'] != '参考报价') {
                 $key++;
             }
@@ -337,23 +340,26 @@ function getAttrValueSale($attr_id,$to_html=false,$or_limit=1,$in_arr_data=[])
             if ($or_limit == 1) {
                 $html .= '<a class="cur" data_id="'.$value['id'].'-0" href="javascript:;">不限</a></li>';
             } else { //传入指定了的供应商 不能默认选中不限
-                if ($value['attr_name'] == '参考报价') {
-                    $html .= '<a class="cur" data_id="'.$value['id'].'-0" href="javascript:;">不限</a></li>';
-                } else { 
-                    $html .= '<a data_id="'.$value['id'].'-0" href="javascript:;">不限</a></li>';
+                foreach ($value['attr_vs_val'] as $kk => $vv) {
+                    //检查是否选中了
+                    if ($tmp && in_array($vv['id'],$in_arr_data)) {
+                            $html .= '<a data_id="'.$value['id'].'-0" href="javascript:;">不限</a></li>';
+                            $tmp = false;
+                    }
                 }
+                if ($tmp === true) {
+                    $html .= '<a class="cur" data_id="'.$value['id'].'-0" href="javascript:;">不限</a></li>';
+                }
+
             }
-            // dd($in_arr_data,$value['attr_vs_val']);
             foreach ($value['attr_vs_val'] as $kk => $vv) {
-                //检查是否选中了
                 if (in_array($vv['id'],$in_arr_data)) {
                     $html .= "<li data_id=\"$vv[id]\"><a data_id=\"$value[id]-$vv[id]\" class=\"cur\" category_id=\"$vv[id]\" class=\"\" href=\"javascript:;\">".$vv['attr_value']."</a></li>";
 
-                    $select_html .= '<li data=\"option_'.$key.'\" data_id="'.$vv['id'].'"><a href="javascript:;">'.$vv['attr_value'].'</a></li>';
+                    $select_html .= '<li data="option_'.$key.'" data_id="'.$vv['id'].'"><a href="javascript:;">'.$vv['attr_value'].'</a></li>';
                 } else {
                     $html .= "<li data_id=\"$vv[id]\"><a data_id=\"$value[id]-$vv[id]\" category_id=\"$vv[id]\" class=\"\" href=\"javascript:;\">".$vv['attr_value']."</a></li>";
                 }
-                
             }
             $html .= '</ul></div>';
             $html .= '</div>';
@@ -499,7 +505,6 @@ function get_supp_users_id($attr_id_one,$attr_val,$level_id) {
                                     ->orderBy('sort','asc')
                                     ->get()
                                     ->toArray();
-
     foreach ($plate_attr as $key => $value) { // 2级新闻约稿所有规格值
         $screen_array[$value['id']] = $value;
         $screen_array[$value['id']]['screen'] = [];
@@ -517,8 +522,6 @@ function get_supp_users_id($attr_id_one,$attr_val,$level_id) {
             }else{
                 $offer = $attr_value_id;
             }
-            
-          
         }
     }
     $i =0;

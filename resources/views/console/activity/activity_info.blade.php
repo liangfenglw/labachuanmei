@@ -28,27 +28,27 @@
                             <p><i class="LGntas">*</i>开始时间:</p>
 								<input type="text" name="start" id="datepicker1" class="txt2" value="{{ $info['start'] or '' }}" />
 								<select class="sel_t1 options_h" name="name4_1">
-									<option @if(!empty($start) && $start['0'] == '00') selected="selected" @endif value='00'>00</option>
-                                    <option @if(!empty($start) && $start['0'] == '01') selected="selected" @endif value='01'>01</option>
-                                    <option @if(!empty($start) && $start['0'] == '23') selected="selected" @endif value='23'>23</option>
+									@for($i=0;$i<24;$i++)
+									<option @if(!empty($start) && $start['0'] == $i) selected="selected" @endif value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
+									@endfor
 								</select>时
 								<select class="sel_t1 options_m" name="name4_2">
-									<option @if(!empty($start) && $start['1'] == '00') selected="selected" @endif value='00'>00</option>
-                                    <option @if(!empty($start) && $start['1'] == '01') selected="selected" @endif value='01'>01</option>
-                                    <option @if(!empty($start) && $start['1'] == '59') selected="selected" @endif value='59'>59</option>
+									@for($i=0;$i<60;$i++)
+									<option @if(!empty($start) && $start['1'] == $i) selected="selected" @endif value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
+									@endfor
 								</select>分
 						</div>
 						<div class="item_f"><p><i class="LGntas">*</i>截止时间:</p>
 							<input type="text" name="over" id="datepicker2" class="txt2" value="{{ $info['over'] or '' }}" />
 							<select class="sel_t1 options_h" name="name5_1">
-                                <option @if(!empty($over) && $over['0'] == '00') selected="selected" @endif value='00'>00</option>
-                                <option @if(!empty($over) && $over['0'] == '01') selected="selected" @endif value='01'>01</option>
-                                <option @if(!empty($over) && $over['0'] == '23') selected="selected" @endif value='23'>23</option>
+								@for($i=0;$i<24;$i++)
+								<option @if(!empty($over) && $over['0'] == $i) selected="selected" @endif value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
+								@endfor
 							</select>时
 							<select class="sel_t1 options_m" name="name5_2">
-                                <option @if(!empty($over) && $over['1'] == '00') selected="selected" @endif value='00'>00</option>
-                                <option @if(!empty($over) && $over['1'] == '01') selected="selected" @endif value='01'>01</option>
-                                <option @if(!empty($over) && $over['1'] == '59') selected="selected" @endif value='59'>59</option>
+								@for($i=0;$i<60;$i++)
+								<option @if(!empty($over) && $over['1'] == $i) selected="selected" @endif value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
+								@endfor
 							</select>分
 						</div>
                         <div class="item_f"><p><i class="LGntas"></i>平台优惠率：</p>

@@ -147,6 +147,7 @@ class MediaController extends CommonController
         if (\Request::ajax()) {
                 return ['status'=>1,'data'=>$lists,'msg'=>'操作成功','resource_count'=>count($user_ids2),'page'=>$page];
         }
+        
         // 怕需要扩展 for_apply修改
         $assign = [
             1 => ['user' => $user, 

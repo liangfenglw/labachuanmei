@@ -64,7 +64,6 @@
 				</h4>
 				<div class="sbox_3_table tab1_body clearfix" style="margin-top:15px;" id="error_show">
 					<table class="table_in1 cur" style="margin:0;" id="resource_table">
-						@if($lists)
 						<thead id="title_bbs">
 							<tr class="normal">
 								<th><label class="check_all" style="margin:0;"><input type="checkbox" name="checkall" value="1" class="checkall" />全选</label></th>
@@ -81,28 +80,33 @@
 								<th style="width:20%;">备注</th>
 							</tr>
 						</thead>
-						<tbody id="wrapper_i">
-							@foreach($lists as $k => $v)
-							<tr rst_id="{{$v['user_id']}}">
-								<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>
-								<td class="logo-title"><img src="{{$v['media_logo']}}">{{$v['media_name']}}</td>
-								<td>@if(isset($v['web_type'])){{$v['web_type']}}@else 不限 @endif</td>
-								<td>@if(isset($v['channel_type'])){{$v['channel_type']}}@else 不限 @endif</td>
-								<td>@if(isset($v['channel_level'])){{$v['channel_level']}}@else 不限 @endif</td>
-								<td>@if(isset($v['included_reference'])){{$v['included_reference']}}@else 不限 @endif</td>
-								<td>@if(isset($v['text_link'])){{$v['text_link']}}@else 不限 @endif</td>
-								<td>@if(isset($v['index_logo']))<img src="{{$v['index_logo']}}">@else 不限 @endif</td>
-								<td class="color1">￥{{$v['proxy_price']}}</td>
-								<td>{{$v['remark']}}</td>
-							</tr>
-							@endforeach
-							
-						</tbody>
-						@else
-						<a>抱歉，暂无媒体</a>
-						@endif
 
+						@if(!empty(Request::input('user_id')))
+						<tbody id="wrapper_i"></tbody>
+						@else
+						<tbody id="wrapper_i">
+							@if($lists)
+								@foreach($lists as $k => $v)
+								<tr rst_id="{{$v['user_id']}}">
+									<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>
+									<td class="logo-title"><img src="{{$v['media_logo']}}">{{$v['media_name']}}</td>
+									<td>@if(isset($v['web_type'])){{$v['web_type']}}@else 不限 @endif</td>
+									<td>@if(isset($v['channel_type'])){{$v['channel_type']}}@else 不限 @endif</td>
+									<td>@if(isset($v['channel_level'])){{$v['channel_level']}}@else 不限 @endif</td>
+									<td>@if(isset($v['included_reference'])){{$v['included_reference']}}@else 不限 @endif</td>
+									<td>@if(isset($v['text_link'])){{$v['text_link']}}@else 不限 @endif</td>
+									<td>@if(isset($v['index_logo']))<img src="{{$v['index_logo']}}">@else 不限 @endif</td>
+									<td class="color1">￥{{$v['proxy_price']}}</td>
+									<td>{{$v['remark']}}</td>
+								</tr>
+								@endforeach
+							@else
+								<tr id="no-data"><td colspan="10"><a>抱歉，暂无媒体</a></td></tr>
+							@endif
+						</tbody>
+						@endif
 					</table>
+					
 					<div class="sbox_3_b" style="width:auto;height:auto;" id="page">
 						@if($page['page_statue'])<a href="javascript:void(0);" onclick="page_load()" class="more"  style="adisplay:none;">加载更多</a>
 						<div id="demo1"></div>@endif
@@ -449,6 +453,7 @@
 		});
 		return false
 	});
+	$('#wrapper_i tr.no-data').unbind("click");
 			 
 	//点击已选媒体的x删除事件
 	$("#select_media").on("click","tr td a.del",function(){
@@ -711,7 +716,8 @@ console.log("ajax-data:", data);
 		var value = $.trim($(this).html());
 		$(this).parent("li").remove();
 //		$(".sbox_1_item span.l[data='" + option + "']").next(".m").find("ul li[data_id='" + data_id + "'] a").removeClass("cur");
-		$(".sbox_1_item span.l[data='" + option + "']").next(".m").find("ul li[data_id='" + data_id + "'] a").click();
+//		$(".sbox_1_item span.l[data='" + option + "']").next(".m").find("ul li[data_id='" + data_id + "'] a").click();
+		$(".sbox_1_item span.l[data='" + option + "']").siblings(".m").find("ul li[data_id='" + data_id + "'] a").click();
 //		$(".sbox_1_item span.l[data='" + option + "']").next(".m").find("ul li:first-child a").click();
 //		$(".sbox_1_item span.l[data='" + option + "']").next(".m").find("ul li:first-child a").addClass("cur");
 		return false;
@@ -1129,6 +1135,12 @@ $('#wrapper_i').on("click","tr td input",function(event){
 	}
 });
 
+	@if(!empty(Request::input('user_id')))
+		$("#wrapper_i").hide();
+		var last_cur = $(".sbox_1_item .m ul li a.cur");
+		last_cur.last().click().click();
+		$("#wrapper_i").show();
+	@endif
 	
 </script>
 </body>
