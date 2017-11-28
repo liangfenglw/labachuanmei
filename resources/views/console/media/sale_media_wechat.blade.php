@@ -379,6 +379,7 @@
 			dataType: "json",
 			stopAllStart: true,
 			success: function (data) {
+				console.log("#wrapper_i tr click data:",data);
 				var result='';
 				var _get=data.data;
 				var sum = data.data.length;

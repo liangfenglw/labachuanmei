@@ -2,15 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>{{$media['plate_name']}}_喇叭传媒</title>
+	<title>{{$media['plate_name']}} _喇叭传媒</title>
 
 	<meta name="description" content="" />
 	<meta name="keywords" content="" />
 
     @include('console.share.cssjs')
+
 	<style>
 	#error_show a{    font-size: 16px;    color: #ff0000; padding-left:50%; float:left; width:100%; line-height:30px; border-top:1px solid #eee;padding-top: 20px;}
 	body .logo-title img{	display:none;	}
+	
 	</style>
 </head>
 <body class="fold">			<!--	class="fold" 左导航收缩	-->
@@ -27,7 +29,7 @@
 	
 	<div class="main_o clearfix" style="">
 	
-		<h3 class="title5 clearfix"><strong>{{$media['plate_name']}}</strong></h3><!--微博营销-->
+		<h3 class="title5 clearfix"><strong>{{$media['plate_name']}}</strong></h3><!--新闻约稿-->
 		
 		<div class="Wikipedia">
 		
@@ -39,6 +41,7 @@
 
 				</div>
 			</div>
+
 			<div class="sbox_2 clearfix radius1">
 				<strong class="l">已选择：</strong>
 				<ul class="m">{!! $select_html !!}</ul>
@@ -66,14 +69,15 @@
 							<tr class="normal">
 								<th><label class="check_all" style="margin:0;"><input type="checkbox" name="checkall" value="1" class="checkall" />全选</label></th>
 								<th style="width:18%;">媒体名称</th>
-								@foreach($title as $key => $val)
-									<th>{{ $val['attr_name'] }}</th>
-								@endforeach
-								
-								{{-- <th>频道类型</th>
-								<th>粉丝量</th>
-								<th>阅读量</th>--}}
-								<th>价格</th> 
+								<th>网站类型</th>
+								<th>入口形式</th>
+								<th>入口级别</th>
+								<th>收录参考</th>
+								<th>正文带链接</th>
+								<th>入口示意图</th>
+
+								<!-- <th>阅读量</th> -->
+								<th>价格</th>
 								<th style="width:20%;">备注</th>
 							</tr>
 						</thead>
@@ -82,11 +86,12 @@
 							<tr rst_id="{{$v['user_id']}}">
 								<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>
 								<td class="logo-title"><img src="{{$v['media_logo']}}">{{$v['media_name']}}</td>
-								<td>{{ $v['platform'] }}</td>
-								<td>@if(isset($v['publish_type'])){{$v['publish_type']}}@else 不限 @endif</td>
-								<td>{{ $v['add'] }}</td>
-								<td>@if(isset($v['fans'])){{$v['fans']}}@else 不限 @endif</td>
-								<td>{{ $v['cankao'] }}</td>
+								<td>@if(isset($v['web_type'])){{$v['web_type']}}@else 不限 @endif</td>
+								<td>@if(isset($v['channel_type'])){{$v['channel_type']}}@else 不限 @endif</td>
+								<td>@if(isset($v['channel_level'])){{$v['channel_level']}}@else 不限 @endif</td>
+								<td>@if(isset($v['included_reference'])){{$v['included_reference']}}@else 不限 @endif</td>
+								<td>@if(isset($v['text_link'])){{$v['text_link']}}@else 不限 @endif</td>
+								<td>@if(isset($v['index_logo']))<img src="{{$v['index_logo']}}">@else 不限 @endif</td>
 								<td class="color1">￥{{$v['proxy_price']}}</td>
 								<td>{{$v['remark']}}</td>
 							</tr>
@@ -112,9 +117,12 @@
 						<tr class="normal">
 							<th style="">选择</th>
 							<th style="width:18%;">媒体名称</th>
-							@foreach($title as $key => $val)
-									<th>{{ $val['attr_name'] }}</th>
-								@endforeach
+								<th>网站类型</th>
+								<th>入口形式</th>
+								<th>入口级别</th>
+								<th>收录参考</th>
+								<th>正文带链接</th>
+								<th>入口示意图</th>
 							<!-- <th>阅读量</th> -->
 							<th>价格</th>
 							<th style="width:8%;">操作</th>
@@ -185,7 +193,7 @@
 										@endfor
 										</select>时
 										<select class="sel_t1 options_m" name="name4_2">
-											
+										
 										@for($i=0;$i<60;$i++)
 										<option value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
 										@endfor
@@ -195,7 +203,7 @@
 									<div class="WMain3 WMain3_2"><p><i class="LGntas">*</i>截止时间:</p>
 										<input type="text" name="name5" id="datepicker2" class="txt2"/>
 										<select class="sel_t1 options_h" name="name5_1">
-											
+										
 										@for($i=0;$i<24;$i++)
 										<option value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
 										@endfor
@@ -214,6 +222,7 @@
 											<p>还可输入<b>500</b>个字</p>
 										</div>
 									</div>
+									
 									<div class="item_f item_f_2" style="margin-top:50px;margin-left:-145px;">
                                         <div class="r"><input type="submit" value="确 认" class="sub5"></div>
                                     </div>
@@ -221,7 +230,6 @@
 										<button type="submit" value="submit" class="btn_sub"><img src="{{url('console/images/WLButton.png')}}">
 										</button>
 									</div>-->
-									
 								</li>
 							</ul>
 						</div>
@@ -241,12 +249,114 @@
 @include('console.share.admin_foot')
 
 <script type="text/javascript">
+	var id = {{$media['id']}}; 
+    var limit_start = {{$page['limit_start']}};
+    var page_num = {{$page['page_num']}};
+console.log("limit_start:", limit_start);
+console.log("page_num:", page_num);
+	
 	/*	百度编辑器	*/
 	var ue = UE.getEditor('container');
 	var _token = $('input[name="_token"]').val();
+	
+	function page_load (argument) {
+console.log("page_load");
+		page_num_new = $("#page_nums").val();			//每页显示条数
+        var category_arr = [];
+        var id_arr = [];
+        $('#attr_val ul[set_name="network"] a.cur').each(function(){
+            id_arr.push($(this).attr('data_id'));
+            category_arr.push($(this).attr('category_id'));
+        })
+        data_id = category_arr.toString();
+        category_id = id_arr.toString();
 
+console.log("data_id:",data_id);
+console.log("category_id:",category_id);
 
+		$.ajax({
+			url: '',
+			data: {
+				'id':id,
+				'page_num':page_num_new,
+				'limit_start':limit_start,
+				'category_id':category_id,
+				'_token': _token
+			},
+			type: 'post',
+			dataType: "json",
+			stopAllStart: true,
+			success: function (data) {
+				var sum = data.data.length;
+				limit_start  = data.page.limit_start;
+				page_num  = data.page.page_num;
+				// console.log(limit_start);
+				result='';
+				if (data.status == '1') {
+					if (data.data.length>0) {
+					//页面渲染
+					for(var i=0; i< sum; i++){
+						if (!data.data[i]['web_type'] && isNaN(data.data[i]['web_type'])) {
+							data.data[i]['web_type']='不限';
+						};
+						if (!data.data[i]['channel_type'] && isNaN(data.data[i]['channel_type'])) {
+							data.data[i]['channel_type']='不限';
+						};
+						if (!data.data[i]['channel_level'] && isNaN(data.data[i]['channel_level'])) {
+							data.data[i]['channel_level']='不限';
+						};
+						if (!data.data[i]['included_reference'] && isNaN(data.data[i]['included_reference'])) {
+							data.data[i]['included_reference']='不限';
+						};
+						if (!data.data[i]['text_link'] && isNaN(data.data[i]['text_link'])) {
+							data.data[i]['text_link']='不限';
+						};
+						if (!data.data[i]['index_logo']) {
+							data.data[i]['index_logo']='';
+						}else{
+							data.data[i]['index_logo']='<img src="'+data.data[i]['index_logo']+'">';
+						}
+						
+//						result += '<tr rst_id="'+data.data[i]['user_id']+'"><td class="logo-title"><img src="'+data.data[i]['media_logo']+'">' +
+						result += '<tr rst_id="'+data.data[i]['user_id']+'">' + 
+							'<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>' + 
+							'<td class="logo-title">'+'<img src="'+data.data[i]['media_logo']+'">'+
+							data.data[i]['media_name']+'</td><td>'
+							+data.data[i]['web_type']+'</td><td>'+
+							data.data[i]['channel_type']+'</td><td>'
+							+data.data[i]['channel_level']+'</td><td>'+
+							data.data[i]['included_reference']+'</td><td>'
+							+data.data[i]['text_link']+'</td><td>'+
+							data.data[i]['index_logo']+
+							'</td><td class="color1">￥'+data.data[i]['proxy_price']+'</td><td>'+
+							data.data[i]['remark']+'</td></tr>';
+					}
+
+					// $('#wrapper_i').html('');
+					$('#wrapper_i').append(result);
+					$('#page').html('');
+					if (data.page.page_statue>0) {
+						$('#page').append('<a href="javascript:void(0);" onclick="page_load()" class="more"  style="adisplay:none;">加载更多</a>');
+					}
+				}else{
+					$('#page').html('');
+					layer.msg('抱歉，暂无更多媒体');
+				}
+					// $('#wrapper_i').html("");
+					// $('#wrapper_i').append(result);
+					
+				} else {
+					layer.msg(data.msg || '请求失败');
+				}
+			},
+			error: function (data) {
+				layer.msg(data.msg || '网络发生错误');
+			}
+		});
+	}
+	
 	$('#wrapper_i').on("click","tr",function(){
+		// allen
 		var num = parseInt($("#resource_count_select").text());
 		$('#resource_count_select').html(num+1);
 		$(this).addClass("choose");
@@ -293,25 +403,46 @@
 				var sum = data.data.length;
 				if (data.status == '1') {
 					for(var i=0; i< sum; i++){
-						if (!data.data[i]['publish_type']) {
-							data.data[i]['publish_type']='不限';
+						if (!data.data[i]['web_type'] && isNaN(data.data[i]['web_type'])) {
+							data.data[i]['web_type']='不限';
 						};
-						if (!data.data[i]['fans']) {
-							data.data[i]['fans']='不限';
+						if (!data.data[i]['channel_type'] && isNaN(data.data[i]['channel_type'])) {
+							data.data[i]['channel_type']='不限';
 						};
-						
-						result +='<tr rst_id="' + data.data[i]['user_id'] + '" screen_attr_value_ids ="' + data.data[i]['screen_attr_value_ids'] + '" >'
-							+ '<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="' + data.data[i]['user_id'] + '" /></label></td>'
-							+ '<td class="logo-title">' + '<img src="' + data.data[i]['media_logo'] + '">' +data.data[i]['media_name'] + '</td>'
-							+ '<td>' + data.data[i]['platform'] + '</td>'
-							+ '<td>' + data.data[i]['publish_type'] + '</td>'
-							+ '<td>' + data.data[i]['add'] + '</td>'
-							+ '<td>' + data.data[i]['fans'] + '</td>'
-							+ '<td>' + data.data[i]['cankao'] + '</td>'
-							+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-							+ '<td><a href="#" class="del">删除</a><input type="hidden" name="screen_attr_value_ids" value="' +
-							data.data[i]['screen_attr_value_ids'] + '" /></td>'
-							+ '</tr>';
+						if (!data.data[i]['channel_level'] && isNaN(data.data[i]['channel_level'])) {
+							data.data[i]['channel_level']='不限';
+						};
+						if (!data.data[i]['included_reference'] && isNaN(data.data[i]['included_reference'])) {
+							data.data[i]['included_reference']='不限';
+						};
+						if (!data.data[i]['text_link'] && isNaN(data.data[i]['text_link'])) {
+							data.data[i]['text_link']='不限';
+						};
+						if (!data.data[i]['index_logo']) {
+							data.data[i]['index_logo']='';
+						}else{
+							data.data[i]['index_logo']='<img src="'+data.data[i]['index_logo']+'">';
+						}
+
+						result +='<tr rst_id="'+data.data[i]['user_id']+'" screen_attr_value_ids ="'+data.data[i]['screen_attr_value_ids']+'" >'+
+						'<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="'+data.data[i]['user_id']+'" /></label></td>'+
+						'<td class="logo-title">'+'<img src="'+data.data[i]['media_logo']+'">'+
+						data.data[i]['media_name']+'</td><td>'+
+						data.data[i]['web_type']+'</td><td>'+
+						data.data[i]['channel_type']+'</td><td>'+
+						data.data[i]['channel_level']+'</td><td>'+
+						data.data[i]['included_reference']+'</td>'+
+							'<td>'+data.data[i]['text_link']+'</td><td>'+
+							data.data[i]['index_logo']+'</td><td class="color1">￥'+data.data[i]['proxy_price']+'</td>'+
+							'<td><a href="#" class="del">删除</a><input type="hidden" name="screen_attr_value_ids" value="'+
+							data.data[i]['screen_attr_value_ids']+'" /></td></tr>';
+
+						// result +='<tr rst_id="'+data[i]['user_id']+'">'+
+						// 		'<td class="WIna5"><img src="'+data[i]['']+'">'+data[i]['']+'</td>'+
+						// 		'<td class="WIna6">'+data[i]['']+'</td>'+
+						// 		'<td class="WIna7">'+_get.mb_price+'元</td>'+
+						// 		'<td class="WIna8"><a href="" class="del">×</a></td>'+
+						// 		'</tr>';
 					}
 					$('#select_media').append(result);
 				} else {
@@ -334,16 +465,21 @@
 		$("#wrapper_i tr[rst_id=" + rst_id + "]").find("input[name='check_1']").prop("checked",false);		//+
 		return false;
 	});
-			 
+	
+	//筛选媒体
 	$(".sbox_1_item .m ul li a").click(function () {
-		var option = $(this).parents(".m").prev("span").attr("data");
+		var option = $(this).parents(".m").prev("span").prev("span").attr("data");
+console.log("option:", option);
 		var value = $.trim($(this).html());
+console.log("value:", value);
+//console.log(":", );
 		if( typeof($(this).parent().attr("data_id")) == "undefined" ){
 			var data_id = "-1";
 		}else{
 			var data_id = $(this).parent().attr("data_id");
 		}
 		var li = "<li data='" + option + "' data_id='" + data_id + "'><a href=''>" + value + "</a></li>";
+console.log("li:", li);
 		
 		if( data_id == "-1" ){
 			$(this).addClass("cur").parent().siblings("li").find("a").removeClass("cur");
@@ -360,7 +496,7 @@
 					$(".sbox_2 .m li[data='" + option + "']").remove();
 					$(".sbox_2 .m").append(li);
 				}
-			}else{
+			}else{								//多选
 				if( $(this).hasClass("cur") ){
 					$(this).removeClass("cur");
 					$(".sbox_2 .m li[data='" + option + "'][data_id='" + data_id + "'").remove();
@@ -375,6 +511,7 @@
 		}
 		
 		var  opt = getDataArr2();
+console.log("opt:", opt);
 		var  key ='category_id';
 		var  dt=[];
 		for(var i=0;i< opt.length;i++){
@@ -382,6 +519,8 @@
 				dt[i]=opt[i].data_id
 			}
 		}
+		dt = opt;
+console.log("dt:", dt);
 		if(dt ==''){
 			$('#wrapper_i').html($page_data2);
 			/*	返回数据 分页	*/
@@ -401,7 +540,8 @@
         })
         data_id = category_arr.toString();
         category_id = id_arr.toString();
-        // console.log(category_id);
+console.log("data_id", data_id);
+console.log("category_id:", category_id);
         // alert(category_id);
 		//请求数据，加载页面
 		$.ajax({
@@ -426,90 +566,107 @@
 			stopAllStart: true,
 			success: function (data) {
 					// $("#resource_table a").remove();
+console.log("ajax-data:", data);
 				var sum = data.data.length;
 				var get_data = data.data;
 				limit_start  = data.page.limit_start;
 				page_num  = data.page.page_num;
-				// result='<thead><tr class="normal"><th style="width:18%;">资源名称</th>' + '<th>发布类型</th>' +
-				// 				'<th>频道类型</th><th>指定效果</th><!-- <th>阅读量</th> --><th>价格</th>' +
-				// 				'<th style="width:20%;">备注</th></tr></thead>' +
+				// result='<thead><tr class="normal"><th style="width:18%;">资源名称</th>'+'<th>发布类型</th>'+
+				// 				'<th>频道类型</th><th>指定效果</th><!-- <th>阅读量</th> --><th>价格</th>'+
+				// 				'<th style="width:20%;">备注</th></tr></thead>'+
 				// 		'<tbody id="wrapper_i">';
 				result='';
 				if (data.status == '1') {
 					if (data.data.length>0) {
 
-					$('#title_bbs').show();
-					//页面渲染
-					for(var i=0; i< sum; i++){
-                        var vg=get_data[i].standard;
-                        var vt=get_data[i].Entrance_form;
-                        var vb=get_data[i].Entrance_level;
-						console.log(get_data[i]);
-                        if( !get_data[i].standard || get_data[i].standard==''){
-                            vg  = "不限";
-                        }else{
-//                            vg= get_data[i].standard[0].name;
-                            vg= get_data[i].standard;
-                        }
-                        if( !get_data[i].Entrance_form || get_data[i].Entrance_form==''){
-                            vt = "不限";
-                        }else{
-//							vt= get_data[i].Entrance_form[0].name;
-                            vt= get_data[i].Entrance_form;
-                        }
-                        if( !get_data[i].Entrance_level || get_data[i].Entrance_level==''){
-                            vb  = "不限";
-                        }else{
-//							vb= get_data[i].Entrance_level[0].name;
-							vb= get_data[i].Entrance_level;
-                        }
-						if (!data.data[i]['publish_type']) {
-							data.data[i]['publish_type']='不限';
-						};
-						if (!data.data[i]['fans']) {
-							data.data[i]['fans']='不限';
-						};
+						$('#title_bbs').show();
+						//页面渲染
+						for(var i=0; i< sum; i++){
+							var vg=get_data[i].standard;
+							var vt=get_data[i].Entrance_form;
+							var vb=get_data[i].Entrance_level;
+							console.log("get_data["+i+"]:", get_data[i]);
+							if( !get_data[i].standard || get_data[i].standard==''){
+								vg  = "不限";
+							}else{
+	//                            vg= get_data[i].standard[0].name;
+								vg= get_data[i].standard;
+							}
+							if( !get_data[i].Entrance_form || get_data[i].Entrance_form==''){
+								vt = "不限";
+							}else{
+	//							vt= get_data[i].Entrance_form[0].name;
+								vt= get_data[i].Entrance_form;
+							}
+							if( !get_data[i].Entrance_level || get_data[i].Entrance_level==''){
+								vb  = "不限";
+							}else{
+	//							vb= get_data[i].Entrance_level[0].name;
+								vb= get_data[i].Entrance_level;
+							}
+							if (!data.data[i]['web_type'] && isNaN(data.data[i]['web_type'])) {
+								data.data[i]['web_type']='不限';
+							};
+							if (!data.data[i]['channel_type'] && isNaN(data.data[i]['channel_type'])) {
+								data.data[i]['channel_type']='不限';
+							};
+							if (!data.data[i]['channel_level'] && isNaN(data.data[i]['channel_level'])) {
+								data.data[i]['channel_level']='不限';
+							};
+							if (!data.data[i]['included_reference'] && isNaN(data.data[i]['included_reference'])) {
+								data.data[i]['included_reference']='不限';
+							};
+							if (!data.data[i]['text_link'] && isNaN(data.data[i]['text_link'])) {
+								data.data[i]['text_link']='不限';
+							};
+							if (!data.data[i]['index_logo']) {
+								data.data[i]['index_logo']='';
+							}else{
+								data.data[i]['index_logo']='<img src="'+data.data[i]['index_logo']+'">';
+							}
+							result += '<tr rst_id="'+data.data[i]['user_id']+'">' + 
+								'<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>' + 
+								'<td class="logo-title"><img src="'+data.data[i]['media_logo']+'">' +
+								data.data[i]['media_name']+'</td><td>'
+								+data.data[i]['web_type']+'</td><td>'
+								+data.data[i]['channel_type']+'</td><td>'
+								+data.data[i]['channel_level']+'</td><td>'+
+								data.data[i]['included_reference']+'</td>'+'</td><td>'+data.data[i]['text_link']+'</td><td>'+
+								data.data[i]['index_logo']+'</td>'+
+								'<td class="color1">￥'+data.data[i]['proxy_price']+'</td><td>'+
+								data.data[i]['remark']+'</td></tr>';
+						}
 
-						result +='<tr rst_id="' + data.data[i]['user_id'] + '" screen_attr_value_ids ="' + data.data[i]['screen_attr_value_ids'] + '" >'
-							+ '<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="' + data.data[i]['user_id'] + '" /></label></td>'
-							+ '<td class="logo-title">' + '<img src="' + data.data[i]['media_logo'] + '">' +data.data[i]['media_name'] + '</td>'
-							+ '<td>' + data.data[i]['platform'] + '</td>'
-							+ '<td>' + data.data[i]['publish_type'] + '</td>'
-							+ '<td>' + data.data[i]['add'] + '</td>'
-							+ '<td>' + data.data[i]['fans'] + '</td>'
-							+ '<td>' + data.data[i]['cankao'] + '</td>'
-							+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-							+ '<td>' + data.data[i]['remark'] + '</td>'
-							+ '</tr>';
+						
+						$('#resource_count').html(data.resource_count);
+						$('#wrapper_i').html('');
+						// $('#resource_table').html("");
+						$("#error_show a").remove();
+						$('#wrapper_i').append(result);
+					}else{
+						$('#resource_count').html(0);
+						$('#title_bbs').hide();
+						$('#wrapper_i').html(result);
+						// $('#resource_table').html("");
+						$("#error_show a").remove();
+						$('#resource_table').append('<a>抱歉，暂无资源</a>');
 					}
-
-					
-					$('#resource_count').html(data.resource_count);
-					$('#wrapper_i').html('');
-					// $('#resource_table').html("");
-					$("#error_show a").remove();
-					$('#wrapper_i').append(result);
-				}else{
-					$('#resource_count').html(0);
-					$('#title_bbs').hide();
-					$('#wrapper_i').html(result);
-					// $('#resource_table').html("");
-					$("#error_show a").remove();
-					$('#resource_table').append('<a>抱歉，暂无资源</a>');
-				}
 					// $('#wrapper_i').html("");
 					// $('#wrapper_i').append(result);
 					$('#page').html('');
 					if (data.page.page_statue>0) {
 							// alert(43);
 						$('#page').append('<a href="javascript:void(0);" onclick="page_load()" class="more"  style="adisplay:none;">加载更多</a>');
-					};
+					}
+					$('#page').append('<a href="javascript:void(0);" onclick="page_load()" class="more2"  style="adisplay:none;">加载更多2</a>');
 					
 					/*	返回数据 分页	*/
+/*
 					$page_data = $("#wrapper_i tr");
 					data_len = $page_data.length;
 					nums = $("#page_nums").val();
 					laypage_l($("#wrapper_i"), $("#demo1"), $page_data, data_len, nums);
+*/
 					
 				} else {
 					layer.msg(data.msg || '请求失败');
@@ -522,6 +679,7 @@
 		return false;
 	});
 
+	//获得筛选分类字符串
 	function getDataArr2() {
 		var opt_2 = [];
 		$('.sbox_1_item').each(function(key,vel){
@@ -543,8 +701,7 @@
 					});
 				}
 		});
-		console.log("opt_2:");
-		console.log(opt_2);
+		console.log("opt_2:", opt_2);
 		return opt_2;
 		
 	}
@@ -593,6 +750,7 @@
 		}
 		return false;
 	});
+
 
 	/*	设置选中tr背景色	*/
 	function setTrBg(){
@@ -767,11 +925,13 @@
 			var id = $(this).attr("rst_id");
 			form5data['id'].push(id);
 		});
+		form5data['id'] = $(".choose_media:checked").val();			//已选媒体 改成只能单选，加单选框		
+		
 		form5data['name1'] = $("input[name=name1]").val();				//活动标题
 		form5data['name2'] = $("input[name=name2]:checked").val();		//稿件内容		1 外部连接 		2 上传文档		3 内部编辑
-		form5data['name2_1'] = $("input[name=name2_1]").val();			//稿件内容》外部连接
-		form5data['Manuscripts'] = $("input[name=name2_2]").val();		//稿件内容》上传文档	稿件导入
-		form5data['content'] = ue.getContent();							//稿件内容》内部编辑	内容编辑		获取编辑器的内容
+			form5data['name2_1'] = $("input[name=name2_1]").val();			//稿件内容》外部连接
+			form5data['Manuscripts'] = $("input[name=name2_2]").val();		//稿件内容》上传文档	稿件导入
+			form5data['content'] = ue.getContent();							//稿件内容》内部编辑	内容编辑		获取编辑器的内容
 			
 		form5data['name3'] = $("input[name=name3]").val();				//关键字
 		
@@ -805,7 +965,7 @@ $.validator.setDefaults({
 		console.log("表单提交");
 		
 		var flag = 0;
-		if( form5data['id'] == "" ){
+		if( form5data['id'] == "" || form5data['id'] == "undefined"){
 			flag = 1;
 			layer.msg("还要选择媒体哦");
 			return false;
@@ -826,8 +986,8 @@ $.validator.setDefaults({
 			content = ue.getContent();
 		}
 
-		start_at = $("input[name=name4]").val()+ ' ' +$("select[name=name4_1]").val()+ ':' +$("select[name=name4_2]").val()+ ':' +seconds;
-		over_at = $("input[name=name5]").val()+ ' ' +$("select[name=name5_1]").val()+ ':' +$("select[name=name5_2]").val()+ ':' +seconds;
+		start_at = $("input[name=name4]").val()+' '+$("select[name=name4_1]").val()+':'+$("select[name=name4_2]").val()+':'+seconds;
+		over_at = $("input[name=name5]").val()+' '+$("select[name=name5_1]").val()+':'+$("select[name=name5_2]").val()+':'+seconds;
 
         var category_arr = [];
         var id_arr = [];
@@ -847,7 +1007,7 @@ $.validator.setDefaults({
         user_ids = user_arr.toString();
 
   		remark = $("#name6").val();
-  		// 购物车
+
 		$.ajax({
 			url: '/cart/post_cart',
             data: {
@@ -960,10 +1120,34 @@ var hours = moment().format("HH");
 var minutes = moment().format("mm");
 $("[name='name4_1']").val(hours);
 $("[name='name4_2']").val(minutes);
+
+$(".checkall").click(function(){			//全选
+	if( $(this).is(":checked") ) {
+		$("#wrapper_i tr").each(function(){
+			if( $(this).hasClass("choose") ){
+			}else{
+				$(this).click();
+			}
+		});
+	}else{
+		$("#wrapper_i tr").each(function(){
+			if( $(this).hasClass("choose") ){
+				$(this).click();
+			}else{
+			}
+		});
+	}
+});
+
+$('#wrapper_i').on("click","tr td input",function(event){
+	if( $(this).closest("tr").hasClass("choose") ) {
+		$(this).prop('checked', true);		
+	}else{
+		$(this).prop('checked', false);
+	}
+});
+
 	
 </script>
-
-@include('console.share.media_js')
-
 </body>
 </html>

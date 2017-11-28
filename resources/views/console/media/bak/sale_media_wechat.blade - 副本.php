@@ -8,6 +8,7 @@
 	<meta name="keywords" content="" />
 
     @include('console.share.cssjs')
+
 	<style>
 	#error_show a{    font-size: 16px;    color: #ff0000; padding-left:50%; float:left; width:100%; line-height:30px; border-top:1px solid #eee;padding-top: 20px;}
 	body .logo-title img{	display:none;	}
@@ -22,12 +23,12 @@
 <div class="content"><div class="Invoice">
 
 	<div class="place">
-		 <div class="place_ant"><a href="/console/index">首页</a><a  class="cur">{{$media['plate_name']}} </a></div>
+		<div class="place_ant"><a href="/console/index">首页</a><a  class="cur">{{$media['plate_name']}} </a></div>
 	</div>
 	
 	<div class="main_o clearfix" style="">
 	
-		<h3 class="title5 clearfix"><strong>{{$media['plate_name']}}</strong></h3><!--微博营销-->
+		<h3 class="title5 clearfix"><strong>{{$media['plate_name']}}</strong></h3><!--微信营销-->
 		
 		<div class="Wikipedia">
 		
@@ -39,10 +40,10 @@
 
 				</div>
 			</div>
+
 			<div class="sbox_2 clearfix radius1">
 				<strong class="l">已选择：</strong>
 				<ul class="m">{!! $select_html !!}</ul>
-				
 			</div>
 			
 			<div class="sbox_3">
@@ -66,14 +67,12 @@
 							<tr class="normal">
 								<th><label class="check_all" style="margin:0;"><input type="checkbox" name="checkall" value="1" class="checkall" />全选</label></th>
 								<th style="width:18%;">媒体名称</th>
-								@foreach($title as $key => $val)
-									<th>{{ $val['attr_name'] }}</th>
-								@endforeach
-								
-								{{-- <th>频道类型</th>
+								<th>平台</th>
+								<th>频道类型</th>
 								<th>粉丝量</th>
-								<th>阅读量</th>--}}
-								<th>价格</th> 
+								<th>阅读量</th>
+								<th>广告位置</th>
+								<th>价格</th>
 								<th style="width:20%;">备注</th>
 							</tr>
 						</thead>
@@ -81,12 +80,12 @@
 							@foreach($lists as $k => $v)
 							<tr rst_id="{{$v['user_id']}}">
 								<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>
-								<td class="logo-title"><img src="{{$v['media_logo']}}">{{$v['media_name']}}</td>
-								<td>{{ $v['platform'] }}</td>
+								<td class="logo-title"><img src="/uploads/{{$v['media_logo']}}">{{$v['media_name']}}</td>
+								<td>@if(isset($v['platform_type'])){{$v['platform_type']}}@else 不限 @endif</td>
 								<td>@if(isset($v['publish_type'])){{$v['publish_type']}}@else 不限 @endif</td>
-								<td>{{ $v['add'] }}</td>
 								<td>@if(isset($v['fans'])){{$v['fans']}}@else 不限 @endif</td>
-								<td>{{ $v['cankao'] }}</td>
+								<td>阅读量</td>
+								<td>@if(isset($v['appoint_type'])){{$v['appoint_type']}}@else 不限 @endif</td>
 								<td class="color1">￥{{$v['proxy_price']}}</td>
 								<td>{{$v['remark']}}</td>
 							</tr>
@@ -112,9 +111,10 @@
 						<tr class="normal">
 							<th style="">选择</th>
 							<th style="width:18%;">媒体名称</th>
-							@foreach($title as $key => $val)
-									<th>{{ $val['attr_name'] }}</th>
-								@endforeach
+								<th>平台</th>
+								<th>频道类型</th>
+								<th>粉丝量</th>
+								<th>广告位置</th>
 							<!-- <th>阅读量</th> -->
 							<th>价格</th>
 							<th style="width:8%;">操作</th>
@@ -140,13 +140,13 @@
 					<h2>创建内容</h2>
 					
 				<form id="form5">
-					<div class="WMain1" style="border:none;margin-left:8%; width:85%">
+					<div class="WMain1" style="border: none; margin-left: 8%; width: 85%;">
 						<div class="WMain2">
 							<ul>
 								<li style="display:block;">
 									<div class="WMain3"><p><i class="LGntas">*</i>稿件标题:</p>
 										<input type="text" name="name1" id="name1" maxlength="25"
-											placeholder="可输入25个汉字" class="txt_f1" style="width:45%;" />
+											placeholder="可输入25个汉字" class="txt_f1" style="width:45%;"/>
 									</div>
 									<div class="WMain3"><p><i class="LGntas">*</i>稿件内容:</p>
 										<label class="rd1 css_cur" onclick="waibu.style.display='';shangchuan.style.display='none';bianji.style.display='none';$('#Manuscripts').hide();"><input type="radio" name="name2" value="1" checked />外部连接</label>
@@ -155,13 +155,14 @@
 									</div>
 									<div id="waibu" title="外部连接">
 										<div class="WMain3"><p><i class="LGntas">*</i>外部链接:</p>
-											<input type="text" name="name2_1" id="name2_1" class="txt_f1" style="width:45%;" />
+											<input type="text" name="name2_1" id="name2_1"
+												class="txt_f1" style="width:45%;"/>
 										</div>
 									</div>
 									<div id="shangchuan" title="上传文档" style="display: none;">
 										<div class="WMain3 WMain3_2"><p><i class="LGntas">*</i>稿件导入:</p>
 											<input type="text" name="name2_2" id="name2_2" class="txt6" readonly />
-											<button type="button" name="upload_file" id="upload_file" class="txt7" style=" width:80px;" >导入</button><br/>
+											<button type="button" name="upload_file" id="upload_file" class="txt7" style=" width:80px;">导入</button><br/>
 											<span style="margin-left: 145px;">选填，如果您的文章已编辑完成，请复制链接到此处，并点击“导入”。</span>
 										</div>
 									</div>
@@ -172,7 +173,7 @@
 									</div>															
 									<div class="WMain3 WMain3_1"><p><i class="LGntas"></i>关键字:</p>
 										<div id="key_input">
-											<input type="text" name="name3" id="name3" class="txt_f1" style="width:86%;"  placeholder="关键字不超过100个字符，多个关键字请用，隔开"/>
+											<input type="text" name="name3" id="name3" class="txt_f1" style="width:86%;" placeholder="关键字不超过100个字符，多个关键字请用，隔开"/>
 											<p>还可输入<b>100</b>个字</p>
 										</div>
 									</div>
@@ -185,7 +186,7 @@
 										@endfor
 										</select>时
 										<select class="sel_t1 options_m" name="name4_2">
-											
+										
 										@for($i=0;$i<60;$i++)
 										<option value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
 										@endfor
@@ -201,7 +202,7 @@
 										@endfor
 										</select>时
 										<select class="sel_t1 options_m" name="name5_2">
-											
+										
 										@for($i=0;$i<60;$i++)
 										<option value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
 										@endfor
@@ -214,6 +215,7 @@
 											<p>还可输入<b>500</b>个字</p>
 										</div>
 									</div>
+									
 									<div class="item_f item_f_2" style="margin-top:50px;margin-left:-145px;">
                                         <div class="r"><input type="submit" value="确 认" class="sub5"></div>
                                     </div>
@@ -221,7 +223,6 @@
 										<button type="submit" value="submit" class="btn_sub"><img src="{{url('console/images/WLButton.png')}}">
 										</button>
 									</div>-->
-									
 								</li>
 							</ul>
 						</div>
@@ -241,12 +242,92 @@
 @include('console.share.admin_foot')
 
 <script type="text/javascript">
+	var id = {{$media['id']}}; 
+    var limit_start = {{$page['limit_start']}};
+    var page_num = {{$page['page_num']}};
 	/*	百度编辑器	*/
 	var ue = UE.getEditor('container');
 	var _token = $('input[name="_token"]').val();
+	function page_load (argument) {
+		page_num_new = $("#page_nums").val();
 
 
+        var category_arr = [];
+        var id_arr = [];
+        $('#attr_val ul[set_name="network"] a.cur').each(function(){
+            id_arr.push($(this).attr('data_id'));
+            category_arr.push($(this).attr('category_id'));
+        })
+        data_id = category_arr.toString();
+        category_id = id_arr.toString();
+
+		$.ajax({
+			url: '',
+			data: {
+				'id':id,
+				'page_num':page_num_new,
+				'limit_start':limit_start,
+				'category_id':category_id,
+				'_token': _token
+			},
+			type: 'post',
+			dataType: "json",
+			stopAllStart: true,
+			success: function (data) {
+				var sum = data.data.length;
+				limit_start  = data.page.limit_start;
+				page_num  = data.page.page_num;
+				// console.log(limit_start);
+				result='';
+				if (data.status == '1') {
+					if (data.data.length>0) {
+					//页面渲染
+					for(var i=0; i< sum; i++){
+						if (!data.data[i]['platform_type']) {
+							data.data[i]['platform_type']='不限';
+						};
+						if (!data.data[i]['publish_type']) {
+							data.data[i]['publish_type']='不限';
+						};
+						if (!data.data[i]['fans']) {
+							data.data[i]['fans']='不限';
+						};
+						if (!data.data[i]['appoint_type']) {
+							data.data[i]['appoint_type']='不限';
+						};
+
+						result += '<tr rst_id="'+data.data[i]['user_id']+'"><td class="logo-title"><img src="/uploads/'+data.data[i]['media_logo']+'">' +
+							data.data[i]['media_name']+'</td><td>'+data.data[i]['platform_type']+'</td><td>'+
+							data.data[i]['publish_type']+'</td><td>'+data.data[i]['fans']+'</td><td>'+
+							data.data[i]['appoint_type']+
+							'</td><td class="color1">￥'+data.data[i]['proxy_price']+'</td><td>'+
+							data.data[i]['remark']+'</td></tr>';
+					}
+
+					// $('#wrapper_i').html('');
+					$('#wrapper_i').append(result);
+					$('#page').html('');
+					if (data.page.page_statue>0) {
+						$('#page').append('<a href="javascript:void(0);" onclick="page_load()" class="more"  style="adisplay:none;">加载更多</a>');
+					}
+				}else{
+					$('#page').html('');
+					layer.msg('抱歉，暂无更多媒体');
+				}
+					// $('#wrapper_i').html("");
+					// $('#wrapper_i').append(result);
+					
+				} else {
+					layer.msg(data.msg || '请求失败');
+				}
+			},
+			error: function (data) {
+				layer.msg(data.msg || '网络发生错误');
+			}
+		});
+	}
 	$('#wrapper_i').on("click","tr",function(){
+		// allen
 		var num = parseInt($("#resource_count_select").text());
 		$('#resource_count_select').html(num+1);
 		$(this).addClass("choose");
@@ -293,25 +374,34 @@
 				var sum = data.data.length;
 				if (data.status == '1') {
 					for(var i=0; i< sum; i++){
+						if (!data.data[i]['platform_type']) {
+							data.data[i]['platform_type']='不限';
+						};
 						if (!data.data[i]['publish_type']) {
 							data.data[i]['publish_type']='不限';
 						};
 						if (!data.data[i]['fans']) {
 							data.data[i]['fans']='不限';
 						};
-						
-						result +='<tr rst_id="' + data.data[i]['user_id'] + '" screen_attr_value_ids ="' + data.data[i]['screen_attr_value_ids'] + '" >'
-							+ '<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="' + data.data[i]['user_id'] + '" /></label></td>'
-							+ '<td class="logo-title">' + '<img src="' + data.data[i]['media_logo'] + '">' +data.data[i]['media_name'] + '</td>'
-							+ '<td>' + data.data[i]['platform'] + '</td>'
-							+ '<td>' + data.data[i]['publish_type'] + '</td>'
-							+ '<td>' + data.data[i]['add'] + '</td>'
-							+ '<td>' + data.data[i]['fans'] + '</td>'
-							+ '<td>' + data.data[i]['cankao'] + '</td>'
-							+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-							+ '<td><a href="#" class="del">删除</a><input type="hidden" name="screen_attr_value_ids" value="' +
-							data.data[i]['screen_attr_value_ids'] + '" /></td>'
-							+ '</tr>';
+						if (!data.data[i]['appoint_type']) {
+							data.data[i]['appoint_type']='不限';
+						};
+
+						result +='<tr rst_id="'+data.data[i]['user_id']+'" screen_attr_value_ids ="'+data.data[i]['screen_attr_value_ids']+'" >'+
+						'<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="'+data.data[i]['user_id']+'" /></label></td>'+
+						'<td class="logo-title">'+'<img src="/uploads/'+data.data[i]['media_logo']+'">'+
+						data.data[i]['media_name']+'</td><td>'+data.data[i]['platform_type']+'</td>'+
+							'<td>'+data.data[i]['publish_type']+'</td><td>'+data.data[i]['fans']+'</td>'+
+							'<td>'+data.data[i]['appoint_type']+'</td><td class="color1">￥'+data.data[i]['proxy_price']+'</td>'+
+							'<td><a href="#" class="del">删除</a><input type="hidden" name="screen_attr_value_ids" value="'+
+							data.data[i]['screen_attr_value_ids']+'" /></td></tr>';
+
+						// result +='<tr rst_id="'+data[i]['user_id']+'">'+
+						// 		'<td class="WIna5"><img src="'+data[i]['']+'">'+data[i]['']+'</td>'+
+						// 		'<td class="WIna6">'+data[i]['']+'</td>'+
+						// 		'<td class="WIna7">'+_get.mb_price+'元</td>'+
+						// 		'<td class="WIna8"><a href="" class="del">×</a></td>'+
+						// 		'</tr>';
 					}
 					$('#select_media').append(result);
 				} else {
@@ -430,9 +520,9 @@
 				var get_data = data.data;
 				limit_start  = data.page.limit_start;
 				page_num  = data.page.page_num;
-				// result='<thead><tr class="normal"><th style="width:18%;">资源名称</th>' + '<th>发布类型</th>' +
-				// 				'<th>频道类型</th><th>指定效果</th><!-- <th>阅读量</th> --><th>价格</th>' +
-				// 				'<th style="width:20%;">备注</th></tr></thead>' +
+				// result='<thead><tr class="normal"><th style="width:18%;">资源名称</th>'+'<th>发布类型</th>'+
+				// 				'<th>频道类型</th><th>指定效果</th><!-- <th>阅读量</th> --><th>价格</th>'+
+				// 				'<th style="width:20%;">备注</th></tr></thead>'+
 				// 		'<tbody id="wrapper_i">';
 				result='';
 				if (data.status == '1') {
@@ -463,24 +553,26 @@
 //							vb= get_data[i].Entrance_level[0].name;
 							vb= get_data[i].Entrance_level;
                         }
+						if (!data.data[i]['platform_type']) {
+							data.data[i]['platform_type']='不限';
+						};
 						if (!data.data[i]['publish_type']) {
 							data.data[i]['publish_type']='不限';
 						};
 						if (!data.data[i]['fans']) {
 							data.data[i]['fans']='不限';
 						};
-
-						result +='<tr rst_id="' + data.data[i]['user_id'] + '" screen_attr_value_ids ="' + data.data[i]['screen_attr_value_ids'] + '" >'
-							+ '<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="' + data.data[i]['user_id'] + '" /></label></td>'
-							+ '<td class="logo-title">' + '<img src="' + data.data[i]['media_logo'] + '">' +data.data[i]['media_name'] + '</td>'
-							+ '<td>' + data.data[i]['platform'] + '</td>'
-							+ '<td>' + data.data[i]['publish_type'] + '</td>'
-							+ '<td>' + data.data[i]['add'] + '</td>'
-							+ '<td>' + data.data[i]['fans'] + '</td>'
-							+ '<td>' + data.data[i]['cankao'] + '</td>'
-							+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-							+ '<td>' + data.data[i]['remark'] + '</td>'
-							+ '</tr>';
+						if (!data.data[i]['appoint_type']) {
+							data.data[i]['appoint_type']='不限';
+						};
+						result += '<tr rst_id="'+data.data[i]['user_id']+'">' + 
+							'<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>' + 
+							'<td class="logo-title"><img src="'+data.data[i]['media_logo']+'">' +
+							data.data[i]['media_name']+'</td><td>'+data.data[i]['platform_type']+'</td><td>'+
+							data.data[i]['publish_type']+'</td>'+'</td><td>'+data.data[i]['fans']+'</td><td>'+
+							data.data[i]['appoint_type']+'</td>'+
+							'<td class="color1">￥'+data.data[i]['proxy_price']+'</td><td>'+
+							data.data[i]['remark']+'</td></tr>';
 					}
 
 					
@@ -769,9 +861,9 @@
 		});
 		form5data['name1'] = $("input[name=name1]").val();				//活动标题
 		form5data['name2'] = $("input[name=name2]:checked").val();		//稿件内容		1 外部连接 		2 上传文档		3 内部编辑
-		form5data['name2_1'] = $("input[name=name2_1]").val();			//稿件内容》外部连接
-		form5data['Manuscripts'] = $("input[name=name2_2]").val();		//稿件内容》上传文档	稿件导入
-		form5data['content'] = ue.getContent();							//稿件内容》内部编辑	内容编辑		获取编辑器的内容
+			form5data['name2_1'] = $("input[name=name2_1]").val();			//稿件内容》外部连接
+			form5data['Manuscripts'] = $("input[name=name2_2]").val();		//稿件内容》上传文档	稿件导入
+			form5data['content'] = ue.getContent();							//稿件内容》内部编辑	内容编辑		获取编辑器的内容
 			
 		form5data['name3'] = $("input[name=name3]").val();				//关键字
 		
@@ -826,8 +918,8 @@ $.validator.setDefaults({
 			content = ue.getContent();
 		}
 
-		start_at = $("input[name=name4]").val()+ ' ' +$("select[name=name4_1]").val()+ ':' +$("select[name=name4_2]").val()+ ':' +seconds;
-		over_at = $("input[name=name5]").val()+ ' ' +$("select[name=name5_1]").val()+ ':' +$("select[name=name5_2]").val()+ ':' +seconds;
+		start_at = $("input[name=name4]").val()+' '+$("select[name=name4_1]").val()+':'+$("select[name=name4_2]").val()+':'+seconds;
+		over_at = $("input[name=name5]").val()+' '+$("select[name=name5_1]").val()+':'+$("select[name=name5_2]").val()+':'+seconds;
 
         var category_arr = [];
         var id_arr = [];
@@ -847,7 +939,7 @@ $.validator.setDefaults({
         user_ids = user_arr.toString();
 
   		remark = $("#name6").val();
-  		// 购物车
+
 		$.ajax({
 			url: '/cart/post_cart',
             data: {
@@ -961,9 +1053,24 @@ var minutes = moment().format("mm");
 $("[name='name4_1']").val(hours);
 $("[name='name4_2']").val(minutes);
 	
+$(".checkall").click(function(){			//全选
+	if( $(this).is(":checked") ) {
+		$("#wrapper_i tr").each(function(){
+			if( $(this).hasClass("choose") ){
+			}else{
+				$(this).click();
+			}
+		});
+	}else{
+		$("#wrapper_i tr").each(function(){
+			if( $(this).hasClass("choose") ){
+				$(this).click();
+			}else{
+			}
+		});
+	}
+});
+	
 </script>
-
-@include('console.share.media_js')
-
 </body>
 </html>

@@ -66,14 +66,11 @@
 							<tr class="normal">
 								<th><label class="check_all" style="margin:0;"><input type="checkbox" name="checkall" value="1" class="checkall" />全选</label></th>
 								<th style="width:18%;">媒体名称</th>
-								@foreach($title as $key => $val)
-									<th>{{ $val['attr_name'] }}</th>
-								@endforeach
-								
-								{{-- <th>频道类型</th>
+								<th>平台</th>
+								<th>频道类型</th>
 								<th>粉丝量</th>
-								<th>阅读量</th>--}}
-								<th>价格</th> 
+								<th>阅读量</th>
+								<th>价格</th>
 								<th style="width:20%;">备注</th>
 							</tr>
 						</thead>
@@ -82,11 +79,9 @@
 							<tr rst_id="{{$v['user_id']}}">
 								<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>
 								<td class="logo-title"><img src="{{$v['media_logo']}}">{{$v['media_name']}}</td>
-								<td>{{ $v['platform'] }}</td>
+								<td>平台</td>
 								<td>@if(isset($v['publish_type'])){{$v['publish_type']}}@else 不限 @endif</td>
-								<td>{{ $v['add'] }}</td>
 								<td>@if(isset($v['fans'])){{$v['fans']}}@else 不限 @endif</td>
-								<td>{{ $v['cankao'] }}</td>
 								<td class="color1">￥{{$v['proxy_price']}}</td>
 								<td>{{$v['remark']}}</td>
 							</tr>
@@ -112,9 +107,8 @@
 						<tr class="normal">
 							<th style="">选择</th>
 							<th style="width:18%;">媒体名称</th>
-							@foreach($title as $key => $val)
-									<th>{{ $val['attr_name'] }}</th>
-								@endforeach
+							<th>频道类型</th>
+							<th>粉丝量</th>
 							<!-- <th>阅读量</th> -->
 							<th>价格</th>
 							<th style="width:8%;">操作</th>
@@ -241,12 +235,85 @@
 @include('console.share.admin_foot')
 
 <script type="text/javascript">
+	var id = {{$media['id']}}; 
+    var limit_start = {{$page['limit_start']}};
+    var page_num = {{$page['page_num']}};
 	/*	百度编辑器	*/
 	var ue = UE.getEditor('container');
 	var _token = $('input[name="_token"]').val();
+	function page_load (argument) {
+		page_num_new = $("#page_nums").val();
 
 
+        var category_arr = [];
+        var id_arr = [];
+        $('#attr_val ul[set_name="network"] a.cur').each(function(){
+            id_arr.push($(this).attr('data_id'));
+            category_arr.push($(this).attr('category_id'));
+        })
+        data_id = category_arr.toString();
+        category_id = id_arr.toString();
+
+		$.ajax({
+			url: '',
+			data: {
+				'id':id,
+				'page_num':page_num_new,
+				'limit_start':limit_start,
+				'category_id':category_id,
+				'_token': _token
+			},
+			type: 'post',
+			dataType: "json",
+			stopAllStart: true,
+			success: function (data) {
+				var sum = data.data.length;
+				limit_start  = data.page.limit_start;
+				page_num  = data.page.page_num;
+				// console.log(limit_start);
+				result='';
+				if (data.status == '1') {
+					if (data.data.length>0) {
+					//页面渲染
+					for(var i=0; i< sum; i++){
+						if (!data.data[i]['publish_type']) {
+							data.data[i]['publish_type']='不限';
+						};
+						if (!data.data[i]['fans']) {
+							data.data[i]['fans']='不限';
+						};
+
+						result += '<tr rst_id="'+data.data[i]['user_id']+'"><td class="logo-title"><img src="'+data.data[i]['media_logo']+'">' +
+							data.data[i]['media_name']+'</td><td>'+data.data[i]['publish_type']+'</td><td>'+
+							data.data[i]['fans']+
+							'<td class="color1">￥'+data.data[i]['proxy_price']+'</td><td>'+
+							data.data[i]['remark']+'</td></tr>';
+					}
+
+					// $('#wrapper_i').html('');
+					$('#wrapper_i').append(result);
+					$('#page').html('');
+					if (data.page.page_statue>0) {
+						$('#page').append('<a href="javascript:void(0);" onclick="page_load()" class="more"  style="adisplay:none;">加载更多</a>');
+					}
+				}else{
+					$('#page').html('');
+					layer.msg('抱歉，暂无更多媒体');
+				}
+					// $('#wrapper_i').html("");
+					// $('#wrapper_i').append(result);
+					
+				} else {
+					layer.msg(data.msg || '请求失败');
+				}
+			},
+			error: function (data) {
+				layer.msg(data.msg || '网络发生错误');
+			}
+		});
+	}
 	$('#wrapper_i').on("click","tr",function(){
+		// allen
 		var num = parseInt($("#resource_count_select").text());
 		$('#resource_count_select').html(num+1);
 		$(this).addClass("choose");
@@ -299,19 +366,21 @@
 						if (!data.data[i]['fans']) {
 							data.data[i]['fans']='不限';
 						};
-						
-						result +='<tr rst_id="' + data.data[i]['user_id'] + '" screen_attr_value_ids ="' + data.data[i]['screen_attr_value_ids'] + '" >'
-							+ '<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="' + data.data[i]['user_id'] + '" /></label></td>'
-							+ '<td class="logo-title">' + '<img src="' + data.data[i]['media_logo'] + '">' +data.data[i]['media_name'] + '</td>'
-							+ '<td>' + data.data[i]['platform'] + '</td>'
-							+ '<td>' + data.data[i]['publish_type'] + '</td>'
-							+ '<td>' + data.data[i]['add'] + '</td>'
-							+ '<td>' + data.data[i]['fans'] + '</td>'
-							+ '<td>' + data.data[i]['cankao'] + '</td>'
-							+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-							+ '<td><a href="#" class="del">删除</a><input type="hidden" name="screen_attr_value_ids" value="' +
-							data.data[i]['screen_attr_value_ids'] + '" /></td>'
-							+ '</tr>';
+
+						result +='<tr rst_id="'+data.data[i]['user_id']+'" screen_attr_value_ids ="'+data.data[i]['screen_attr_value_ids']+'" >'+
+						'<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="'+data.data[i]['user_id']+'" /></label></td>'+
+						'<td class="logo-title">'+'<img src="'+data.data[i]['media_logo']+'">'+
+						data.data[i]['media_name']+'</td><td>'+data.data[i]['publish_type']+'</td>'+
+							'<td>'+data.data[i]['fans']+'</td><td class="color1">￥'+data.data[i]['proxy_price']+'</td>'+
+							'<td><a href="#" class="del">删除</a><input type="hidden" name="screen_attr_value_ids" value="'+
+							data.data[i]['screen_attr_value_ids']+'" /></td></tr>';
+
+						// result +='<tr rst_id="'+data[i]['user_id']+'">'+
+						// 		'<td class="WIna5"><img src="'+data[i]['']+'">'+data[i]['']+'</td>'+
+						// 		'<td class="WIna6">'+data[i]['']+'</td>'+
+						// 		'<td class="WIna7">'+_get.mb_price+'元</td>'+
+						// 		'<td class="WIna8"><a href="" class="del">×</a></td>'+
+						// 		'</tr>';
 					}
 					$('#select_media').append(result);
 				} else {
@@ -430,9 +499,9 @@
 				var get_data = data.data;
 				limit_start  = data.page.limit_start;
 				page_num  = data.page.page_num;
-				// result='<thead><tr class="normal"><th style="width:18%;">资源名称</th>' + '<th>发布类型</th>' +
-				// 				'<th>频道类型</th><th>指定效果</th><!-- <th>阅读量</th> --><th>价格</th>' +
-				// 				'<th style="width:20%;">备注</th></tr></thead>' +
+				// result='<thead><tr class="normal"><th style="width:18%;">资源名称</th>'+'<th>发布类型</th>'+
+				// 				'<th>频道类型</th><th>指定效果</th><!-- <th>阅读量</th> --><th>价格</th>'+
+				// 				'<th style="width:20%;">备注</th></tr></thead>'+
 				// 		'<tbody id="wrapper_i">';
 				result='';
 				if (data.status == '1') {
@@ -469,18 +538,25 @@
 						if (!data.data[i]['fans']) {
 							data.data[i]['fans']='不限';
 						};
-
-						result +='<tr rst_id="' + data.data[i]['user_id'] + '" screen_attr_value_ids ="' + data.data[i]['screen_attr_value_ids'] + '" >'
-							+ '<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="' + data.data[i]['user_id'] + '" /></label></td>'
-							+ '<td class="logo-title">' + '<img src="' + data.data[i]['media_logo'] + '">' +data.data[i]['media_name'] + '</td>'
-							+ '<td>' + data.data[i]['platform'] + '</td>'
-							+ '<td>' + data.data[i]['publish_type'] + '</td>'
-							+ '<td>' + data.data[i]['add'] + '</td>'
-							+ '<td>' + data.data[i]['fans'] + '</td>'
-							+ '<td>' + data.data[i]['cankao'] + '</td>'
-							+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-							+ '<td>' + data.data[i]['remark'] + '</td>'
-							+ '</tr>';
+						// result += '<tr rst_id="'+get_data[i].id+'">' +
+						// 	'<td>'+get_data[i].id+'</td>' +
+						// 	'<td class="sbox_3_t1">' +
+						// 	'<img src="'+get_data[i].media_md5+'"  style="width: 100px;height:30px">'+get_data[i].media_name+'</td>' +
+						// 	'<td class="sbox_3_t2">'+vt+'</td>' +
+						// 	'<td class="sbox_3_t3">'+vb+'</td>' +
+						// 	'<td>'+vg+'</td>' +
+						// 	'<td class="sbox_3_t5"><img src="'+get_data[i].diagram_img+'" style="width:50px;height:20px"></td>' +
+						// 	'<td class="red">'+get_data[i].pf_price+'</td>' +
+						// 	'<td class="red">'+get_data[i].px_price+'</td>' +
+						// 	'<td class="red">'+get_data[i].mb_price+'</td>' +
+						// 	'</tr>';
+						result += '<tr rst_id="'+data.data[i]['user_id']+'">' + 
+							'<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>' + 
+							'<td class="logo-title"><img src="'+data.data[i]['media_logo']+'">' +
+							data.data[i]['media_name']+'</td><td>'+data.data[i]['publish_type']+'</td><td>'+
+							data.data[i]['fans']+'</td>'+
+							'<td class="color1">￥'+data.data[i]['proxy_price']+'</td><td>'+
+							data.data[i]['remark']+'</td></tr>';
 					}
 
 					
@@ -769,9 +845,9 @@
 		});
 		form5data['name1'] = $("input[name=name1]").val();				//活动标题
 		form5data['name2'] = $("input[name=name2]:checked").val();		//稿件内容		1 外部连接 		2 上传文档		3 内部编辑
-		form5data['name2_1'] = $("input[name=name2_1]").val();			//稿件内容》外部连接
-		form5data['Manuscripts'] = $("input[name=name2_2]").val();		//稿件内容》上传文档	稿件导入
-		form5data['content'] = ue.getContent();							//稿件内容》内部编辑	内容编辑		获取编辑器的内容
+			form5data['name2_1'] = $("input[name=name2_1]").val();			//稿件内容》外部连接
+			form5data['Manuscripts'] = $("input[name=name2_2]").val();		//稿件内容》上传文档	稿件导入
+			form5data['content'] = ue.getContent();							//稿件内容》内部编辑	内容编辑		获取编辑器的内容
 			
 		form5data['name3'] = $("input[name=name3]").val();				//关键字
 		
@@ -826,8 +902,8 @@ $.validator.setDefaults({
 			content = ue.getContent();
 		}
 
-		start_at = $("input[name=name4]").val()+ ' ' +$("select[name=name4_1]").val()+ ':' +$("select[name=name4_2]").val()+ ':' +seconds;
-		over_at = $("input[name=name5]").val()+ ' ' +$("select[name=name5_1]").val()+ ':' +$("select[name=name5_2]").val()+ ':' +seconds;
+		start_at = $("input[name=name4]").val()+' '+$("select[name=name4_1]").val()+':'+$("select[name=name4_2]").val()+':'+seconds;
+		over_at = $("input[name=name5]").val()+' '+$("select[name=name5_1]").val()+':'+$("select[name=name5_2]").val()+':'+seconds;
 
         var category_arr = [];
         var id_arr = [];
@@ -847,7 +923,7 @@ $.validator.setDefaults({
         user_ids = user_arr.toString();
 
   		remark = $("#name6").val();
-  		// 购物车
+
 		$.ajax({
 			url: '/cart/post_cart',
             data: {
@@ -961,9 +1037,24 @@ var minutes = moment().format("mm");
 $("[name='name4_1']").val(hours);
 $("[name='name4_2']").val(minutes);
 	
+$(".checkall").click(function(){			//全选
+	if( $(this).is(":checked") ) {
+		$("#wrapper_i tr").each(function(){
+			if( $(this).hasClass("choose") ){
+			}else{
+				$(this).click();
+			}
+		});
+	}else{
+		$("#wrapper_i tr").each(function(){
+			if( $(this).hasClass("choose") ){
+				$(this).click();
+			}else{
+			}
+		});
+	}
+});
+	
 </script>
-
-@include('console.share.media_js')
-
 </body>
 </html>

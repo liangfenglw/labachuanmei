@@ -8,6 +8,7 @@
 	<meta name="keywords" content="" />
 
     @include('console.share.cssjs')
+
 	<style>
 	#error_show a{    font-size: 16px;    color: #ff0000; padding-left:50%; float:left; width:100%; line-height:30px; border-top:1px solid #eee;padding-top: 20px;}
 	body .logo-title img{	display:none;	}
@@ -27,16 +28,14 @@
 	
 	<div class="main_o clearfix" style="">
 	
-		<h3 class="title5 clearfix"><strong>{{$media['plate_name']}}</strong></h3><!--微博营销-->
+		<h3 class="title5 clearfix"><strong>{{$media['plate_name']}}</strong></h3><!--视频营销-->
 		
 		<div class="Wikipedia">
 		
 			<div class="sbox_1 clearfix">
 				<div class="sbox_1_w" id="attr_val">
-        {{ csrf_field() }}
-
-			{!!$html!!}
-
+        			{{ csrf_field() }}
+					{!!$html!!}
 				</div>
 			</div>
 			<div class="sbox_2 clearfix radius1">
@@ -44,7 +43,6 @@
 				<ul class="m">{!! $select_html !!}</ul>
 				
 			</div>
-			
 			<div class="sbox_3">
 				<h4>
 					<span class="r">每页显示
@@ -66,14 +64,12 @@
 							<tr class="normal">
 								<th><label class="check_all" style="margin:0;"><input type="checkbox" name="checkall" value="1" class="checkall" />全选</label></th>
 								<th style="width:18%;">媒体名称</th>
-								@foreach($title as $key => $val)
-									<th>{{ $val['attr_name'] }}</th>
-								@endforeach
-								
-								{{-- <th>频道类型</th>
+								<th>平台</th>
+								<th>视频类型</th>
 								<th>粉丝量</th>
-								<th>阅读量</th>--}}
-								<th>价格</th> 
+								<th>性别</th>
+								<!-- <th>阅读量</th> -->
+								<th>价格</th>
 								<th style="width:20%;">备注</th>
 							</tr>
 						</thead>
@@ -82,11 +78,10 @@
 							<tr rst_id="{{$v['user_id']}}">
 								<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>
 								<td class="logo-title"><img src="{{$v['media_logo']}}">{{$v['media_name']}}</td>
-								<td>{{ $v['platform'] }}</td>
-								<td>@if(isset($v['publish_type'])){{$v['publish_type']}}@else 不限 @endif</td>
-								<td>{{ $v['add'] }}</td>
+								<td>@if(isset($v['platform_type'])){{$v['platform_type']}}@else 不限 @endif</td>
+								<td>@if(isset($v['video_type'])){{$v['video_type']}}@else 不限 @endif</td>
 								<td>@if(isset($v['fans'])){{$v['fans']}}@else 不限 @endif</td>
-								<td>{{ $v['cankao'] }}</td>
+								<td>@if(isset($v['sex_type'])){{$v['sex_type']}}@else 不限 @endif</td>
 								<td class="color1">￥{{$v['proxy_price']}}</td>
 								<td>{{$v['remark']}}</td>
 							</tr>
@@ -109,19 +104,20 @@
 				<h2 style="margin-top:0;">已选媒体</h2>
 				<table class="table_in1 cur" style="margin:0;">
 					<thead>
+						
 						<tr class="normal">
 							<th style="">选择</th>
 							<th style="width:18%;">媒体名称</th>
-							@foreach($title as $key => $val)
-									<th>{{ $val['attr_name'] }}</th>
-								@endforeach
-							<!-- <th>阅读量</th> -->
+							<th>平台</th>
+							<th>视频类型</th>
+							<th>粉丝量</th>
+							<th>性别</th>
 							<th>价格</th>
 							<th style="width:8%;">操作</th>
 						</tr>
 					</thead>
 					<tbody id="select_media">
-						
+				
 					</tbody>
 				</table>
 			</div>
@@ -144,71 +140,78 @@
 						<div class="WMain2">
 							<ul>
 								<li style="display:block;">
-									<div class="WMain3"><p><i class="LGntas">*</i>稿件标题:</p>
+									<div class="WMain3"><p><i class="LGntas">*</i>合作形式:</p>
+										<input type="text" name="name7" id="name7" maxlength="25"
+											placeholder="" class="txt_f1" style="width:45%;" />
+									</div>
+									<div class="WMain3"><p><i class="LGntas">*</i>直播标题:</p>
 										<input type="text" name="name1" id="name1" maxlength="25"
-											placeholder="可输入25个汉字" class="txt_f1" style="width:45%;" />
+											placeholder="可输入25个汉字" class="txt_f1" style="width:45%;"/>
 									</div>
-									<div class="WMain3"><p><i class="LGntas">*</i>稿件内容:</p>
-										<label class="rd1 css_cur" onclick="waibu.style.display='';shangchuan.style.display='none';bianji.style.display='none';$('#Manuscripts').hide();"><input type="radio" name="name2" value="1" checked />外部连接</label>
-										<label class="rd1" onclick="shangchuan.style.display='';waibu.style.display='none';bianji.style.display='none';$('#Manuscripts').show();setOffset('#Manuscripts','#upload_file');"><input type="radio" name="name2" value="2" />上传文档</label>
-										<label class="rd1" onclick="bianji.style.display='';waibu.style.display='none';shangchuan.style.display='none';$('#Manuscripts').hide();"><input type="radio" name="name2" value="3" />内部编辑</label>
+									<!-- <div class="WMain3"><p><i class="LGntas">*</i>具体形式:</p>
+										<label><input type="radio" name="name2" value="1" checked onclick="waibu.style.display='';shangchuan.style.display='none';bianji.style.display='none';$('#Manuscripts').hide();" checked/>外部连接</label>
+										<label><input type="radio" name="name2" value="2" onclick="shangchuan.style.display='';waibu.style.display='none';bianji.style.display='none';$('#Manuscripts').show();setOffset('#Manuscripts','#upload_file');"/>上传文档</label>
+										<label><input type="radio" name="name2" value="3" onclick="bianji.style.display='';waibu.style.display='none';shangchuan.style.display='none';$('#Manuscripts').hide();"/>内部编辑</label>
+									</div> -->
+
+									<div class="WMain3"><p><i class="LGntas">*</i>具体形式：</p>
+										<label class="rd1"><input type="radio" name="name2" value="1" />活动现场直播</label>
+										<label class="rd1"><input type="radio" name="name2" value="2" />产品使用</label>
+										<label class="rd1"><input type="radio" name="name2" value="3" />店铺体验</label>
+										<label class="rd1"><input type="radio" name="name2" value="4" />游戏直播</label>
 									</div>
-									<div id="waibu" title="外部连接">
-										<div class="WMain3"><p><i class="LGntas">*</i>外部链接:</p>
-											<input type="text" name="name2_1" id="name2_1" class="txt_f1" style="width:45%;" />
-										</div>
-									</div>
-									<div id="shangchuan" title="上传文档" style="display: none;">
-										<div class="WMain3 WMain3_2"><p><i class="LGntas">*</i>稿件导入:</p>
-											<input type="text" name="name2_2" id="name2_2" class="txt6" readonly />
-											<button type="button" name="upload_file" id="upload_file" class="txt7" style=" width:80px;" >导入</button><br/>
-											<span style="margin-left: 145px;">选填，如果您的文章已编辑完成，请复制链接到此处，并点击“导入”。</span>
-										</div>
-									</div>
-									<div id="bianji" title="内部编辑" style="display: none;">
-										<div class="WMain3 WMain3_1"><p><i class="LGntas">*</i>内容编辑:</p>
+									
+									<div class="WMain3"  id="bianji">
+										<div class="WMain3 WMain3_1"><p><i class="LGntas">*</i>直播内容：</p>
 											<script id="container" name="content" type="text/plain" style="width:80%;aheight:300px;width:auto;"></script>
 										</div>
 									</div>															
-									<div class="WMain3 WMain3_1"><p><i class="LGntas"></i>关键字:</p>
+									<div class="WMain3 WMain3_1"><p><i class="LGntas"></i>直播地点:</p>
 										<div id="key_input">
-											<input type="text" name="name3" id="name3" class="txt_f1" style="width:86%;"  placeholder="关键字不超过100个字符，多个关键字请用，隔开"/>
-											<p>还可输入<b>100</b>个字</p>
+											<input type="text" name="name3" id="name3" class="txt_f1" style="width:45%;" placeholder=""/>
+											<!--<p>还可输入<b>100</b>个字</p>-->
 										</div>
 									</div>
 									<div class="WMain3 WMain3_2"><p><i class="LGntas">*</i>开始时间:</p>
 										<input type="text" name="name4" id="datepicker1" class="txt2"/>
 										<select class="sel_t1 options_h" name="name4_1">
-										
 										@for($i=0;$i<24;$i++)
 										<option value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
 										@endfor
+										
 										</select>时
 										<select class="sel_t1 options_m" name="name4_2">
-											
 										@for($i=0;$i<60;$i++)
 										<option value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
 										@endfor
+											
 										</select>分
 										<span id="time1-error">请选择当前时间后，7天之内的时间</span>
 									</div>
 									<div class="WMain3 WMain3_2"><p><i class="LGntas">*</i>截止时间:</p>
 										<input type="text" name="name5" id="datepicker2" class="txt2"/>
 										<select class="sel_t1 options_h" name="name5_1">
-											
 										@for($i=0;$i<24;$i++)
 										<option value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
 										@endfor
+											
 										</select>时
 										<select class="sel_t1 options_m" name="name5_2">
-											
 										@for($i=0;$i<60;$i++)
 										<option value='{{sprintf("%02d",$i)}}'>{{sprintf("%02d",$i)}}</option>
 										@endfor
+											
 										</select>分
 										<span id="time2-error">请选择开始时间24小时后，7天之内的时间</span>
 									</div>
-									<div class="WMain3 WMain3_1"><p><i class="LGntas"></i>新闻备注:</p>
+									<div id="shangchuan" title="上传文档">
+										<div class="WMain3 WMain3_2"><p><i class="LGntas">*</i>上传附件:</p>
+											<input type="text" name="name2_2_2" id="name2_2_2" class="txt6" style="width:43%;" readonly />
+											<button type="button" name="upload_file" id="upload_file" class="txt7" style=" width:80px;">导入</button><br/>
+											<span style="margin-left: 145px;">选填，如果您的文章已编辑完成，请复制链接到此处，并点击“导入”。</span>
+										</div>
+									</div>
+									<div class="WMain3 WMain3_1"><p><i class="LGntas"></i>备注:</p>
 										<div id="xinwenbeizhu">
 											<textarea type="text" name="name6" id="name6" class="txt_ft1"></textarea>
 											<p>还可输入<b>500</b>个字</p>
@@ -217,11 +220,10 @@
 									<div class="item_f item_f_2" style="margin-top:50px;margin-left:-145px;">
                                         <div class="r"><input type="submit" value="确 认" class="sub5"></div>
                                     </div>
-									<!--<div class="clr btn_sub_w">
+                                    <!--<div class="clr btn_sub_w">
 										<button type="submit" value="submit" class="btn_sub"><img src="{{url('console/images/WLButton.png')}}">
 										</button>
 									</div>-->
-									
 								</li>
 							</ul>
 						</div>
@@ -241,12 +243,96 @@
 @include('console.share.admin_foot')
 
 <script type="text/javascript">
+	var id = {{$media['id']}}; 
+    var limit_start = {{$page['limit_start']}};
+    var page_num = {{$page['page_num']}};
 	/*	百度编辑器	*/
 	var ue = UE.getEditor('container');
 	var _token = $('input[name="_token"]').val();
+	function page_load (argument) {
+		page_num_new = $("#page_nums").val();
 
 
+        var category_arr = [];
+        var id_arr = [];
+        $('#attr_val ul[set_name="network"] a.cur').each(function(){
+            id_arr.push($(this).attr('data_id'));
+            category_arr.push($(this).attr('category_id'));
+        })
+        data_id = category_arr.toString();
+        category_id = id_arr.toString();
+
+		$.ajax({
+			url: '',
+			data: {
+				'id':id,
+				'page_num':page_num_new,
+				'limit_start':limit_start,
+				'category_id':category_id,
+				'_token': _token
+			},
+			type: 'post',
+			dataType: "json",
+			stopAllStart: true,
+			success: function (data) {
+				var sum = data.data.length;
+				limit_start  = data.page.limit_start;
+				page_num  = data.page.page_num;
+				// console.log(limit_start);
+				result='';
+				if (data.status == '1') {
+					if (data.data.length>0) {
+					//页面渲染
+					for(var i=0; i< sum; i++){
+						if (!data.data[i]['publish_type']) {
+							data.data[i]['publish_type']='不限';
+						};
+						if (!data.data[i]['video_type']) {
+							data.data[i]['video_type']='不限';
+						};
+
+						if (!data.data[i]['fans']) {
+							data.data[i]['fans']='不限';
+						};
+						
+						if (!data.data[i]['sex_type']) {
+							data.data[i]['sex_type']='不限';
+						};
+
+						result += '<tr rst_id="'+data.data[i]['user_id']+
+						'"><td class="logo-title"><img src="'+data.data[i]['media_logo']+'">' +
+							data.data[i]['media_name']+'</td>'+
+							'<td>'+data.data[i]['publish_type']+'</td>'+
+							'<td>'+data.data[i]['video_type']+'</td>'+
+							'<td>'+data.data[i]['fans']+'</td><td>'+data.data[i]['sex_type']+'</td>'+
+							'<td class="color1">￥'+data.data[i]['proxy_price']+'</td><td>'+
+							data.data[i]['remark']+'</td></tr>';
+					}
+
+					// $('#wrapper_i').html('');
+					$('#wrapper_i').append(result);
+					$('#page').html('');
+					if (data.page.page_statue>0) {
+						$('#page').append('<a href="javascript:void(0);" onclick="page_load()" class="more"  style="adisplay:none;">加载更多</a>');
+					}
+				}else{
+					$('#page').html('');
+					layer.msg('抱歉，暂无更多媒体');
+				}
+					// $('#wrapper_i').html("");
+					// $('#wrapper_i').append(result);
+					
+				} else {
+					layer.msg(data.msg || '请求失败');
+				}
+			},
+			error: function (data) {
+				layer.msg(data.msg || '网络发生错误');
+			}
+		});
+	}
 	$('#wrapper_i').on("click","tr",function(){
+		// allen
 		var num = parseInt($("#resource_count_select").text());
 		$('#resource_count_select').html(num+1);
 		$(this).addClass("choose");
@@ -293,25 +379,30 @@
 				var sum = data.data.length;
 				if (data.status == '1') {
 					for(var i=0; i< sum; i++){
-						if (!data.data[i]['publish_type']) {
-							data.data[i]['publish_type']='不限';
+						if (!data.data[i]['platform_type']) {
+							data.data[i]['platform_type']='不限';
+						};
+						if (!data.data[i]['video_type']) {
+							data.data[i]['video_type']='不限';
 						};
 						if (!data.data[i]['fans']) {
 							data.data[i]['fans']='不限';
 						};
-						
-						result +='<tr rst_id="' + data.data[i]['user_id'] + '" screen_attr_value_ids ="' + data.data[i]['screen_attr_value_ids'] + '" >'
-							+ '<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="' + data.data[i]['user_id'] + '" /></label></td>'
-							+ '<td class="logo-title">' + '<img src="' + data.data[i]['media_logo'] + '">' +data.data[i]['media_name'] + '</td>'
-							+ '<td>' + data.data[i]['platform'] + '</td>'
-							+ '<td>' + data.data[i]['publish_type'] + '</td>'
-							+ '<td>' + data.data[i]['add'] + '</td>'
-							+ '<td>' + data.data[i]['fans'] + '</td>'
-							+ '<td>' + data.data[i]['cankao'] + '</td>'
-							+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-							+ '<td><a href="#" class="del">删除</a><input type="hidden" name="screen_attr_value_ids" value="' +
-							data.data[i]['screen_attr_value_ids'] + '" /></td>'
-							+ '</tr>';
+						if (!data.data[i]['sex_type']) {
+							data.data[i]['sex_type']='不限';
+						};
+
+						result +='<tr rst_id="'+data.data[i]['user_id']+'" screen_attr_value_ids ="'+data.data[i]['screen_attr_value_ids']+'" >'+
+						'<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="'+data.data[i]['user_id']+'" /></label></td>'+
+						'<td class="logo-title">'+'<img src="'+data.data[i]['media_logo']+'">'+
+						data.data[i]['media_name']+'</td><td>'+data.data[i]['platform_type']+'</td>'+
+							'<td>'+data.data[i]['video_type']+'</td><td>'+data.data[i]['fans']+
+							'<td>'+data.data[i]['sex_type']+
+							'</td></td><td class="color1">￥'+data.data[i]['proxy_price']+'</td>'+
+							'<td><a href="#" class="del">删除</a><input type="hidden" name="screen_attr_value_ids" value="'+
+							data.data[i]['screen_attr_value_ids']+'" /></td></tr>';
+
+
 					}
 					$('#select_media').append(result);
 				} else {
@@ -410,30 +501,16 @@
 				'id':id,
 				'category_id':category_id,
 				'page_num':page_num_new,
-				// 'limit_start':limit_start,
-				// 'data': [
-					// {"category_id": opt[0]["category_id"], "data_id": opt[0]["data_id"]},
-					// {"category_id": opt[1]["category_id"], "data_id": opt[1]["data_id"]},
-					// {"category_id": opt[2]["category_id"], "data_id": opt[2]["data_id"]},
-					// {"category_id": opt[3]["category_id"], "data_id": opt[3]["data_id"]},
-					// {"category_id": opt[4]["category_id"], "data_id": opt[4]["data_id"]},
-					// {"category_id": opt[5]["category_id"], "data_id": opt[5]["data_id"]}
-				// ],
 				'_token': _token
 			},
 			type: 'post',
 			dataType: "json",
 			stopAllStart: true,
 			success: function (data) {
-					// $("#resource_table a").remove();
 				var sum = data.data.length;
 				var get_data = data.data;
 				limit_start  = data.page.limit_start;
 				page_num  = data.page.page_num;
-				// result='<thead><tr class="normal"><th style="width:18%;">资源名称</th>' + '<th>发布类型</th>' +
-				// 				'<th>频道类型</th><th>指定效果</th><!-- <th>阅读量</th> --><th>价格</th>' +
-				// 				'<th style="width:20%;">备注</th></tr></thead>' +
-				// 		'<tbody id="wrapper_i">';
 				result='';
 				if (data.status == '1') {
 					if (data.data.length>0) {
@@ -448,39 +525,41 @@
                         if( !get_data[i].standard || get_data[i].standard==''){
                             vg  = "不限";
                         }else{
-//                            vg= get_data[i].standard[0].name;
                             vg= get_data[i].standard;
                         }
                         if( !get_data[i].Entrance_form || get_data[i].Entrance_form==''){
                             vt = "不限";
                         }else{
-//							vt= get_data[i].Entrance_form[0].name;
                             vt= get_data[i].Entrance_form;
                         }
                         if( !get_data[i].Entrance_level || get_data[i].Entrance_level==''){
                             vb  = "不限";
                         }else{
-//							vb= get_data[i].Entrance_level[0].name;
 							vb= get_data[i].Entrance_level;
                         }
+
 						if (!data.data[i]['publish_type']) {
 							data.data[i]['publish_type']='不限';
 						};
+						if (!data.data[i]['video_type']) {
+							data.data[i]['video_type']='不限';
+						};
+
 						if (!data.data[i]['fans']) {
 							data.data[i]['fans']='不限';
 						};
+						
+						if (!data.data[i]['sex_type']) {
+							data.data[i]['sex_type']='不限';
+						};
 
-						result +='<tr rst_id="' + data.data[i]['user_id'] + '" screen_attr_value_ids ="' + data.data[i]['screen_attr_value_ids'] + '" >'
-							+ '<td><label class=""><input type="radio" class="choose_media" name="choose_media" value="' + data.data[i]['user_id'] + '" /></label></td>'
-							+ '<td class="logo-title">' + '<img src="' + data.data[i]['media_logo'] + '">' +data.data[i]['media_name'] + '</td>'
-							+ '<td>' + data.data[i]['platform'] + '</td>'
-							+ '<td>' + data.data[i]['publish_type'] + '</td>'
-							+ '<td>' + data.data[i]['add'] + '</td>'
-							+ '<td>' + data.data[i]['fans'] + '</td>'
-							+ '<td>' + data.data[i]['cankao'] + '</td>'
-							+ '<td class="color1">￥' + data.data[i]['proxy_price'] + '</td>'
-							+ '<td>' + data.data[i]['remark'] + '</td>'
-							+ '</tr>';
+						result += '<tr rst_id="'+data.data[i]['user_id']+'">' + 
+							'<td>&nbsp; &nbsp; <input type="checkbox" name="check_1" value="" /></td>' + 
+							'<td class="logo-title"><img src="'+data.data[i]['media_logo']+'">' +
+							data.data[i]['media_name']+'</td><td>'+data.data[i]['publish_type']+'</td><td>'+
+							data.data[i]['video_type']+'</td><td>'+data.data[i]['fans']+'</td><td>'+
+							data.data[i]['sex_type']+'</td><td class="color1">￥'+data.data[i]['proxy_price']+'</td><td>'+
+							data.data[i]['remark']+'</td></tr>';
 					}
 
 					
@@ -693,7 +772,7 @@
 			if( typeof(ret) == "string" ){	ret = JSON.parse(ret);	}
 			if(ret.sta == "1"){
 				layer.msg('文件上传成功');
-				$('input[name="name2_2"]').val(ret.md5);
+				$('input[name="name2_2_2"]').val(ret.md5);
 			}else{
 				layer.msg(ret.msg);
 			}
@@ -727,7 +806,7 @@
 			}).done(function(ret){
 				console.log(ret);
 				if(ret.status == 1){
-					$('input[name="name2_2"]').val(ret.data.file);
+					$('input[name="name2_2_2"]').val(ret.data.file);
 				}else{
 					layer.msg('文件上传失败');
 				}
@@ -771,6 +850,7 @@
 		form5data['name2'] = $("input[name=name2]:checked").val();		//稿件内容		1 外部连接 		2 上传文档		3 内部编辑
 		form5data['name2_1'] = $("input[name=name2_1]").val();			//稿件内容》外部连接
 		form5data['Manuscripts'] = $("input[name=name2_2]").val();		//稿件内容》上传文档	稿件导入
+		
 		form5data['content'] = ue.getContent();							//稿件内容》内部编辑	内容编辑		获取编辑器的内容
 			
 		form5data['name3'] = $("input[name=name3]").val();				//关键字
@@ -803,31 +883,55 @@
 $.validator.setDefaults({
 	submitHandler: function() {
 		console.log("表单提交");
+		platform_type = $("input[name=name7]").val();
+		if ($.trim(platform_type) =='') {
+			flag = 1;
+			layer.msg("合作形式不能为空");
+			return false;
+
+		};
+
+		content = ue.getContent();
+		sale_file = $("input[name=name2_2_2]").val();
+		if ($.trim(content) == '') {
+			if (!sale_file) {
+				flag = 1;
+				layer.msg("直播内容不能为空");
+				return false;
+			}
+		};
 		
+		if ($.trim(sale_file) == '') {
+			if (!content) {
+				flag = 1;
+				layer.msg("请上传附件");
+				return false;
+			}
+		};
+
 		var flag = 0;
 		if( form5data['id'] == "" ){
 			flag = 1;
 			layer.msg("还要选择媒体哦");
 			return false;
 		}
-		console.log("表单提交1");
-		console.log(form5data);
+		// console.log("表单提交1");
+		// console.log(form5data);
 		
 		var key = "test1";
 		var doc_type = $("input[name=name2]:checked").val();
-		var content='';
 		var mydate = new Date();
 		var seconds = mydate.getSeconds();
-		if (doc_type==1) {
-			content = $("input[name=name2_1]").val();
-		}else if(doc_type == 2){
-			content = $("input[name=name2_2]").val();
-		}else{
-			content = ue.getContent();
-		}
+		// if (doc_type==1) {
+		// 	content = $("input[name=name2_1]").val();
+		// }else if(doc_type == 2){
+		// 	content = $("input[name=name2_2]").val();
+		// }else{
+		// 	content = ue.getContent();
+		// }
 
-		start_at = $("input[name=name4]").val()+ ' ' +$("select[name=name4_1]").val()+ ':' +$("select[name=name4_2]").val()+ ':' +seconds;
-		over_at = $("input[name=name5]").val()+ ' ' +$("select[name=name5_1]").val()+ ':' +$("select[name=name5_2]").val()+ ':' +seconds;
+		start_at = $("input[name=name4]").val()+' '+$("select[name=name4_1]").val()+':'+$("select[name=name4_2]").val()+':'+seconds;
+		over_at = $("input[name=name5]").val()+' '+$("select[name=name5_1]").val()+':'+$("select[name=name5_2]").val()+':'+seconds;
 
         var category_arr = [];
         var id_arr = [];
@@ -847,7 +951,7 @@ $.validator.setDefaults({
         user_ids = user_arr.toString();
 
   		remark = $("#name6").val();
-  		// 购物车
+
 		$.ajax({
 			url: '/cart/post_cart',
             data: {
@@ -856,9 +960,11 @@ $.validator.setDefaults({
             	'media_id':{{$media['id']}},
             	'user_ids':user_ids,
                 'title':$("input[name=name1]").val(),
+                'cooperation_mode':platform_type,
                 'doc_type':doc_type,
                 'content':content,
-                'keywords':$("input[name=name3]").val(),
+                'cooperation_place':$("input[name=name3]").val(),
+                'sale_file': sale_file,
                 'start_at':start_at,
                 'over_at':over_at,
                 'remark':remark,
@@ -906,7 +1012,7 @@ $.validator.setDefaults({
 			name1: { required: "请输入标题", minlength: "标题不能小于两个字" }
 			,name4: { required: "请选择开始时间" }
 			,name5: { required: "请选择截止时间" }
-			,name6: { required: "新闻备注不能为空" }
+			,name6: { required: "备注不能为空" }
 			,agree: "先同意才能提交"
 		}
 	});
@@ -961,9 +1067,24 @@ var minutes = moment().format("mm");
 $("[name='name4_1']").val(hours);
 $("[name='name4_2']").val(minutes);
 	
+$(".checkall").click(function(){			//全选
+	if( $(this).is(":checked") ) {
+		$("#wrapper_i tr").each(function(){
+			if( $(this).hasClass("choose") ){
+			}else{
+				$(this).click();
+			}
+		});
+	}else{
+		$("#wrapper_i tr").each(function(){
+			if( $(this).hasClass("choose") ){
+				$(this).click();
+			}else{
+			}
+		});
+	}
+});
+	
 </script>
-
-@include('console.share.media_js')
-
 </body>
 </html>
