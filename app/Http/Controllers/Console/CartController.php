@@ -115,13 +115,13 @@ class CartController extends CommonController
             if (!empty($activity)) {
                 $user_ids = ActivityVsUserModel::where('activity_id',$activity->id)->pluck('user_id')->toArray();
                 if ($user['level_id'] >= 2) {
-                    $rate = number_format($activity->vip_rate / 100, 2);
+                    $rate = bcdiv($activity->vip_rate, 100,2);
                 } else {
-                    $rate = number_format($activity->plate_rate / 100, 2);
+                    $rate = bcdiv($activity->plate_rate, 100,2);
                 }
                 foreach ($lists as $key => $value) {
                     if (in_array($value['user_id'], $user_ids)) {
-                        $lists[$key]['proxy_price'] = number_format($value['proxy_price'] * $rate, 2);
+                        $lists[$key]['proxy_price'] = bcmul($value['proxy_price'], $rate,2);
                     }
                 }
             }
@@ -135,7 +135,8 @@ class CartController extends CommonController
             $user_money = 0;
             // dd($screen_attr_value_ids);
             foreach ($lists as $key => $value) {
-                $user_money+=$value['proxy_price'];
+                $user_money += $value['proxy_price'];
+
                 $cart_network_data[] = [
                         'order_sn' => $order_sn, 
                         'supp_user_id' => $value['user_id'],

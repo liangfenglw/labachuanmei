@@ -63,7 +63,9 @@ class SearchController extends CommonController
         
         foreach ($lists as $key => $value) {
             if (in_array($value['user_id'], $user_ids)) {
-                $lists[$key]['proxy_price'] = number_format($value['proxy_price'] * $rate, 2);
+                $lists[$key]['member_price'] = number_format($value['proxy_price'] * $rate, 2);
+            } else {
+                $lists[$key]['member_price'] = '';//$value['proxy_price'];
             }
         }
 

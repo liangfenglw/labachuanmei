@@ -34,6 +34,7 @@
             <th>入口示意图</th>
             <th>媒体优势</th>
             <th>金额</th>
+            <th>活动价</th>
             <th style="border-radius:0 12px 0 0;" class="nosort">操作</th>
         </tr>
     </thead>
@@ -48,6 +49,7 @@
 					<div style="text-overflow:ellipsis;padding:6px 5px;white-space:nowrap;max-width:500px;overflow:hidden;height:1.5em;display:inline-block;">{{ $val['remark'] }}</div>
 				</td>
                 <td class="color1">￥{{ $val['proxy_price'] }}</td>
+                <td class="color1">@if(empty($val['member_price'])) @else ￥{{$val['member_price']}} @endif</td>
                 <td><a class="color2" href="/media/sale_media/{{ $val['plate_id'] }}?user_id={{ $val['user_id'] }}">任务发布</a></td>
             </tr>
         @endforeach

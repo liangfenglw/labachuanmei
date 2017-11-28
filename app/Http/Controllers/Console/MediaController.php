@@ -17,6 +17,7 @@ use App\Model\CartNetworkModel;
 use App\Model\ActivityModel;
 use App\Model\ActivityVsUserModel;
 use App\Model\SuppUsersSelfModel;
+use App\Model\PlateAttrModel;
 
 use Auth;
 use Cache;
@@ -97,6 +98,7 @@ class MediaController extends CommonController
         // 查看活动
         $activity = ActivityModel::where('start','<=',date("Y-m-d H:i:s",time()))
                         ->where('over','>=',date("Y-m-d H:i:s",time()))
+                        ->orderBy('id','desc')
                         ->select('vip_rate','plate_rate','id')
                         ->first();
 
@@ -132,7 +134,9 @@ class MediaController extends CommonController
             }
             foreach ($lists as $key => $value) {
                 if (in_array($value['user_id'], $user_ids)) {
-                    $lists[$key]['proxy_price'] = number_format($value['proxy_price'] * $rate, 2);
+                    $lists[$key]['member_price'] = number_format($value['proxy_price'] * $rate, 2);
+                } else {
+                    $lists[$key]['member_price'] = '';//$value['proxy_price'];
                 }
             }
         }
@@ -150,6 +154,7 @@ class MediaController extends CommonController
         if (!empty($this->request->user_id)) {
             $lists = [];
         }
+        $title = PlateAttrModel::where('plate_id', 25)->get();
         // 怕需要扩展 for_apply修改
         $assign = [
             1 => ['user' => $user, 
@@ -159,6 +164,15 @@ class MediaController extends CommonController
                   'page_statue',
                   'page' => $page, 
                   'media' => $media,
+                  'select_html' => $select_html],
+            25 => ['user' => $user, 
+                  'html' => $html,
+                  'lists' => $lists,
+                  'resource_count' => count($user_ids2),
+                  'page_statue',
+                  'page' => $page, 
+                  'media' => $media,
+                  'title' => $title,
                   'select_html' => $select_html]
         ];
         switch ($id) {
@@ -172,7 +186,8 @@ class MediaController extends CommonController
                  return view('console.media.sale_media_bbs', $assign['1']);
                 break;
             case 25:
-                 return view('console.media.sale_media_microblog', $assign['1']);
+                
+                 return view('console.media.sale_media_microblog', $assign['25']);
                 break;
             case 33: //木有
                  return view('console.media.sale_media_qa', $assign['1']);

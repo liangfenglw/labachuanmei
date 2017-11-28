@@ -684,7 +684,7 @@ function getSaleShowAttributeStatus($attr_id_one) {
     // 论坛营销
     $status[17] = [15=>'publish_type',18=>'channel_type',16=>'appoint_type'];
     // 微博营销
-    $status[25] = [23=>'publish_type',27=>'fans'];
+    $status[25] = [23=>'publish_type',27=>'fans', 22 => 'platform', 28 => 'cankao', 24 => 'add'];
     // 问答营销
     // $status[33] = [15,18,16];
     // 微信营销

@@ -581,13 +581,13 @@ class UserController extends CommonController
                 $value['order']['parent_order']['title'],
                 $value['order']['parent_order']['user']['name'],
                 $value['order']['commission'],
-                $value['order']['platform'],
+                $platform,
                 $value['status'] == 1 ? '到账' : '未到账',
             ];
         }
         $ads_cellData = [];
         $ads_cellData[] = [
-            '序号','会员','时间','消费类型','描述','金额','流水订单号','订单名称','供应商','会员佣金','平台获利','状态'
+            '序号','会员','用户角色','时间','消费类型','描述','金额','流水订单号','订单名称','供应商','会员佣金','平台获利','状态'
         ];
 
         $supp_lists = UserAccountLogModel::with(['ads_user',
@@ -597,12 +597,27 @@ class UserController extends CommonController
             ->leftJoin('users','users.id','=','user_account_log.user_id')
                 ->where('users.user_type', 2)
                 ->orderBy('user_account_log.id','desc')
-                ->select('user_account_log.*')
+                ->select('user_account_log.*','users.user_type')
                 ->get()
                 ->toArray();
         $account_type = [ 1 => '充值', 2 => '消费', 3 => '提现', 4 => '收入', 5 => '退款'];
         foreach ($supp_lists as $key => $value) {
             $order_id = $platform = 0;
+            if ($value['user_type'] == 3) {
+                $user_class = '供应商';
+                $username = $value['suppUser']['name'];
+            } elseif ($value['user_type'] == 2) {
+                if ($value['ads_user']['level_id'] > 2) {
+                    $user_class = '高级会员';
+                } else {
+                    if ($value['ads_user']['parent_id'] == 0) {
+                        $user_class = '注册会员';
+                    } else {
+                        $user_class = '代理会员';
+                    }
+                }
+                $username = $value['ads_user']['nickname'];
+            }
             if (in_array($value['account_type'], [1,3])) {
                 $order_id = $value['order_id'];
             } else {
@@ -617,6 +632,7 @@ class UserController extends CommonController
             $ads_cellData[] = [
                 $value['id'],
                 $value['ads_user']['nickname'],
+                $user_class,
                 $value['created_at'],
                 $account_type[$value['account_type']],
                 $value['desc'],
@@ -625,18 +641,32 @@ class UserController extends CommonController
                 $value['order']['parent_order']['title'],
                 $value['order']['supp_user']['name'],
                 $value['order']['commission'],
-                $value['order']['platform'],
+                $platform,
                 $value['status'] == 1 ? '到账' : '未到账',
             ];
         }
+        $account_type = [ 1 => '充值', 2 => '消费', 3 => '提现', 4 => '收入', 5 => '退款'];
+
         // 平台收益
         $form_cellData = [];
         $form_cellData[] = [
-            '序号','用户名','用户角色','消费类型','消费金额','平台获利','描述','时间','流水订单号','订单名称','状态'
+            '序号',
+            '用户名',
+            '用户角色',
+            '消费类型',
+            '交易金额',
+            '平台获利',
+            '供应商所得',
+            '会员佣金',
+            '描述',
+            '时间',
+            '流水订单号',
+            '订单名称',
+            '状态'
         ];
         $form_lists = UserAccountLogModel::
                     leftJoin('users','users.id','=','user_account_log.user_id')
-                    ->whereIn('user_account_log.account_type', [1,3,4])
+                    ->whereIn('user_account_log.account_type', [1,3,2])
                     ->with(['suppUser','ads_user','order'])
                     ->select('user_account_log.*','users.user_type')
                     ->where('users.user_type', '<>', 1)
@@ -663,9 +693,15 @@ class UserController extends CommonController
             } else {
                 $order_id = $value['order']['id'];
             }
+            $supp_money = "";
+            $commission = "";
             if ($value['account_type'] == 1) {
                 $platform = $value['user_money'];
+            } elseif($value['account_type'] == 3) {
+                $platform = '-'.$value['user_money'];
             } else {
+                $supp_money = "-".$value['order']['supp_money'];
+                $commission = "-".$value['order']['commission'];
                 $platform = $value['order']['platform'];
             }
             $form_cellData[] = [
@@ -674,7 +710,9 @@ class UserController extends CommonController
                 $user_class,
                 $account_type[$value['account_type']],
                 $value['order']['user_money'],
-                $value['order']['platform'],
+                $platform,
+                $supp_money,
+                $commission,
                 $value['desc'],
                 $value['created_at'],
                 $order_id,
@@ -686,12 +724,69 @@ class UserController extends CommonController
         Excel::create('财务流水'.date('Y/m/d H:i',time()),function($excel) use ($supp_cellData,$ads_cellData,$form_cellData){
             $excel->sheet('供应商金额流水', function($sheet) use ($supp_cellData){
                 $sheet->rows($supp_cellData);
+                $sheet->row(1,function($row){
+                    // 单元格处理方法
+                    $row ->setBackground('#3376b3'); // 设置单元格背景
+                    $row ->setFontColor('#ffffff'); // 改变字体颜色
+                    // 分开设置字体
+                    $row ->setFontSize(11);  
+                    //要改变当前表的字体用：->setFont($array)
+                    $row ->setFont([
+                        'family' => '宋体', // 设置字体
+                        'size' => '11', // 改变字体大小
+                        'bold' => true // 字体设置为粗体
+                    ]);
+                    // 设置边框
+                    // $row -> setBorder('solid','none','none','solid');
+                    //设置水平对齐
+                    $row ->setAlignment('center');
+                    //设置垂直对齐
+                    $row ->setValignment('middle');
+                });
             });
             $excel->sheet('会员流水', function($sheet)use($ads_cellData){
                 $sheet->rows($ads_cellData);
+                $sheet->row(1,function($row){
+                    // 单元格处理方法
+                    $row ->setBackground('#3376b3'); // 设置单元格背景
+                    $row ->setFontColor('#ffffff'); // 改变字体颜色
+                    // 分开设置字体
+                    $row ->setFontSize(11);  
+                    //要改变当前表的字体用：->setFont($array)
+                    $row ->setFont([
+                        'family' => '宋体', // 设置字体
+                        'size' => '11', // 改变字体大小
+                        'bold' => true // 字体设置为粗体
+                    ]);
+                    // 设置边框
+                    // $row -> setBorder('solid','none','none','solid');
+                    //设置水平对齐
+                    $row ->setAlignment('center');
+                    //设置垂直对齐
+                    $row ->setValignment('middle');
+                });
             });
             $excel->sheet('平台收益流水', function($sheet)use($form_cellData){
                 $sheet->rows($form_cellData);
+                 $sheet->row(1,function($row){
+                    // 单元格处理方法
+                    $row ->setBackground('#3376b3'); // 设置单元格背景
+                    $row ->setFontColor('#ffffff'); // 改变字体颜色
+                    // 分开设置字体
+                    $row ->setFontSize(11);  
+                    //要改变当前表的字体用：->setFont($array)
+                    $row ->setFont([
+                        'family' => '宋体', // 设置字体
+                        'size' => '11', // 改变字体大小
+                        'bold' => true // 字体设置为粗体
+                    ]);
+                    // 设置边框
+                    // $row -> setBorder('solid','none','none','solid');
+                    //设置水平对齐
+                    $row ->setAlignment('center');
+                    //设置垂直对齐
+                    $row ->setValignment('middle');
+                });
             });
         })->export('xls');
     }
