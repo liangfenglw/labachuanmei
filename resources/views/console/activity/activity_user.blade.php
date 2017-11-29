@@ -6,6 +6,10 @@
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     @include('console.share.cssjs')
+	<style>
+		.tab1_body .a_control{	width:30px;	height:24px;	line-height:24px;	overflow:hidden;	float:right;	text-align:center;
+			margin-right:20px;	padding:0 10px;	font-weight:700;	color:#f00;	font-size:30px;		}
+	</style>
 </head>
 <body class="fold"><!--    class="fold" 左导航收缩  -->
 @include('console.share.admin_head')
@@ -18,8 +22,8 @@
             <h3 class="title4 clearfix"><strong><a>活动媒体供应商</a></strong>
 				<div class="search_1" id="search_act" style="margin-left:50px;float:left;">
 					<form method="post" action="" id="form_act">
-						<input type="text" name="" class="txt5" id="key_act" placeholder="搜一下" />
-						<input type="submit" name="submit" class="sub4_3" id="sub_act" value="搜索">
+						<input type="text" name="key_act" class="txt5" id="key_act" placeholder="搜一下" />
+						<input type="submit" class="sub4_3" id="sub_act" value="搜索">
 					</form>
 				</div>
 			</h3>
@@ -34,6 +38,7 @@
                                 <tr>
                                     <th colspan="5" style="text-align:left;width:1%; padding-left:1%;">{{ $users['plate_name'] }}
 										<label class="check_all"><input type="checkbox" name="" value="" class="checkall" />全选</label>
+										<a href="#" class="a_control" data="on" title="收起">-</a>
 									</th>
                                 </tr>
                             </thead>
@@ -81,6 +86,20 @@
 		if( $(this).closest("tbody").find("input[name='user_id[]']:checked").length < len ){
 			$(this).closest("tbody").prev("thead").find(".checkall").prop("checked",false);
 		}
+	});
+	
+	$(".a_control").click(function(){
+		var data = $(this).attr("data");
+		if( data == "on" ){
+			$(this).closest("thead").next("tbody").hide();
+			$(this).attr("data","off").html("+");
+			$(this).attr("title","展开");
+		}else{
+			$(this).closest("thead").next("tbody").show();
+			$(this).attr("data","on").html("-");
+			$(this).attr("title","收起");
+		}
+		return false;
 	});
 
 </script>
