@@ -915,6 +915,11 @@
 		
 	}
 
+	//页数改变更新数据
+	$("#page_nums").change(function(){
+		ajaxGetChooseData();
+	});
+	
 	@if(!empty(Request::input('user_id')))
 	$(function(){
 		ajaxGetChooseData();

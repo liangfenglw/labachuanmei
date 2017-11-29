@@ -250,7 +250,6 @@
 	var ue = UE.getEditor('container');
 	var _token = $('input[name="_token"]').val();
 
-	
 	/*	还可输入字数提示	*/
 	var len_input = 100 ;
 	var len_textarea = 500 ;

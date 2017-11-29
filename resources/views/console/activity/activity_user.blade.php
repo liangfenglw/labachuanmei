@@ -15,7 +15,14 @@
         <div class="place_ant"><a href="/console/index">首页</a><a  href="/console/activity/list" class="cur">活动管理 </a></div>
     </div>
     <div class="main_o clearfix" style="padding-bottom:20px;">
-            <h3 class="title4 clearfix"><strong><a>活动媒体供应商</a></strong></h3>
+            <h3 class="title4 clearfix"><strong><a>活动媒体供应商</a></strong>
+				<div class="search_1" id="search_act" style="margin-left:50px;float:left;">
+					<form method="post" action="" id="form_act">
+						<input type="text" name="" class="txt5" id="key_act" placeholder="搜一下" />
+						<input type="submit" name="submit" class="sub4_3" id="sub_act" value="搜索">
+					</form>
+				</div>
+			</h3>
             <div class="dhorder_m">
             <form method="post"  action="/console/activity/user/add">
                 {{ csrf_field() }}
